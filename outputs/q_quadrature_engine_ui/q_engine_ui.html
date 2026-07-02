@@ -1,0 +1,3171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Q Boundary Quadrature Engine</title>
+  <style>
+    :root {
+      --paper: #fbfbfa;
+      --panel: #ffffff;
+      --ink: #111317;
+      --muted: #5f6670;
+      --hair: #d9dde2;
+      --hair-strong: #b9c0c9;
+      --soft: #f1f3f4;
+      --accent: #15191e;
+      --warn: #a15c13;
+      --bad: #a33b3b;
+      --good: #1f2933;
+      --shadow: 0 18px 55px rgba(25, 31, 38, 0.10);
+      --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f7f7f6;
+      color: var(--ink);
+      font-family: var(--sans);
+      letter-spacing: 0;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1680px, calc(100vw - 32px));
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: minmax(300px, 360px) minmax(600px, 1fr) minmax(320px, 390px);
+      gap: 14px;
+    }
+
+    .topbar {
+      grid-column: 1 / -1;
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--hair);
+      box-shadow: 0 8px 34px rgba(26, 30, 34, 0.07);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.05;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      min-width: 280px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--hair);
+      background: var(--panel);
+      padding: 7px 9px;
+      min-height: 32px;
+      font-size: 12px;
+      color: #2b3036;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--good);
+      box-shadow: 0 0 0 3px rgba(17, 19, 23, 0.10);
+    }
+
+    .dot.warn {
+      background: var(--warn);
+      box-shadow: 0 0 0 3px rgba(161, 92, 19, 0.13);
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--hair);
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel-header {
+      height: 44px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--hair);
+      background: rgba(250,250,249,0.78);
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: #252a30;
+      letter-spacing: 0.09em;
+      font-weight: 680;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .section {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--hair);
+    }
+
+    .section:first-child { padding-top: 0; }
+    .section:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 650;
+      color: #20252b;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .control-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .btn {
+      border: 1px solid var(--hair-strong);
+      background: #fff;
+      color: #15191e;
+      height: 36px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      border-color: #8d97a3;
+      background: #f9faf9;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+      .btn.primary {
+      border-color: #111317;
+      color: #111317;
+      background: #f4f4f3;
+    }
+
+    .btn.icon {
+      width: 36px;
+      padding: 0;
+    }
+
+    .btn.active {
+      background: #101418;
+      border-color: #101418;
+      color: #fff;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      color: #383f47;
+      font-size: 12px;
+      font-weight: 560;
+    }
+
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    select, input[type="number"] {
+      height: 34px;
+      padding: 0 9px;
+      border: 1px solid var(--hair-strong);
+      background: #fff;
+      color: #15191e;
+      border-radius: 0;
+    }
+
+    input[type="range"] {
+      height: 24px;
+    }
+
+    .value-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .stage {
+      position: relative;
+      min-height: 720px;
+      height: min(82vh, 860px);
+      align-self: start;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stage-toolbar {
+      min-height: 48px;
+      border-bottom: 1px solid var(--hair);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 10px;
+      background: rgba(250,250,249,0.92);
+      flex: 0 0 auto;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .draw-palette {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: min(100%, 420px);
+    }
+
+    .tool-btn {
+      min-width: 42px;
+      padding: 0 9px;
+    }
+
+    .tool-btn svg {
+      width: 17px;
+      height: 17px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .tool-btn span {
+      font-size: 12px;
+    }
+
+    .tool-select {
+      height: 36px;
+      width: 64px;
+      padding: 0 7px;
+      border: 1px solid var(--hair-strong);
+      background: #fff;
+      color: #15191e;
+      border-radius: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      flex: 1 1 auto;
+      cursor: crosshair;
+      background: #fff;
+      touch-action: none;
+    }
+
+    .readout {
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(74px, auto));
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .readout-item {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(185,192,201,0.75);
+      padding: 8px 9px;
+      box-shadow: 0 10px 28px rgba(25,31,38,0.08);
+    }
+
+    .readout-item span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+    }
+
+    .readout-item strong {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: baseline;
+      border-bottom: 1px solid #edf0f2;
+      padding-bottom: 7px;
+    }
+
+    .metric:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .metric .name {
+      color: #3d444d;
+      font-size: 12px;
+      min-width: 0;
+    }
+
+    .metric .value {
+      color: #111317;
+      font-family: var(--mono);
+      font-size: 12px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .right-panel .metric .value {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.35;
+    }
+
+    .ledger {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .ledger-step {
+      border: 1px solid var(--hair);
+      background: #fcfcfb;
+      padding: 9px;
+    }
+
+    .ledger-step b {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #303740;
+      margin-bottom: 5px;
+    }
+
+    .ledger-step span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .cert-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf0f2;
+    }
+
+    .cert-row:last-child { border-bottom: 0; }
+
+    .cert-state {
+      width: 9px;
+      height: 9px;
+      border-radius: 20px;
+      background: var(--good);
+    }
+
+    .cert-state.warn { background: var(--warn); }
+    .cert-state.bad { background: var(--bad); }
+
+    .cert-name {
+      font-size: 12px;
+      color: #333942;
+    }
+
+    .cert-value {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #111317;
+      white-space: nowrap;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .ramp {
+      width: 96px;
+      height: 10px;
+      border: 1px solid var(--hair-strong);
+      background: linear-gradient(90deg, #14171b, #f2f2f0, #14171b);
+    }
+
+    .small {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 1fr 1fr;
+      }
+      .stage {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+      .shell > aside.panel:not(.right-panel) {
+        grid-column: 1;
+        grid-row: 3;
+      }
+      .right-panel {
+        grid-column: 2;
+        grid-row: 3;
+      }
+      .stage {
+        min-height: 640px;
+      }
+      canvas {
+        min-height: 596px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        width: calc(100vw - 18px);
+        grid-template-columns: 1fr;
+        margin: 9px auto;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .status-strip {
+        justify-content: flex-start;
+        min-width: 0;
+      }
+      .stage {
+        grid-column: 1;
+        grid-row: 2;
+        min-height: 560px;
+      }
+      .shell > aside.panel:not(.right-panel) {
+        grid-column: 1;
+        grid-row: 3;
+      }
+      .right-panel {
+        grid-column: 1;
+        grid-row: 4;
+      }
+      canvas {
+        min-height: 516px;
+      }
+      .readout {
+        grid-template-columns: repeat(2, minmax(74px, auto));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Q Boundary Quadrature Engine</h1>
+      </div>
+      <div class="status-strip">
+        <span class="pill"><span id="status-dot" class="dot"></span><span id="status-text">certificate ready</span></span>
+        <span class="pill">mode <b id="status-mode">Laplace DtN</b></span>
+        <span class="pill">apply <b id="status-cost">O(n log n)</b></span>
+      </div>
+    </header>
+
+    <aside class="panel">
+      <div class="panel-header">
+        <h2>Boundary</h2>
+        <button id="reset-view" class="btn icon" title="Reset view" aria-label="Reset view">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/></svg>
+        </button>
+      </div>
+      <div class="panel-body">
+        <section class="section">
+          <div class="section-title"><h3>Shape Source</h3></div>
+          <div class="control-grid">
+            <button class="btn preset" data-preset="circle">Circle</button>
+            <button class="btn preset" data-preset="golden">Golden ellipse</button>
+            <button class="btn preset" data-preset="airfoil">Airfoil</button>
+            <button class="btn preset" data-preset="stealth">Stealth spline</button>
+            <button class="btn preset" data-preset="star">Star</button>
+            <button class="btn preset" data-preset="lobe">Lobed</button>
+            <button class="btn preset" data-preset="polygon">Corner polygon</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Tools</h3></div>
+          <div class="control-grid">
+            <button id="smooth-shape" class="btn">Smooth</button>
+            <button id="reverse-shape" class="btn">Reverse</button>
+            <button id="clear-shape" class="btn">Clear</button>
+            <button id="export-cert" class="btn">Export cert</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Sampling</h3><span class="small" id="sample-value">256</span></div>
+          <div class="field">
+            <label for="sample-count">Boundary QJets</label>
+            <input id="sample-count" type="range" min="7" max="10" step="1" value="8">
+          </div>
+          <div class="field">
+            <label for="mode-count">Spectral modes</label>
+            <input id="mode-count" type="range" min="16" max="96" step="8" value="56">
+          </div>
+          <div class="value-row"><span id="mode-value">56 modes</span><span id="node-readout">256 nodes</span></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Boundary Data</h3></div>
+          <div class="field">
+            <label for="boundary-data">Dirichlet trace</label>
+            <select id="boundary-data">
+              <option value="mixed">mixed harmonic packet</option>
+              <option value="dipole">dipole field</option>
+              <option value="corner">corner stress packet</option>
+              <option value="plane">plane wave trace</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phase">phase</label>
+            <input id="phase" type="range" min="0" max="628" value="0">
+          </div>
+          <div class="value-row"><span>phase</span><span id="phase-value">0.00</span></div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="panel stage">
+      <div class="stage-toolbar">
+        <div class="draw-palette" aria-label="Drawing tools">
+          <button id="draw-toggle" class="btn tool-btn primary active" data-draw-tool="pen" title="Pen boundary" aria-label="Pen boundary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 20 4.2-1 10.4-10.4a2.4 2.4 0 0 0-3.4-3.4L4.8 15.6 4 20Z"/><path d="m13.6 6.8 3.6 3.6"/></svg>
+            <span>Pen</span>
+          </button>
+          <button class="btn tool-btn" data-draw-tool="squiggle" title="Smooth squiggle boundary" aria-label="Smooth squiggle boundary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 14c3.1-6.4 5.8 6.1 9 0s5.9-6.1 9 0"/></svg>
+            <span>Squiggle</span>
+          </button>
+          <button class="btn tool-btn" data-draw-tool="circle" title="Circle compass" aria-label="Circle compass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7.2"/><path d="M12 12 17 7"/><path d="M12 3.8v2.4"/></svg>
+            <span>Circle</span>
+          </button>
+          <button class="btn tool-btn" data-draw-tool="parallel" title="Parallel-line strip" aria-label="Parallel-line strip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14"/><path d="M5 16h14"/><path d="M5 8v8"/><path d="M19 8v8"/></svg>
+            <span>Parallel</span>
+          </button>
+          <button class="btn tool-btn" data-draw-tool="polygon" title="Regular polygon" aria-label="Regular polygon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 8 5.8-3.1 9.4H7.1L4 8.8 12 3Z"/></svg>
+            <span>Polygon</span>
+          </button>
+          <select id="polygon-sides" class="tool-select" title="Polygon sides" aria-label="Polygon sides">
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" selected>6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <button class="btn tool-btn" data-draw-tool="arc" title="Arc lens" aria-label="Arc lens">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15c4-8 12-8 16 0"/><path d="M4 15c4 3.8 12 3.8 16 0"/></svg>
+            <span>Arc</span>
+          </button>
+          <button class="btn tool-btn" data-draw-tool="edit" title="Edit existing boundary" aria-label="Edit existing boundary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16"/><path d="M12 4v16"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="tool-group">
+          <button id="show-field" class="btn active">Field</button>
+          <button id="show-reconstruction" class="btn active">Recon</button>
+          <button id="show-flux" class="btn">Flux</button>
+          <button id="show-nodes" class="btn active">Nodes</button>
+        </div>
+        <div class="legend"><span>-</span><span class="ramp"></span><span>+</span></div>
+      </div>
+      <canvas id="stage" width="1200" height="820"></canvas>
+      <div class="readout">
+        <div class="readout-item"><span>Boundary</span><strong id="r-boundary">0</strong></div>
+        <div class="readout-item"><span>Area</span><strong id="r-area">0</strong></div>
+        <div class="readout-item"><span>Residual</span><strong id="r-residual">0</strong></div>
+        <div class="readout-item"><span>Tail</span><strong id="r-tail">0</strong></div>
+      </div>
+    </section>
+
+    <aside class="panel right-panel">
+      <div class="panel-header"><h2>Operator</h2></div>
+      <div class="panel-body">
+        <section class="section">
+          <div class="section-title"><h3>PDE Family</h3></div>
+          <div class="field">
+            <label for="pde-select">Boundary solve</label>
+            <select id="pde-select">
+              <option value="laplace">Laplace DtN</option>
+              <option value="heat">Heat semigroup</option>
+              <option value="poisson">Poisson/Steklov solve</option>
+              <option value="helmholtz">Helmholtz resolvent</option>
+              <option value="wave">Wave propagator</option>
+            </select>
+          </div>
+          <div class="control-grid">
+            <button id="solve-boundary" class="btn primary">Solve</button>
+          </div>
+          <div class="control-grid">
+            <div class="field">
+              <label for="time-param">time</label>
+              <input id="time-param" type="number" min="0" max="10" step="0.05" value="0.35">
+            </div>
+            <div class="field">
+              <label for="mass-param">mass</label>
+              <input id="mass-param" type="number" min="0.001" max="10" step="0.05" value="0.45">
+            </div>
+          </div>
+          <div class="control-grid">
+            <div class="field">
+              <label for="wave-param">wavenumber</label>
+              <input id="wave-param" type="number" min="0" max="20" step="0.1" value="4.2">
+            </div>
+            <div class="field">
+              <label for="damping-param">damping</label>
+              <input id="damping-param" type="number" min="0.0001" max="1" step="0.001" value="0.02">
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Live Metrics</h3></div>
+          <div id="metrics" class="metric-list"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Q Spectrum</h3></div>
+          <div id="q-spectrum" class="metric-list"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Reference Audits</h3></div>
+          <div id="audits" class="metric-list"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Exact Backend</h3></div>
+          <div id="exact-reference" class="metric-list"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Production Q</h3></div>
+          <div id="production-q" class="metric-list"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Certificates</h3></div>
+          <div id="certificates"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h3>Borrow-Compute-Repay</h3></div>
+          <div class="ledger">
+            <div class="ledger-step"><b>Borrow</b><span id="ledger-borrow">boundary QJets, arclength samples, circle mode generator</span></div>
+            <div class="ledger-step"><b>Compute</b><span id="ledger-compute">FFT-style modal PDE action; dense Q is not stored</span></div>
+            <div class="ledger-step"><b>Repay</b><span id="ledger-repay">speed correction, null mode, tail bound, invariance checks</span></div>
+          </div>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const TAU = Math.PI * 2;
+    const canvas = document.getElementById("stage");
+    const ctx = canvas.getContext("2d", { alpha: false });
+    const els = {
+      sample: document.getElementById("sample-count"),
+      mode: document.getElementById("mode-count"),
+      sampleValue: document.getElementById("sample-value"),
+      modeValue: document.getElementById("mode-value"),
+      nodeReadout: document.getElementById("node-readout"),
+      pde: document.getElementById("pde-select"),
+      data: document.getElementById("boundary-data"),
+      polygonSides: document.getElementById("polygon-sides"),
+      phase: document.getElementById("phase"),
+      phaseValue: document.getElementById("phase-value"),
+      time: document.getElementById("time-param"),
+      mass: document.getElementById("mass-param"),
+      wave: document.getElementById("wave-param"),
+      damping: document.getElementById("damping-param"),
+      metrics: document.getElementById("metrics"),
+      spectrum: document.getElementById("q-spectrum"),
+      audits: document.getElementById("audits"),
+      reference: document.getElementById("exact-reference"),
+      production: document.getElementById("production-q"),
+      certs: document.getElementById("certificates"),
+      statusMode: document.getElementById("status-mode"),
+      statusCost: document.getElementById("status-cost"),
+      statusText: document.getElementById("status-text"),
+      statusDot: document.getElementById("status-dot"),
+      rBoundary: document.getElementById("r-boundary"),
+      rArea: document.getElementById("r-area"),
+      rResidual: document.getElementById("r-residual"),
+      rTail: document.getElementById("r-tail"),
+      ledgerBorrow: document.getElementById("ledger-borrow"),
+      ledgerCompute: document.getElementById("ledger-compute"),
+      ledgerRepay: document.getElementById("ledger-repay")
+    };
+
+    const state = {
+      points: [],
+      rawDraw: [],
+      drawing: false,
+      drawMode: true,
+      drawTool: "pen",
+      toolGesture: null,
+      boundaryStyle: "blank",
+      drawnCornerCount: 0,
+      solveRequested: false,
+      drawRepairStatus: "blank",
+      showField: true,
+      showReconstruction: true,
+      showFlux: false,
+      showNodes: true,
+      preset: "blank",
+      customized: false,
+      dragIndex: -1,
+      dragStart: null,
+      dragOriginal: [],
+      interacting: false,
+      liveBoundary: null,
+      liveBoundaryN: 0,
+      backend: { status: "idle", rows: [["backend", "idle"], ["reason", "no boundary"], ["dense matrix", "not stored"], ["pair table", "not stored"]] },
+      reference: { status: "pending", rows: [["exact backend", "checking"]] },
+      production: null,
+      backendTimer: 0,
+      backendSeq: 0,
+      pendingProductionKey: "",
+      framePending: false,
+      solution: null,
+      viewport: { scale: 1, x: 0, y: 0 }
+    };
+
+    function fmt(value, digits = 3) {
+      if (!Number.isFinite(value)) return "nan";
+      const av = Math.abs(value);
+      if (av > 0 && (av < 1e-3 || av >= 1e4)) return value.toExponential(2);
+      return value.toFixed(digits);
+    }
+
+    function clamp(value, lo, hi) {
+      return Math.max(lo, Math.min(hi, value));
+    }
+
+    function complex(re = 0, im = 0) { return { re, im }; }
+    function cAdd(a, b) { return { re: a.re + b.re, im: a.im + b.im }; }
+    function cSub(a, b) { return { re: a.re - b.re, im: a.im - b.im }; }
+    function cMul(a, b) { return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re }; }
+    function cScale(a, s) { return { re: a.re * s, im: a.im * s }; }
+    function cAbs(a) { return Math.hypot(a.re, a.im); }
+    function cDiv(a, b) {
+      const d = b.re * b.re + b.im * b.im || 1e-30;
+      return { re: (a.re * b.re + a.im * b.im) / d, im: (a.im * b.re - a.re * b.im) / d };
+    }
+    function cFmt(a, digits = 4) {
+      if (Math.abs(a.im) < 5e-15) return fmt(a.re, digits);
+      const sign = a.im >= 0 ? "+" : "-";
+      return `${fmt(a.re, digits)}${sign}${fmt(Math.abs(a.im), digits)}i`;
+    }
+    function isPowerOfTwo(n) {
+      return n > 0 && (n & (n - 1)) === 0;
+    }
+    function fft(values) {
+      const n = values.length;
+      if (!isPowerOfTwo(n)) throw new Error("QJet FFT length must be a power of two");
+      const data = values.map(v => ({ re: v.re, im: v.im }));
+      let j = 0;
+      for (let i = 1; i < n; i++) {
+        let bit = n >> 1;
+        while (j & bit) {
+          j ^= bit;
+          bit >>= 1;
+        }
+        j ^= bit;
+        if (i < j) {
+          const tmp = data[i];
+          data[i] = data[j];
+          data[j] = tmp;
+        }
+      }
+      for (let size = 2; size <= n; size <<= 1) {
+        const half = size >> 1;
+        for (let start = 0; start < n; start += size) {
+          for (let offset = 0; offset < half; offset++) {
+            const angle = -TAU * offset / size;
+            const twiddle = { re: Math.cos(angle), im: Math.sin(angle) };
+            const even = data[start + offset];
+            const odd = cMul(twiddle, data[start + offset + half]);
+            data[start + offset] = cAdd(even, odd);
+            data[start + offset + half] = cSub(even, odd);
+          }
+        }
+      }
+      return data;
+    }
+    function ifft(values) {
+      const n = values.length;
+      const transformed = fft(values.map(v => complex(v.re, -v.im)));
+      return transformed.map(v => complex(v.re / n, -v.im / n));
+    }
+    function fftBundle(values) {
+      const n = values.length;
+      const raw = fft(values);
+      const coeffs = [];
+      const half = Math.floor(n / 2);
+      for (let k = -half + 1; k <= half; k++) {
+        const idx = (k + n) % n;
+        coeffs.push({ k, c: cScale(raw[idx], 1 / n) });
+      }
+      return { raw, coeffs };
+    }
+    function complexL2Relative(values, reference) {
+      let num = 0, den = 0;
+      for (let i = 0; i < values.length; i++) {
+        const diffAbs = cAbs(cSub(values[i], reference[i]));
+        const refAbs = cAbs(reference[i]);
+        num += diffAbs * diffAbs;
+        den += refAbs * refAbs;
+      }
+      return Math.sqrt(num) / Math.max(1e-30, Math.sqrt(den));
+    }
+    function coeffTailRelative(coeffs, maxMode) {
+      let num = 0, den = 0;
+      for (const item of coeffs) {
+        const absCoeff = cAbs(item.c);
+        const e = absCoeff * absCoeff;
+        den += e;
+        if (Math.abs(item.k) > maxMode) num += e;
+      }
+      return Math.sqrt(num) / Math.max(1e-30, Math.sqrt(den));
+    }
+    function synthesizeComplex(coeffs, theta) {
+      let out = complex(0, 0);
+      for (const item of coeffs) {
+        const angle = item.k * theta;
+        out = cAdd(out, cMul(item.c, complex(Math.cos(angle), Math.sin(angle))));
+      }
+      return out;
+    }
+
+    function synthesizeComplexDerivative(coeffs, theta) {
+      let out = complex(0, 0);
+      for (const item of coeffs) {
+        if (item.k === 0) continue;
+        const angle = item.k * theta;
+        const basis = complex(Math.cos(angle), Math.sin(angle));
+        const ikc = complex(-item.k * item.c.im, item.k * item.c.re);
+        out = cAdd(out, cMul(ikc, basis));
+      }
+      return out;
+    }
+
+    const CORNER_POLYGON_VERTICES = [
+      [-0.85, -0.62], [0.0, -0.84], [0.82, -0.58], [0.62, 0.02],
+      [0.9, 0.62], [0.12, 0.42], [-0.64, 0.72], [-0.46, 0.08]
+    ].map(([x, y]) => ({ x, y }));
+
+    function edgeUniformPolygon(points, target) {
+      if (points.length < 3) return densify(points, target, true);
+      const lengths = points.map((p, i) => {
+        const q = points[(i + 1) % points.length];
+        return Math.hypot(q.x - p.x, q.y - p.y);
+      });
+      const total = lengths.reduce((a, b) => a + b, 0) || 1;
+      const minPerEdge = target >= points.length * 2 ? 2 : 1;
+      const counts = lengths.map(length => Math.max(minPerEdge, Math.floor(target * length / total)));
+      let used = counts.reduce((a, b) => a + b, 0);
+      const fractions = lengths.map((length, i) => ({ i, frac: target * length / total - Math.floor(target * length / total) }))
+        .sort((a, b) => b.frac - a.frac);
+      let cursor = 0;
+      while (used < target) {
+        counts[fractions[cursor % fractions.length].i] += 1;
+        used += 1;
+        cursor += 1;
+      }
+      cursor = fractions.length - 1;
+      while (used > target) {
+        const index = fractions[cursor % fractions.length].i;
+        if (counts[index] > 1) {
+          counts[index] -= 1;
+          used -= 1;
+        }
+        cursor = (cursor - 1 + fractions.length) % fractions.length;
+      }
+      const out = [];
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i];
+        const b = points[(i + 1) % points.length];
+        for (let j = 0; j < counts[i]; j++) {
+          const u = j / counts[i];
+          out.push({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u });
+        }
+      }
+      return normalizeShape(out);
+    }
+
+    function edgeUniformPolygonPreserveFrame(points, target) {
+      if (points.length < 3) return [];
+      const frame = shapeFrame(points);
+      return restoreShape(edgeUniformPolygon(normalizeWithFrame(points, frame), target), frame);
+    }
+
+    function ensureCcw(points) {
+      if (points.length >= 3 && polygonArea(points) < 0) return points.slice().reverse();
+      return points;
+    }
+
+    function makeCircleBoundary(center, edge, target = 240) {
+      const r = Math.hypot(edge.x - center.x, edge.y - center.y);
+      if (r < 0.025) return [];
+      const out = [];
+      for (let i = 0; i < target; i++) {
+        const t = TAU * i / target;
+        out.push({ x: center.x + r * Math.cos(t), y: center.y + r * Math.sin(t) });
+      }
+      return out;
+    }
+
+    function makeRegularPolygonVertices(center, edge, sides) {
+      const r = Math.hypot(edge.x - center.x, edge.y - center.y);
+      if (r < 0.025) return [];
+      const count = clamp(Math.round(sides || 6), 3, 12);
+      const a0 = Math.atan2(edge.y - center.y, edge.x - center.x);
+      const out = [];
+      for (let i = 0; i < count; i++) {
+        const t = a0 + TAU * i / count;
+        out.push({ x: center.x + r * Math.cos(t), y: center.y + r * Math.sin(t) });
+      }
+      return ensureCcw(out);
+    }
+
+    function makeParallelStripBoundary(start, end, target = 220) {
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const len = Math.hypot(dx, dy);
+      if (len < 0.04) return [];
+      const ux = dx / len, uy = dy / len;
+      const nx = -uy, ny = ux;
+      const radius = clamp(len * 0.09, 0.035, 0.18);
+      const lineCount = Math.max(12, Math.floor(target * 0.28));
+      const capCount = Math.max(12, Math.floor(target * 0.22));
+      const out = [];
+      for (let i = 0; i <= lineCount; i++) {
+        const s = i / lineCount;
+        out.push({ x: start.x + dx * s + nx * radius, y: start.y + dy * s + ny * radius });
+      }
+      for (let i = 1; i <= capCount; i++) {
+        const phi = Math.PI / 2 - Math.PI * i / capCount;
+        out.push({ x: end.x + nx * radius * Math.sin(phi) + ux * radius * Math.cos(phi), y: end.y + ny * radius * Math.sin(phi) + uy * radius * Math.cos(phi) });
+      }
+      for (let i = 0; i <= lineCount; i++) {
+        const s = 1 - i / lineCount;
+        out.push({ x: start.x + dx * s - nx * radius, y: start.y + dy * s - ny * radius });
+      }
+      for (let i = 1; i <= capCount; i++) {
+        const phi = -Math.PI / 2 + Math.PI * i / capCount;
+        out.push({ x: start.x + nx * radius * Math.sin(phi) - ux * radius * Math.cos(phi), y: start.y + ny * radius * Math.sin(phi) - uy * radius * Math.cos(phi) });
+      }
+      return ensureCcw(out);
+    }
+
+    function makeArcLensBoundary(start, end, target = 240) {
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const len = Math.hypot(dx, dy);
+      if (len < 0.04) return [];
+      const ux = dx / len, uy = dy / len;
+      const nx = -uy, ny = ux;
+      const mid = { x: 0.5 * (start.x + end.x), y: 0.5 * (start.y + end.y) };
+      const upperSag = clamp(len * 0.36, 0.06, 0.55);
+      const lowerSag = upperSag * 0.28;
+      const upperCount = Math.max(24, Math.floor(target * 0.58));
+      const lowerCount = Math.max(18, Math.floor(target * 0.42));
+      const map = (x, y) => ({ x: mid.x + ux * x + nx * y, y: mid.y + uy * x + ny * y });
+      const out = [];
+      for (let i = 0; i <= upperCount; i++) {
+        const s = i / upperCount;
+        const x = -0.5 * len + len * s;
+        const y = upperSag * Math.sin(Math.PI * s);
+        out.push(map(x, y));
+      }
+      for (let i = 1; i <= lowerCount; i++) {
+        const s = 1 - i / lowerCount;
+        const x = -0.5 * len + len * s;
+        const y = -lowerSag * Math.sin(Math.PI * s);
+        out.push(map(x, y));
+      }
+      return ensureCcw(out);
+    }
+
+    function constructedBoundaryFromGesture(gesture, target = 240) {
+      if (!gesture || !gesture.start || !gesture.current) return [];
+      const tool = gesture.tool;
+      if (tool === "circle") return makeCircleBoundary(gesture.start, gesture.current, target);
+      if (tool === "parallel") return makeParallelStripBoundary(gesture.start, gesture.current, target);
+      if (tool === "polygon") return makeRegularPolygonVertices(gesture.start, gesture.current, Number(els.polygonSides.value));
+      if (tool === "arc") return makeArcLensBoundary(gesture.start, gesture.current, target);
+      return [];
+    }
+
+    function makePreset(name, count = 260) {
+      const pts = [];
+      if (name === "polygon") {
+        return edgeUniformPolygon(CORNER_POLYGON_VERTICES, count);
+      }
+      if (name === "stealth") {
+        const base = [
+          [-0.96, 0], [-0.5, -0.18], [0.08, -0.70], [0.22, -0.26],
+          [0.92, -0.06], [0.18, 0.0], [0.92, 0.06], [0.22, 0.26],
+          [0.08, 0.70], [-0.5, 0.18]
+        ];
+        return smoothClosedCurve(base.map(([x, y]) => ({ x, y })), count);
+      }
+      for (let i = 0; i < count; i++) {
+        const t = TAU * i / count;
+        let r = 1, x = Math.cos(t), y = Math.sin(t);
+        if (name === "circle") {
+          x = Math.cos(t);
+          y = Math.sin(t);
+        } else if (name === "golden") {
+          x = Math.cos(t);
+          y = (Math.sqrt(5) / 3) * Math.sin(t);
+        } else if (name === "ellipse") {
+          x = 1.04 * Math.cos(t);
+          y = 0.62 * Math.sin(t);
+        } else if (name === "airfoil") {
+          const c = Math.cos(t);
+          const s = Math.sin(t);
+          const thickness = 0.17 * Math.sin(t) * (1 - 0.18 * c);
+          x = 1.08 * c + 0.16 * Math.cos(2 * t) - 0.05;
+          y = 0.62 * thickness + 0.09 * s * (1 + c);
+        } else if (name === "star") {
+          r = 0.78 + 0.18 * Math.cos(5 * t) + 0.055 * Math.cos(9 * t);
+          x = r * Math.cos(t);
+          y = r * Math.sin(t);
+        } else if (name === "lobe") {
+          r = 0.82 + 0.16 * Math.cos(3 * t + 0.4) - 0.08 * Math.sin(7 * t);
+          x = r * Math.cos(t) + 0.08 * Math.cos(2 * t);
+          y = 0.92 * r * Math.sin(t);
+        }
+        pts.push({ x, y });
+      }
+      return normalizeShape(pts);
+    }
+
+    function catmullRom(p0, p1, p2, p3, t) {
+      const t2 = t * t;
+      const t3 = t2 * t;
+      return {
+        x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+        y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
+      };
+    }
+
+    function smoothClosedCurve(points, target) {
+      if (points.length < 4) return densify(points, target, true);
+      const samples = [];
+      const perSegment = Math.max(6, Math.ceil(target / points.length));
+      for (let i = 0; i < points.length; i++) {
+        const p0 = points[(i - 1 + points.length) % points.length];
+        const p1 = points[i];
+        const p2 = points[(i + 1) % points.length];
+        const p3 = points[(i + 2) % points.length];
+        for (let j = 0; j < perSegment; j++) {
+          samples.push(catmullRom(p0, p1, p2, p3, j / perSegment));
+        }
+      }
+      return densify(samples, target, true);
+    }
+
+    function densify(points, target, closed) {
+      if (points.length < 2) return points.slice();
+      const src = closed ? points.concat([points[0]]) : points.slice();
+      const lengths = [0];
+      let total = 0;
+      for (let i = 1; i < src.length; i++) {
+        total += Math.hypot(src[i].x - src[i - 1].x, src[i].y - src[i - 1].y);
+        lengths.push(total);
+      }
+      const out = [];
+      for (let k = 0; k < target; k++) {
+        const s = total * k / target;
+        let i = 1;
+        while (i < lengths.length - 1 && lengths[i] < s) i++;
+        const a = src[i - 1], b = src[i];
+        const u = (s - lengths[i - 1]) / Math.max(1e-12, lengths[i] - lengths[i - 1]);
+        out.push({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u });
+      }
+      return normalizeShape(out);
+    }
+
+    function normalizeShape(points) {
+      if (!points.length) return [];
+      const c = centroid(points);
+      let scale = 0;
+      for (const p of points) scale = Math.max(scale, Math.hypot(p.x - c.x, p.y - c.y));
+      scale = scale || 1;
+      return points.map(p => ({ x: (p.x - c.x) / scale, y: (p.y - c.y) / scale }));
+    }
+
+    function shapeFrame(points) {
+      const c = centroid(points);
+      let scale = 0;
+      for (const p of points) scale = Math.max(scale, Math.hypot(p.x - c.x, p.y - c.y));
+      return { center: c, scale: scale || 1 };
+    }
+
+    function normalizeWithFrame(points, frame) {
+      const scale = frame.scale || 1;
+      return points.map(p => ({ x: (p.x - frame.center.x) / scale, y: (p.y - frame.center.y) / scale }));
+    }
+
+    function restoreShape(points, frame) {
+      const scale = frame.scale || 1;
+      return points.map(p => ({ x: frame.center.x + p.x * scale, y: frame.center.y + p.y * scale }));
+    }
+
+    function smoothClosedCurvePreserveFrame(points, target) {
+      if (points.length < 3) return [];
+      const frame = shapeFrame(points);
+      return restoreShape(smoothClosedCurve(normalizeWithFrame(points, frame), target), frame);
+    }
+
+    function smoothPoints(points, passes = 2) {
+      let out = points.map(p => ({ x: p.x, y: p.y }));
+      for (let pass = 0; pass < passes; pass++) {
+        out = out.map((p, i) => {
+          const a = out[(i - 1 + out.length) % out.length];
+          const b = out[(i + 1) % out.length];
+          return { x: 0.25 * a.x + 0.5 * p.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * p.y + 0.25 * b.y };
+        });
+      }
+      return normalizeShape(out);
+    }
+
+    function centroid(points) {
+      let x = 0, y = 0;
+      for (const p of points) { x += p.x; y += p.y; }
+      return { x: x / Math.max(1, points.length), y: y / Math.max(1, points.length) };
+    }
+
+    function polygonArea(points) {
+      let area = 0;
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i], b = points[(i + 1) % points.length];
+        area += a.x * b.y - b.x * a.y;
+      }
+      return 0.5 * area;
+    }
+
+    function perimeter(points) {
+      let total = 0;
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i], b = points[(i + 1) % points.length];
+        total += Math.hypot(a.x - b.x, a.y - b.y);
+      }
+      return total;
+    }
+
+    function pointInside(point, poly) {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const a = poly[i], b = poly[j];
+        const hit = ((a.y > point.y) !== (b.y > point.y)) &&
+          (point.x < (b.x - a.x) * (point.y - a.y) / ((b.y - a.y) || 1e-30) + a.x);
+        if (hit) inside = !inside;
+      }
+      return inside;
+    }
+
+    function cross2(a, b, c) {
+      return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+
+    function onSegment(a, b, p, eps) {
+      return Math.abs(cross2(a, b, p)) <= eps &&
+        p.x >= Math.min(a.x, b.x) - eps && p.x <= Math.max(a.x, b.x) + eps &&
+        p.y >= Math.min(a.y, b.y) - eps && p.y <= Math.max(a.y, b.y) + eps;
+    }
+
+    function segmentsIntersect(a, b, c, d, eps = 1e-10) {
+      const o1 = cross2(a, b, c);
+      const o2 = cross2(a, b, d);
+      const o3 = cross2(c, d, a);
+      const o4 = cross2(c, d, b);
+      if (o1 * o2 < -eps && o3 * o4 < -eps) return true;
+      if (Math.abs(o1) <= eps && onSegment(a, b, c, eps)) return true;
+      if (Math.abs(o2) <= eps && onSegment(a, b, d, eps)) return true;
+      if (Math.abs(o3) <= eps && onSegment(c, d, a, eps)) return true;
+      if (Math.abs(o4) <= eps && onSegment(c, d, b, eps)) return true;
+      return false;
+    }
+
+    function minimumTurnDegrees(points) {
+      let minAngle = 180;
+      for (let i = 0; i < points.length; i++) {
+        const a = points[(i - 1 + points.length) % points.length];
+        const b = points[i];
+        const c = points[(i + 1) % points.length];
+        const ux = a.x - b.x, uy = a.y - b.y;
+        const vx = c.x - b.x, vy = c.y - b.y;
+        const nu = Math.hypot(ux, uy);
+        const nv = Math.hypot(vx, vy);
+        if (nu < 1e-12 || nv < 1e-12) continue;
+        const angle = Math.acos(clamp((ux * vx + uy * vy) / (nu * nv), -1, 1)) * 180 / Math.PI;
+        minAngle = Math.min(minAngle, angle);
+      }
+      return minAngle;
+    }
+
+    function topologyDiagnostics(points, signedArea) {
+      if (!points || points.length < 3) {
+        return { simple: false, intersections: 0, checked_edges: 0, orientation: "degenerate", min_turn_deg: 0 };
+      }
+      const maxEdges = 256;
+      const stride = Math.max(1, Math.ceil(points.length / maxEdges));
+      const sample = [];
+      for (let i = 0; i < points.length; i += stride) sample.push(points[i]);
+      const m = sample.length;
+      let intersections = 0;
+      for (let i = 0; i < m; i++) {
+        const a = sample[i], b = sample[(i + 1) % m];
+        for (let j = i + 1; j < m; j++) {
+          if (Math.abs(i - j) <= 1) continue;
+          if (i === 0 && j === m - 1) continue;
+          const c = sample[j], d = sample[(j + 1) % m];
+          if (segmentsIntersect(a, b, c, d)) intersections += 1;
+          if (intersections > 32) break;
+        }
+        if (intersections > 32) break;
+      }
+      const area = Number.isFinite(signedArea) ? signedArea : polygonArea(points);
+      return {
+        simple: intersections === 0 && Math.abs(area) > 1e-10,
+        intersections,
+        checked_edges: m,
+        orientation: area >= 0 ? "ccw" : "cw",
+        min_turn_deg: minimumTurnDegrees(sample)
+      };
+    }
+
+    function interpolatedRadius(radii, theta) {
+      const bins = radii.length;
+      const wrapped = ((theta % TAU) + TAU) % TAU;
+      const scaled = wrapped / TAU * bins;
+      const i = Math.floor(scaled) % bins;
+      const u = scaled - Math.floor(scaled);
+      const a = radii[i] || 0;
+      const b = radii[(i + 1) % bins] || a;
+      return a + (b - a) * u;
+    }
+
+    function filledEnvelopeRadii(radii) {
+      const bins = radii.length;
+      const occupied = radii.filter(value => value > 0).sort((a, b) => a - b);
+      const median = occupied[Math.floor(occupied.length / 2)] || 0.65;
+      const floor = Math.max(0.06, median * 0.16);
+      if (!occupied.length) return radii.map(() => median);
+      const out = radii.slice();
+      for (let i = 0; i < bins; i++) {
+        if (out[i] > 0) continue;
+        let prev = -1, next = -1;
+        for (let d = 1; d <= bins; d++) {
+          const j = (i - d + bins) % bins;
+          if (radii[j] > 0) { prev = j; break; }
+        }
+        for (let d = 1; d <= bins; d++) {
+          const j = (i + d) % bins;
+          if (radii[j] > 0) { next = j; break; }
+        }
+        if (prev >= 0 && next >= 0) {
+          const dPrev = (i - prev + bins) % bins;
+          const dNext = (next - i + bins) % bins;
+          out[i] = (radii[prev] * dNext + radii[next] * dPrev) / Math.max(1, dPrev + dNext);
+        } else {
+          out[i] = prev >= 0 ? radii[prev] : radii[next];
+        }
+      }
+      for (let i = 0; i < bins; i++) out[i] = Math.max(floor, out[i]);
+      return out;
+    }
+
+    function radialEnvelopeBoundary(points, target) {
+      const normalized = normalizeShape(points);
+      const c = centroid(normalized);
+      const bins = Math.max(96, Math.min(360, target));
+      let radii = new Array(bins).fill(0);
+      for (const p of normalized) {
+        const dx = p.x - c.x;
+        const dy = p.y - c.y;
+        const radius = Math.hypot(dx, dy);
+        if (radius < 1e-6) continue;
+        const idx = Math.floor(((Math.atan2(dy, dx) + TAU) % TAU) / TAU * bins) % bins;
+        radii[idx] = Math.max(radii[idx], radius);
+      }
+      radii = filledEnvelopeRadii(radii);
+      for (let pass = 0; pass < 5; pass++) {
+        const copy = radii.slice();
+        for (let i = 0; i < bins; i++) {
+          radii[i] = 0.18 * copy[(i - 1 + bins) % bins] + 0.64 * copy[i] + 0.18 * copy[(i + 1) % bins];
+        }
+      }
+      const out = [];
+      for (let i = 0; i < target; i++) {
+        const theta = TAU * i / target;
+        const radius = interpolatedRadius(radii, theta);
+        out.push({ x: c.x + radius * Math.cos(theta), y: c.y + radius * Math.sin(theta) });
+      }
+      return normalizeShape(out);
+    }
+
+    function ellipseFallbackBoundary(points, target) {
+      const normalized = normalizeShape(points);
+      const c = centroid(normalized);
+      let xx = 0, xy = 0, yy = 0;
+      for (const p of normalized) {
+        const dx = p.x - c.x;
+        const dy = p.y - c.y;
+        xx += dx * dx;
+        xy += dx * dy;
+        yy += dy * dy;
+      }
+      const angle = 0.5 * Math.atan2(2 * xy, Math.max(1e-12, xx - yy));
+      const ca = Math.cos(angle), sa = Math.sin(angle);
+      let rx = 0.2, ry = 0.2;
+      for (const p of normalized) {
+        const dx = p.x - c.x;
+        const dy = p.y - c.y;
+        rx = Math.max(rx, Math.abs(ca * dx + sa * dy));
+        ry = Math.max(ry, Math.abs(-sa * dx + ca * dy));
+      }
+      const out = [];
+      for (let i = 0; i < target; i++) {
+        const theta = TAU * i / target;
+        const x = rx * Math.cos(theta);
+        const y = ry * Math.sin(theta);
+        out.push({ x: c.x + ca * x - sa * y, y: c.y + sa * x + ca * y });
+      }
+      return normalizeShape(out);
+    }
+
+    function closeDrawnBoundary(rawPoints, target, label = "pen") {
+      const frame = shapeFrame(rawPoints);
+      const normalized = normalizeWithFrame(rawPoints, frame);
+      const closed = smoothClosedCurve(normalized, target);
+      let topo = topologyDiagnostics(closed, polygonArea(closed));
+      if (topo.simple) {
+        state.drawRepairStatus = label === "squiggle" ? "auto-closed squiggle curve" : "auto-closed pen curve";
+        return restoreShape(closed, frame);
+      }
+      const repaired = radialEnvelopeBoundary(normalized, target);
+      topo = topologyDiagnostics(repaired, polygonArea(repaired));
+      if (topo.simple) {
+        state.drawRepairStatus = "self-intersection repaired";
+        return restoreShape(repaired, frame);
+      }
+      state.drawRepairStatus = "self-intersection repaired by ellipse fallback";
+      return restoreShape(ellipseFallbackBoundary(normalized, target), frame);
+    }
+
+    function resampleBoundary(points, n) {
+      if (state.liveBoundary && state.liveBoundaryN === n) return state.liveBoundary.map(p => ({ x: p.x, y: p.y }));
+      if (!state.customized && state.preset === "polygon") return makePreset("polygon", n);
+      if (!state.customized && (state.preset === "circle" || state.preset === "golden" || state.preset === "ellipse" || state.preset === "airfoil" || state.preset === "star" || state.preset === "lobe")) {
+        return makePreset(state.preset, n);
+      }
+      if (points.length < 3) return [];
+      if (state.customized && state.boundaryStyle === "polygon") return edgeUniformPolygonPreserveFrame(points, n);
+      return smoothClosedCurvePreserveFrame(points, n);
+    }
+
+    function boundaryTrace(theta, mode) {
+      const ph = Number(els.phase.value) / 100;
+      if (mode === "dipole") return Math.cos(theta - ph) + 0.28 * Math.cos(2 * theta + 0.4);
+      if (mode === "corner") return Math.sign(Math.cos(3 * theta + ph)) * 0.45 + 0.35 * Math.cos(7 * theta);
+      if (mode === "plane") return Math.cos(4.2 * Math.cos(theta - ph));
+      return 0.62 * Math.cos(2 * theta + ph) + 0.34 * Math.sin(5 * theta - 0.3) + 0.18 * Math.cos(9 * theta);
+    }
+
+    function computeDFT(values) {
+      return fftBundle(values.map(value => complex(value, 0))).coeffs;
+    }
+
+    function synthesize(coeffs, theta, radius, transform) {
+      let out = { re: 0, im: 0 };
+      for (const item of coeffs) {
+        const k = item.k;
+        const m = Math.abs(k);
+        let amp = item.c;
+        if (transform) amp = transform(item.c, k);
+        const radial = m === 0 ? 1 : Math.pow(clamp(radius, 0, 1), m);
+        const a = k * theta;
+        const basis = { re: Math.cos(a) * radial, im: Math.sin(a) * radial };
+        out = cAdd(out, cMul(amp, basis));
+      }
+      return out.re;
+    }
+
+    function productionFieldSource(sol) {
+      const prod = state.production;
+      if (!prod || state.interacting) return null;
+      if (prod.uiProblem !== sol.problem || prod.problem !== canonicalProblemName(sol.problem)) return null;
+      if (!prod.output || prod.output.length < 8 || !isPowerOfTwo(prod.output.length)) return null;
+      if (!prod.fieldCoeffs) prod.fieldCoeffs = fftBundle(prod.output).coeffs;
+      return prod;
+    }
+
+    function synthesizeProductionField(prod, theta, radius) {
+      let out = complex(0, 0);
+      for (const item of prod.fieldCoeffs) {
+        const m = Math.abs(item.k);
+        const radial = m === 0 ? 1 : Math.pow(clamp(radius, 0, 1), m);
+        const a = item.k * theta;
+        out = cAdd(out, cMul(item.c, complex(Math.cos(a) * radial, Math.sin(a) * radial)));
+      }
+      return out;
+    }
+
+    function pdeTransform(problem) {
+      const t = Number(els.time.value);
+      const mass = Number(els.mass.value);
+      const wave = Number(els.wave.value);
+      const damping = Number(els.damping.value);
+      if (problem === "heat") return (c, k) => cScale(c, Math.exp(-t * Math.abs(k)));
+      if (problem === "poisson") return (c, k) => cScale(c, 1 / (Math.abs(k) + mass));
+      if (problem === "helmholtz") return (c, k) => cDiv(c, { re: Math.abs(k) * Math.abs(k) - wave * wave, im: damping });
+      if (problem === "wave") return (c, k) => cScale(c, Math.cos(t * Math.sqrt(Math.abs(k))));
+      return (c) => c;
+    }
+
+    function pdeEigenvalue(problem, mu) {
+      const t = Number(els.time.value);
+      const mass = Number(els.mass.value);
+      const wave = Number(els.wave.value);
+      const damping = Number(els.damping.value);
+      if (problem === "heat") return complex(Math.exp(-t * mu), 0);
+      if (problem === "poisson") return complex(1 / (mu + mass), 0);
+      if (problem === "helmholtz") return cDiv(complex(1, 0), complex(mu * mu - wave * wave, damping));
+      if (problem === "wave") return complex(Math.cos(t * Math.sqrt(mu)), 0);
+      return complex(mu, 0);
+    }
+
+    function boundaryPdeOutput(sol, index) {
+      if (sol.problem === "laplace") return complex(sol.flux[index], 0);
+      const theta = TAU * index / sol.n;
+      let out = complex(0, 0);
+      for (const item of sol.coeffs) {
+        const amp = sol.transform(item.c, item.k);
+        const a = item.k * theta;
+        out = cAdd(out, cMul(amp, complex(Math.cos(a), Math.sin(a))));
+      }
+      return out;
+    }
+
+    function complexJson(value) {
+      return [Number(value.re), Number(value.im)];
+    }
+
+    function complexFromJson(value) {
+      if (Array.isArray(value)) return complex(Number(value[0] || 0), Number(value[1] || 0));
+      if (value && typeof value === "object") return complex(Number(value.re || 0), Number(value.im || 0));
+      return complex(Number(value || 0), 0);
+    }
+
+    function canonicalProblemName(problem) {
+      return problem === "laplace" ? "laplace_dtn" : problem;
+    }
+
+    function productionEndpointCandidates() {
+      const local = `${location.protocol}//${location.host}/api/production-q/verify`;
+      return location.protocol === "file:"
+        ? ["http://127.0.0.1:8790/api/production-q/verify"]
+        : [local, "http://127.0.0.1:8790/api/production-q/verify"];
+    }
+
+    function referenceEndpointCandidates() {
+      const local = `${location.protocol}//${location.host}/api/production-q/reference-suite`;
+      return location.protocol === "file:"
+        ? ["http://127.0.0.1:8790/api/production-q/reference-suite"]
+        : [local, "http://127.0.0.1:8790/api/production-q/reference-suite"];
+    }
+
+    function getReferenceSuite() {
+      const urls = referenceEndpointCandidates();
+      let index = 0;
+      let lastError = "reference backend unavailable";
+      function tryNext() {
+        if (index >= urls.length) return Promise.reject(new Error(lastError));
+        const url = urls[index++];
+        return fetch(url)
+          .then(response => response.json().then(data => {
+            if (!response.ok || !data.ok) throw new Error(data.error || response.statusText);
+            return data;
+          }))
+          .catch(error => {
+            lastError = error.message || String(error);
+            return tryNext();
+          });
+      }
+      return tryNext();
+    }
+
+    function fetchReferenceSuite() {
+      state.reference = { status: "pending", rows: [["exact backend", "checking"]], exactRows: [] };
+      updateReferencePanel();
+      getReferenceSuite().then(data => {
+        state.reference = {
+          status: data.certificate || "unknown",
+          exactRows: Array.isArray(data.rows) ? data.rows : [],
+          checksum: data.checksum || "",
+          maxRelativeError: Number(data.max_relative_error || NaN),
+          elapsedMs: Number(data.elapsed_ms || 0),
+          rows: [
+            ["engine", data.engine],
+            ["certificate", data.certificate],
+            ["nodes", String(data.n)],
+            ["problems", String(data.problem_count)],
+            ["modes", String(data.mode_count)],
+            ["max rel err", Number(data.max_relative_error).toExponential(2)],
+            ["checksum", data.checksum],
+            ["elapsed", `${fmt(Number(data.elapsed_ms), 2)} ms`],
+            ["dense matrix", data.dense_matrix_stored ? "stored" : "not stored"]
+          ]
+        };
+        updateReferencePanel();
+      }).catch(error => {
+        state.reference = {
+          status: "offline",
+          exactRows: [],
+          rows: [
+            ["exact backend", "offline"],
+            ["endpoint", "127.0.0.1:8790"],
+            ["message", error.message || String(error)]
+          ]
+        };
+        updateReferencePanel();
+      });
+    }
+
+    function postProductionPayload(payload) {
+      const urls = productionEndpointCandidates();
+      let index = 0;
+      let lastError = "backend unavailable";
+      function tryNext() {
+        if (index >= urls.length) return Promise.reject(new Error(lastError));
+        const url = urls[index++];
+        return fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+          .then(response => response.json().then(data => {
+            if (!response.ok || !data.ok) throw new Error(data.error || response.statusText);
+            return data;
+          }))
+          .catch(error => {
+            lastError = error.message || String(error);
+            return tryNext();
+          });
+      }
+      return tryNext();
+    }
+
+    function buildProductionPayload(sol) {
+      const certificationNodes = 64;
+      const stride = Math.max(1, Math.ceil(sol.n / certificationNodes));
+      const points = [];
+      const values = [];
+      const browserOutput = [];
+      for (let i = 0; i < sol.n; i += stride) {
+        const p = sol.boundary[i];
+        points.push([p.x, p.y]);
+        values.push(sol.values[i]);
+        browserOutput.push(complexJson(boundaryPdeOutput(sol, i)));
+      }
+      return {
+        points,
+        values,
+        browserOutput,
+        problem: sol.problem,
+        geometry: {
+          accuracy_class: sol.accuracyClass,
+          ui_error_bound: sol.uiErrorBound,
+          class: sol.geometryKind,
+          corner_count: sol.cornerCount,
+          corner_treatment: sol.cornerTreatment,
+          pen_closure: sol.drawRepairStatus,
+          topology: sol.topology
+        },
+        residuals: {
+          arithmetic_bound: sol.uiErrorBound,
+          visual_residual: sol.visualResidual,
+          trace_truncation: sol.spectralRel,
+          pde_truncation: sol.pdeSpectralRel,
+          curve_truncation: sol.geometryTruncResidual
+        },
+        parameters: {
+          time: Number(els.time.value),
+          mass: Number(els.mass.value),
+          wavenumber: Number(els.wave.value),
+          damping: Number(els.damping.value),
+          max_steps: 8,
+          iterations: 12,
+          tolerance: 1e-8,
+          moment_degree: 2,
+          zeta_tail_degree: 6
+        }
+      };
+    }
+
+    function productionPayloadKey(payload) {
+      let hash = 2166136261;
+      const feed = text => {
+        for (let i = 0; i < text.length; i++) {
+          hash ^= text.charCodeAt(i);
+          hash = Math.imul(hash, 16777619) >>> 0;
+        }
+      };
+      feed(String(payload.problem));
+      feed(JSON.stringify(payload.parameters));
+      feed(JSON.stringify(payload.geometry || {}));
+      for (const point of payload.points) feed(`${point[0].toExponential(10)},${point[1].toExponential(10)};`);
+      for (const value of payload.values) feed(`${Number(value).toExponential(10)};`);
+      return hash.toString(16).padStart(8, "0");
+    }
+
+    function invalidateProduction() {
+      state.production = null;
+      state.pendingProductionKey = "";
+      clearTimeout(state.backendTimer);
+    }
+
+    function scheduleProductionQ(sol) {
+      if (!window.fetch || !sol) return;
+      if (sol.isEmpty || sol.boundary.length < 8) {
+        clearTimeout(state.backendTimer);
+        state.pendingProductionKey = "";
+        state.production = null;
+        state.backend = {
+          status: "idle",
+          rows: [
+            ["backend", "idle"],
+            ["reason", state.drawing ? "open pen stroke" : "no boundary"],
+            ["dense matrix", "not stored"],
+            ["pair table", "not stored"]
+          ]
+        };
+        updateProductionPanel();
+        return;
+      }
+      if (!state.solveRequested) {
+        clearTimeout(state.backendTimer);
+        state.pendingProductionKey = "";
+        state.production = null;
+        state.backend = {
+          status: "idle",
+          rows: [
+            ["backend", "idle"],
+            ["reason", "awaiting solve"],
+            ["dense matrix", "not stored"],
+            ["pair table", "not stored"]
+          ]
+        };
+        updateProductionPanel();
+        return;
+      }
+      if (state.interacting) {
+        clearTimeout(state.backendTimer);
+        state.backend = {
+          status: "paused",
+          rows: [
+            ["backend", "paused during drag"],
+            ["live solve", "spectral autodiff QJet"],
+            ["dense matrix", "not stored"],
+            ["pair table", "not stored"]
+          ]
+        };
+        updateProductionPanel();
+        return;
+      }
+      if (sol.topology && !sol.topology.simple) {
+        clearTimeout(state.backendTimer);
+        state.pendingProductionKey = "";
+        if (state.backend.status !== "invalid" || state.production) state.backendSeq++;
+        state.production = null;
+        state.backend = {
+          status: "invalid",
+          rows: [
+            ["backend", "not submitted"],
+            ["reason", "boundary is not simple"],
+            ["self intersections", String(sol.topology.intersections)],
+            ["checked edges", String(sol.topology.checked_edges)],
+            ["dense matrix", "not stored"],
+            ["pair table", "not stored"]
+          ]
+        };
+        updateProductionPanel();
+        return;
+      }
+      clearTimeout(state.backendTimer);
+      const payload = buildProductionPayload(sol);
+      const requestKey = productionPayloadKey(payload);
+      if (state.production && state.production.requestKey === requestKey) {
+        if (state.backend.status !== "ok" && Array.isArray(state.production.backendRows)) {
+          state.backend = { status: "ok", rows: state.production.backendRows };
+          updateProductionPanel();
+        }
+        return;
+      }
+      if (state.pendingProductionKey === requestKey && state.backend.status === "pending") return;
+      const seq = ++state.backendSeq;
+      state.production = null;
+      state.pendingProductionKey = requestKey;
+      state.backend = {
+        status: "pending",
+        rows: [
+          ["backend", "checking"],
+          ["submitted nodes", String(Math.min(sol.n, 64))]
+        ]
+      };
+      updateProductionPanel();
+      state.backendTimer = 0;
+      postProductionPayload(payload).then(data => {
+          if (seq !== state.backendSeq) return;
+          state.pendingProductionKey = "";
+          if (Array.isArray(data.output) && Array.isArray(payload.points) && data.output.length === payload.points.length) {
+            state.production = {
+              seq,
+              requestKey,
+              problem: data.problem,
+              uiProblem: sol.problem,
+              checksum: data.output_checksum || "",
+              nodes: data.output.length,
+              points: payload.points.map(([x, y]) => ({ x: Number(x), y: Number(y) })),
+              output: data.output.map(complexFromJson),
+              accuracyClass: data.accuracy_class || sol.accuracyClass,
+              uiErrorBound: Number(data.ui_error_bound == null ? sol.uiErrorBound : data.ui_error_bound),
+              visualResidual: Number(data.visual_residual == null ? sol.visualResidual : data.visual_residual),
+              outputL2: Number(data.output_l2 || 0),
+              outputMeanAbs: Number(data.output_mean_abs || 0),
+              finiteOutput: !!data.finite_output,
+              stats: data.stats || {},
+              ledger: data.ledger || {},
+              certificates: Array.isArray(data.certificates) ? data.certificates : [],
+              denseMatrixStored: !!data.dense_matrix_stored,
+              pairWeightTableStored: !!data.pair_weight_table_stored,
+              elapsedMs: Number(data.elapsed_ms || 0),
+              delta: data.browser_relative_error
+            };
+          } else {
+            state.production = null;
+          }
+          state.backend = {
+            status: "ok",
+            rows: [
+              ["backend", data.engine],
+              ["problem", data.problem],
+              ["nodes", String(data.n)],
+              ["elapsed", `${fmt(data.elapsed_ms, 2)} ms`],
+              ["work units", String(data.work_units)],
+              ["protocol", data.stats.protocol || ""],
+              ["accuracy class", data.accuracy_class || sol.accuracyClass],
+              ["UI error bound", data.ui_error_bound == null ? sol.uiErrorBound.toExponential(2) : Number(data.ui_error_bound).toExponential(2)],
+              ["visual residual", data.visual_residual == null ? sol.visualResidual.toExponential(2) : Number(data.visual_residual).toExponential(2)],
+              ["geometry class", sol.geometryKind],
+              ["corner treatment", sol.cornerTreatment],
+              ["QJet cache", data.stats.qjet_cache || "n/a"],
+              ["harmonic degree", data.stats.harmonic_moment_degree == null ? "n/a" : String(data.stats.harmonic_moment_degree)],
+              ["correction rank", data.stats.correction_rank == null ? "n/a" : String(data.stats.correction_rank)],
+              ["zeta tail rank", data.stats.zeta_tail_rank == null ? "n/a" : String(data.stats.zeta_tail_rank)],
+              ["moment residual", data.stats.max_harmonic_residual_norm == null ? "n/a" : Number(data.stats.max_harmonic_residual_norm).toExponential(2)],
+              ["Q error", data.stats.q_error_type || ""],
+              ["recommended", data.stats.recommended_q || ""],
+              ["operator bound", fmt(Number(data.stats.operator_bound || 0), 3)],
+              ["checksum", data.output_checksum || ""],
+              ["output L2", data.output_l2 == null ? "n/a" : Number(data.output_l2).toExponential(2)],
+              ["mean |output|", data.output_mean_abs == null ? "n/a" : Number(data.output_mean_abs).toExponential(2)],
+              ["ledger", data.ledger && data.ledger.status ? data.ledger.status : ""],
+              ["finite output", data.finite_output ? "yes" : "no"],
+              ["live preview delta", data.browser_relative_error == null ? "n/a" : Number(data.browser_relative_error).toExponential(2)],
+              ["dense matrix", data.dense_matrix_stored ? "stored" : "not stored"],
+              ["pair table", data.pair_weight_table_stored ? "stored" : "not stored"]
+            ]
+          };
+          if (state.production) state.production.backendRows = state.backend.rows.map(row => row.slice());
+          if (Array.isArray(data.certificates)) {
+            for (const cert of data.certificates) {
+              state.backend.rows.push([`cert ${cert.name}`, `${cert.state}: ${cert.value}`]);
+            }
+          }
+          if (state.production) state.production.backendRows = state.backend.rows.map(row => row.slice());
+          updateProductionPanel();
+          if (state.solution) {
+            updatePanels(state.solution);
+            drawProductionOverlay(state.solution);
+          }
+        }).catch(error => {
+          if (seq !== state.backendSeq) return;
+          state.pendingProductionKey = "";
+          state.production = null;
+          state.backend = {
+            status: "offline",
+            rows: [
+              ["backend", "offline"],
+              ["endpoint", "127.0.0.1:8790"],
+              ["message", error.message || String(error)]
+            ]
+          };
+          updateProductionPanel();
+        });
+    }
+
+    function finiteTraceMaxMode(mode) {
+      if (mode === "mixed") return 9;
+      if (mode === "dipole") return 2;
+      return Infinity;
+    }
+
+    function arithmeticCertificateBound(sol) {
+      return Math.max(
+        sol.dataRoundTripResidual,
+        sol.geometryRoundTripResidual,
+        Math.pow(10, sol.thetaCert.logTail),
+        Math.pow(10, sol.goldenCert.logTail),
+        sol.goldenCert.fixedResidual
+      );
+    }
+
+    function visualResidualBound(sol) {
+      return Math.max(sol.spectralRel, sol.pdeSpectralRel, sol.geometryTruncResidual);
+    }
+
+    function accuracyClass() {
+      if (!state.customized && state.preset === "circle") return "machine precision disk reference";
+      if (!state.customized && state.preset === "golden") return "closed-form conic pullback reference";
+      if (!state.customized && state.preset === "polygon") return "corner-corrected generated Q";
+      return "generated QJet bounded";
+    }
+
+    function referenceClass() {
+      if (state.customized) return "drawn";
+      if (state.preset === "circle") return "exact circle";
+      if (state.preset === "golden") return "golden ellipse chart";
+      if (state.preset === "polygon") return "polygon corner case";
+      if (state.preset === "stealth") return "corner surrogate";
+      return "smooth generated chart";
+    }
+
+    function theta3Complex(tau, terms) {
+      let out = complex(1, 0);
+      for (let n = 1; n <= terms; n++) {
+        const nn = n * n;
+        const mag = Math.exp(-Math.PI * tau.im * nn);
+        const phase = Math.PI * tau.re * nn;
+        out = cAdd(out, complex(2 * mag * Math.cos(phase), 2 * mag * Math.sin(phase)));
+      }
+      return out;
+    }
+
+    function goldenTemperatureCertificate() {
+      const tau = complex(1.5, Math.sqrt(5) / 2);
+      const qAbs = Math.exp(-Math.PI * tau.im);
+      const terms = 8;
+      const value = theta3Complex(tau, terms);
+      const next = terms + 1;
+      const tail = 2 * Math.pow(qAbs, next * next) / Math.max(1e-300, 1 - Math.pow(qAbs, 2 * next + 1));
+      const fixed = cDiv(cAdd(cScale(tau, 3), complex(-7, 0)), cAdd(cScale(tau, 2), complex(-3, 0)));
+      return {
+        tau,
+        qAbs,
+        value,
+        tail,
+        logTail: Math.log10(Math.max(tail, 1e-300)),
+        fixedResidual: cAbs(cSub(fixed, tau)),
+        terms
+      };
+    }
+
+    function modeSpectrum(count) {
+      const values = [0];
+      for (let k = 1; values.length < count; k++) {
+        values.push(k);
+        if (values.length < count) values.push(k);
+      }
+      return values;
+    }
+
+    function computeEmptySolution(n, maxMode, started) {
+      const thetaCert = thetaCertificate(Number(els.time.value));
+      const goldenCert = goldenTemperatureCertificate();
+      const topology = topologyDiagnostics([], 0);
+      state.solution = {
+        isEmpty: true,
+        n, maxMode,
+        boundary: [], values: [], coeffs: [], transform: pdeTransform(els.pde.value), flux: [],
+        per: 0, area: 0, signedArea: 0, topology,
+        geometryKind: "blank canvas", cornerCount: 0, cornerTreatment: "none",
+        drawRepairStatus: state.drawRepairStatus || "blank",
+        minEdge: 0, maxEdge: 0, minSpeed: 0, maxSpeed: 0,
+        anisotropy: 0, edgeAnisotropy: 0,
+        metricModeLimit: 0, metricSource: "awaiting pen boundary",
+        tailEnergy: 0, spectralRel: 0, pdeSpectralRel: 0,
+        meanFlux: 0, maxFlux: 0,
+        dataRoundTripResidual: 0, geometryRoundTripResidual: 0, geometryTruncResidual: 0,
+        geometryModes: [], reconstructionBoundary: [],
+        thetaCert, goldenCert, radial: { bins: 1, radii: [1], centroid: { x: 0, y: 0 } },
+        exactTrace: true, refClass: "blank canvas",
+        accuracyClass: "no boundary", uiErrorBound: 0, visualResidual: 0,
+        problem: els.pde.value, spectrum: modeSpectrum(13),
+        computeMs: performance.now() - started,
+        interactionState: state.interacting ? "pen drawing" : "blank canvas"
+      };
+    }
+
+    function computeSolution() {
+      const n = 1 << Number(els.sample.value);
+      const maxMode = Math.min(Number(els.mode.value), Math.floor(n / 2) - 1);
+      const started = performance.now();
+      const boundary = resampleBoundary(state.points, n);
+      if (boundary.length < 3) {
+        computeEmptySolution(n, maxMode, started);
+        return;
+      }
+      const per = perimeter(boundary);
+      const signedArea = polygonArea(boundary);
+      const area = Math.abs(signedArea);
+      const topology = topologyDiagnostics(boundary, signedArea);
+      const polygonCornerMode = (!state.customized && state.preset === "polygon") || (state.customized && state.boundaryStyle === "polygon");
+      const geometryKind = polygonCornerMode ? "corner-preserving polygon" : "smooth spectral chart";
+      const cornerCount = polygonCornerMode ? (state.customized ? state.drawnCornerCount : CORNER_POLYGON_VERTICES.length) : 0;
+      const cornerTreatment = polygonCornerMode ? "Mellin/BGK endpoint channel" : "smooth QJet replay";
+      let minEdge = Infinity, maxEdge = 0;
+      for (let i = 0; i < boundary.length; i++) {
+        const a = boundary[i], b = boundary[(i + 1) % boundary.length];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        minEdge = Math.min(minEdge, d);
+        maxEdge = Math.max(maxEdge, d);
+      }
+      const values = boundary.map((_, i) => boundaryTrace(TAU * i / n, els.data.value));
+      const valueBundle = fftBundle(values.map(value => complex(value, 0)));
+      const coeffs = valueBundle.coeffs;
+      const valueRoundTrip = ifft(valueBundle.raw);
+      const dataRoundTripResidual = complexL2Relative(valueRoundTrip, values.map(value => complex(value, 0)));
+      const zSamples = boundary.map(p => complex(p.x, p.y));
+      const geometryBundle = fftBundle(zSamples);
+      const geometryRoundTrip = ifft(geometryBundle.raw);
+      const geometryRoundTripResidual = complexL2Relative(geometryRoundTrip, zSamples);
+      const geometryTruncResidual = coeffTailRelative(geometryBundle.coeffs, maxMode);
+      const metricModeLimit = Math.min(Math.floor(n / 2) - 1, Math.max(maxMode, state.interacting ? 64 : 128));
+      const metricModes = geometryBundle.coeffs.filter(item => Math.abs(item.k) <= metricModeLimit);
+      const avgSpeed = per / TAU;
+      const speeds = [];
+      let minSpeed = Infinity, maxSpeed = 0;
+      for (let i = 0; i < boundary.length; i++) {
+        const dz = synthesizeComplexDerivative(metricModes, TAU * i / n);
+        const speed = Math.max(avgSpeed * 1e-6, cAbs(dz) || avgSpeed);
+        speeds.push(speed);
+        minSpeed = Math.min(minSpeed, speed);
+        maxSpeed = Math.max(maxSpeed, speed);
+      }
+      const used = coeffs.filter(item => Math.abs(item.k) <= maxMode);
+      const omitted = coeffs.filter(item => Math.abs(item.k) > maxMode);
+      const tailEnergy = Math.sqrt(omitted.reduce((acc, item) => acc + item.c.re * item.c.re + item.c.im * item.c.im, 0));
+      const coeffEnergy = Math.sqrt(coeffs.reduce((acc, item) => acc + item.c.re * item.c.re + item.c.im * item.c.im, 0));
+      const transform = pdeTransform(els.pde.value);
+      const pdeCoeffEnergy = Math.sqrt(coeffs.reduce((acc, item) => {
+        const value = cAbs(transform(item.c, item.k));
+        return acc + value * value;
+      }, 0));
+      const pdeTailEnergy = Math.sqrt(coeffs.reduce((acc, item) => {
+        if (Math.abs(item.k) <= maxMode) return acc;
+        const value = cAbs(transform(item.c, item.k));
+        return acc + value * value;
+      }, 0));
+      const flux = boundary.map((_, i) => {
+        const theta = TAU * i / n;
+        let sum = 0;
+        for (const item of used) {
+          const k = item.k;
+          if (k === 0) continue;
+          const a = k * theta;
+          const amp = cScale(item.c, Math.abs(k));
+          sum += amp.re * Math.cos(a) - amp.im * Math.sin(a);
+        }
+        return sum / Math.max(1e-9, speeds[i]);
+      });
+      const meanFlux = flux.reduce((a, b) => a + b, 0) / flux.length;
+      let maxFlux = 0;
+      for (const value of flux) maxFlux = Math.max(maxFlux, Math.abs(value));
+      const thetaCert = thetaCertificate(Number(els.time.value));
+      const goldenCert = goldenTemperatureCertificate();
+      const radial = makeRadialProfile(boundary);
+      const finiteMode = finiteTraceMaxMode(els.data.value);
+      const exactTrace = Number.isFinite(finiteMode) && maxMode >= finiteMode;
+      const geometryModes = geometryBundle.coeffs.filter(item => Math.abs(item.k) <= maxMode);
+      const reconstructionBoundary = boundary.map((_, i) => {
+        const z = synthesizeComplex(geometryModes, TAU * i / n);
+        return { x: z.re, y: z.im };
+      });
+      state.solution = {
+        n, maxMode, boundary, values, coeffs: used, transform, flux, per, area, signedArea, topology,
+        geometryKind, cornerCount, cornerTreatment, drawRepairStatus: state.customized ? state.drawRepairStatus : "preset",
+        minEdge, maxEdge, minSpeed, maxSpeed,
+        anisotropy: maxSpeed / Math.max(1e-12, minSpeed),
+        edgeAnisotropy: maxEdge / Math.max(1e-12, minEdge),
+        metricModeLimit, metricSource: "spectral autodiff QJet",
+        tailEnergy, spectralRel: tailEnergy / Math.max(coeffEnergy, 1e-30),
+        pdeSpectralRel: pdeTailEnergy / Math.max(pdeCoeffEnergy, 1e-30),
+        meanFlux, maxFlux,
+        dataRoundTripResidual, geometryRoundTripResidual, geometryTruncResidual,
+        geometryModes, reconstructionBoundary,
+        thetaCert, goldenCert, radial, exactTrace, refClass: referenceClass(),
+        accuracyClass: accuracyClass(), uiErrorBound: 0, visualResidual: 0,
+        problem: els.pde.value, spectrum: modeSpectrum(13),
+        computeMs: performance.now() - started,
+        interactionState: state.interacting ? "live preview" : "settled certificate"
+      };
+      state.solution.uiErrorBound = arithmeticCertificateBound(state.solution);
+      state.solution.visualResidual = visualResidualBound(state.solution);
+    }
+
+    function thetaCertificate(t) {
+      const tolLog = -16;
+      function logTailPrimal(M) {
+        const a = Math.PI * t * (M + 1) * (M + 1);
+        const b = Math.PI * t * (2 * M + 3);
+        const den = b > 745 ? 1 : 1 - Math.exp(-b);
+        return Math.log10(2) - a / Math.LN10 - Math.log10(Math.max(den, 1e-300));
+      }
+      function logTailDual(M) {
+        const a = Math.PI * (M + 1) * (M + 1) / Math.max(t, 1e-12);
+        const b = Math.PI * (2 * M + 3) / Math.max(t, 1e-12);
+        const den = b > 745 ? 1 : 1 - Math.exp(-b);
+        return Math.log10(2) - 0.5 * Math.log10(Math.max(t, 1e-12)) - a / Math.LN10 - Math.log10(Math.max(den, 1e-300));
+      }
+      function first(fn) {
+        for (let m = 0; m < 10000; m++) if (fn(m) <= tolLog) return { m, log: fn(m) };
+        return { m: 10000, log: fn(10000) };
+      }
+      const p = first(logTailPrimal);
+      const d = first(logTailDual);
+      return p.m <= d.m ? { side: "primal", used: p.m, logTail: p.log, primal: p.m, dual: d.m } :
+        { side: "dual", used: d.m, logTail: d.log, primal: p.m, dual: d.m };
+    }
+
+    function makeRadialProfile(boundary) {
+      const bins = 720;
+      const c = centroid(boundary);
+      const radii = new Array(bins).fill(0);
+      for (const p of boundary) {
+        const a = (Math.atan2(p.y - c.y, p.x - c.x) + TAU) % TAU;
+        const idx = Math.floor(a / TAU * bins);
+        radii[idx] = Math.max(radii[idx], Math.hypot(p.x - c.x, p.y - c.y));
+      }
+      for (let pass = 0; pass < 6; pass++) {
+        for (let i = 0; i < bins; i++) {
+          if (radii[i] === 0) radii[i] = 0.5 * (radii[(i - 1 + bins) % bins] + radii[(i + 1) % bins]);
+        }
+      }
+      for (let pass = 0; pass < 2; pass++) {
+        const copy = radii.slice();
+        for (let i = 0; i < bins; i++) radii[i] = 0.2 * copy[(i - 1 + bins) % bins] + 0.6 * copy[i] + 0.2 * copy[(i + 1) % bins];
+      }
+      return { bins, radii, centroid: c };
+    }
+
+    function radiusAt(profile, theta) {
+      const x = ((theta % TAU) + TAU) % TAU;
+      const f = x / TAU * profile.bins;
+      const i = Math.floor(f) % profile.bins;
+      const u = f - Math.floor(f);
+      const a = profile.radii[i] || 1;
+      const b = profile.radii[(i + 1) % profile.bins] || a;
+      return a + (b - a) * u;
+    }
+
+    function worldToCanvas(p) {
+      const w = canvas.width, h = canvas.height;
+      const s = Math.min(w, h) * 0.39 * state.viewport.scale;
+      return { x: w / 2 + state.viewport.x + p.x * s, y: h / 2 + state.viewport.y - p.y * s };
+    }
+
+    function canvasToWorld(p) {
+      const w = canvas.width, h = canvas.height;
+      const s = Math.min(w, h) * 0.39 * state.viewport.scale;
+      return { x: (p.x - w / 2 - state.viewport.x) / s, y: -(p.y - h / 2 - state.viewport.y) / s };
+    }
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(720, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(520, Math.floor(rect.height * dpr));
+      requestFrame();
+    }
+
+    function render() {
+      state.framePending = false;
+      if (!state.solution) computeSolution();
+      const sol = state.solution;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (sol.isEmpty) {
+        drawOpenPenStroke();
+        drawToolConstruction();
+        updatePanels(sol);
+        scheduleProductionQ(sol);
+        return;
+      }
+      if (!state.solveRequested) {
+        drawBoundary(sol);
+        drawToolConstruction();
+        updatePanels(sol);
+        scheduleProductionQ(sol);
+        return;
+      }
+      drawGrid();
+      if (state.showField) drawField(sol);
+      if (state.showReconstruction) drawReconstruction(sol);
+      drawBoundary(sol);
+      if (!state.interacting) drawProductionOverlay(sol);
+      if (state.showFlux) drawFlux(sol);
+      if (state.showNodes) drawNodes(sol);
+      drawToolConstruction();
+      updatePanels(sol);
+      scheduleProductionQ(sol);
+    }
+
+    function drawGrid() {
+      const step = Math.max(42, Math.floor(Math.min(canvas.width, canvas.height) / 14));
+      ctx.save();
+      ctx.strokeStyle = "#eef0f2";
+      ctx.lineWidth = 1;
+      for (let x = canvas.width / 2 % step; x < canvas.width; x += step) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = canvas.height / 2 % step; y < canvas.height; y += step) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawOpenPenStroke() {
+      if (!state.rawDraw || state.rawDraw.length < 1) return;
+      ctx.save();
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#101418";
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      state.rawDraw.forEach((p, i) => {
+        const q = worldToCanvas(p);
+        if (i === 0) ctx.moveTo(q.x, q.y);
+        else ctx.lineTo(q.x, q.y);
+      });
+      ctx.stroke();
+      if (state.rawDraw.length === 1) {
+        const q = worldToCanvas(state.rawDraw[0]);
+        ctx.beginPath();
+        ctx.arc(q.x, q.y, 2.4, 0, TAU);
+        ctx.fillStyle = "#101418";
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawToolConstruction() {
+      if (!state.toolGesture || !state.drawing) return;
+      const preview = constructedBoundaryFromGesture(state.toolGesture, 160);
+      if (!preview.length) {
+        const q = worldToCanvas(state.toolGesture.start);
+        ctx.save();
+        ctx.fillStyle = "#101418";
+        ctx.beginPath();
+        ctx.arc(q.x, q.y, 2.6, 0, TAU);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
+      ctx.save();
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#101418";
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([7, 6]);
+      ctx.beginPath();
+      preview.forEach((p, i) => {
+        const q = worldToCanvas(p);
+        if (i === 0) ctx.moveTo(q.x, q.y);
+        else ctx.lineTo(q.x, q.y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+      if (state.toolGesture.tool === "parallel") {
+        const a = worldToCanvas(state.toolGesture.start);
+        const b = worldToCanvas(state.toolGesture.current);
+        ctx.setLineDash([2, 5]);
+        ctx.globalAlpha = 0.55;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawField(sol) {
+      const cols = state.interacting ? 96 : 180;
+      const rows = Math.max(state.interacting ? 72 : 120, Math.round(cols * canvas.height / canvas.width));
+      const prodField = productionFieldSource(sol);
+      const off = document.createElement("canvas");
+      off.width = cols;
+      off.height = rows;
+      const octx = off.getContext("2d");
+      const img = octx.createImageData(cols, rows);
+      const vals = new Float64Array(cols * rows);
+      let maxAbs = 1e-9;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const p = canvasToWorld({ x: (x + 0.5) / cols * canvas.width, y: (y + 0.5) / rows * canvas.height });
+          let v = NaN;
+          if (pointInside(p, sol.boundary)) {
+            const c = sol.radial.centroid;
+            const theta = Math.atan2(p.y - c.y, p.x - c.x);
+            const rb = radiusAt(sol.radial, theta);
+            const r = Math.hypot(p.x - c.x, p.y - c.y) / Math.max(1e-9, rb);
+            v = prodField ? synthesizeProductionField(prodField, theta, r).re : synthesize(sol.coeffs, theta, r, sol.transform);
+            maxAbs = Math.max(maxAbs, Math.abs(v));
+          }
+          vals[y * cols + x] = v;
+        }
+      }
+      for (let i = 0; i < vals.length; i++) {
+        const v = vals[i];
+        const px = i * 4;
+        if (!Number.isFinite(v)) {
+          img.data[px] = 255; img.data[px + 1] = 255; img.data[px + 2] = 255; img.data[px + 3] = 255;
+          continue;
+        }
+        const u = clamp(v / maxAbs, -1, 1);
+        const color = fieldColor(u);
+        img.data[px] = color[0]; img.data[px + 1] = color[1]; img.data[px + 2] = color[2]; img.data[px + 3] = 255;
+      }
+      octx.putImageData(img, 0, 0);
+      ctx.save();
+      ctx.imageSmoothingEnabled = true;
+      ctx.globalAlpha = 0.92;
+      ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+      ctx.restore();
+      if (!state.interacting) drawContours(vals, cols, rows, maxAbs);
+    }
+
+    function fieldColor(u) {
+      if (u >= 0) {
+        const a = u;
+        const shade = Math.round(244 - 96 * a);
+        return [
+          shade,
+          shade,
+          shade
+        ];
+      }
+      const a = -u;
+      const shade = Math.round(247 - 178 * a);
+      return [
+        shade,
+        shade,
+        shade
+      ];
+    }
+
+    function drawContours(vals, cols, rows, maxAbs) {
+      const levels = [-0.75, -0.5, -0.25, 0.25, 0.5, 0.75].map(v => v * maxAbs);
+      ctx.save();
+      ctx.lineWidth = 0.9;
+      ctx.globalAlpha = 0.38;
+      for (const level of levels) {
+        ctx.strokeStyle = level < 0 ? "#1f2328" : "#707780";
+        for (let y = 1; y < rows; y++) {
+          for (let x = 1; x < cols; x++) {
+            const a = vals[y * cols + x];
+            const b = vals[y * cols + x - 1];
+            const c = vals[(y - 1) * cols + x];
+            if (!Number.isFinite(a) || !Number.isFinite(b) || !Number.isFinite(c)) continue;
+            if ((a - level) * (b - level) < 0 || (a - level) * (c - level) < 0) {
+              const px = x / cols * canvas.width;
+              const py = y / rows * canvas.height;
+              ctx.beginPath();
+              ctx.moveTo(px - 2.2, py);
+              ctx.lineTo(px + 2.2, py);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawReconstruction(sol) {
+      if (!sol.reconstructionBoundary || sol.reconstructionBoundary.length < 3) return;
+      ctx.save();
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#8e949b";
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([8, 7]);
+      ctx.globalAlpha = 0.82;
+      ctx.beginPath();
+      sol.reconstructionBoundary.forEach((p, i) => {
+        const q = worldToCanvas(p);
+        if (i === 0) ctx.moveTo(q.x, q.y);
+        else ctx.lineTo(q.x, q.y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBoundary(sol) {
+      ctx.save();
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#101418";
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      sol.boundary.forEach((p, i) => {
+        const q = worldToCanvas(p);
+        if (i === 0) ctx.moveTo(q.x, q.y);
+        else ctx.lineTo(q.x, q.y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawProductionOverlay(sol) {
+      const prod = state.production;
+      if (!prod || prod.uiProblem !== sol.problem || prod.problem !== canonicalProblemName(sol.problem)) return;
+      if (!prod.points || prod.points.length < 3 || !prod.output || prod.output.length !== prod.points.length) return;
+      const c = centroid(prod.points);
+      let maxAbs = 1e-14;
+      for (const value of prod.output) maxAbs = Math.max(maxAbs, cAbs(value));
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      for (let i = 0; i < prod.points.length; i++) {
+        const p = prod.points[i];
+        const value = prod.output[i];
+        const amp = cAbs(value) / maxAbs;
+        const sign = value.re >= 0 ? 1 : -1;
+        const dx = p.x - c.x;
+        const dy = p.y - c.y;
+        const inv = 1 / Math.max(1e-9, Math.hypot(dx, dy));
+        const normal = { x: dx * inv, y: dy * inv };
+        const inner = worldToCanvas({ x: p.x - normal.x * 0.012, y: p.y - normal.y * 0.012 });
+        const outer = worldToCanvas({ x: p.x + normal.x * (0.026 + 0.052 * amp), y: p.y + normal.y * (0.026 + 0.052 * amp) });
+        const shade = sign > 0 ? Math.round(38 + 88 * (1 - amp)) : Math.round(178 + 58 * (1 - amp));
+        ctx.strokeStyle = `rgb(${shade},${shade},${shade})`;
+        ctx.globalAlpha = 0.34 + 0.48 * amp;
+        ctx.lineWidth = 1.2 + 3.6 * amp;
+        ctx.beginPath();
+        ctx.moveTo(inner.x, inner.y);
+        ctx.lineTo(outer.x, outer.y);
+        ctx.stroke();
+        if (Math.abs(value.im) > 1e-10 * maxAbs) {
+          const q = worldToCanvas(p);
+          ctx.globalAlpha = 0.42;
+          ctx.lineWidth = 0.9;
+          ctx.strokeStyle = "#111317";
+          ctx.beginPath();
+          ctx.moveTo(q.x - 3, q.y - 3);
+          ctx.lineTo(q.x + 3, q.y + 3);
+          ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 0.86;
+      ctx.strokeStyle = "#111317";
+      ctx.lineWidth = 1.1;
+      ctx.setLineDash([2, 5]);
+      ctx.beginPath();
+      prod.points.forEach((p, i) => {
+        const q = worldToCanvas(p);
+        if (i === 0) ctx.moveTo(q.x, q.y);
+        else ctx.lineTo(q.x, q.y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawNodes(sol) {
+      ctx.save();
+      const stride = Math.max(1, Math.floor(sol.boundary.length / 64));
+      ctx.fillStyle = "#ffffff";
+      ctx.strokeStyle = "#111317";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < sol.boundary.length; i += stride) {
+        const p = worldToCanvas(sol.boundary[i]);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.4, 0, TAU);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawFlux(sol) {
+      ctx.save();
+      ctx.strokeStyle = "#1f2328";
+      ctx.globalAlpha = 0.72;
+      ctx.lineWidth = 1.2;
+      const max = sol.maxFlux || 1;
+      const c = centroid(sol.boundary);
+      const stride = Math.max(1, Math.floor(sol.boundary.length / 72));
+      for (let i = 0; i < sol.boundary.length; i += stride) {
+        const p = sol.boundary[i];
+        const len = 0.12 * sol.flux[i] / max;
+        const dx = p.x - c.x, dy = p.y - c.y;
+        const inv = 1 / Math.max(1e-9, Math.hypot(dx, dy));
+        const a = worldToCanvas(p);
+        const b = worldToCanvas({ x: p.x + dx * inv * len, y: p.y + dy * inv * len });
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function productionCertificateReady(sol) {
+      const prod = state.production;
+      if (!state.solveRequested) return false;
+      if (!prod || state.backend.status !== "ok") return false;
+      if (prod.uiProblem !== sol.problem || prod.problem !== canonicalProblemName(sol.problem)) return false;
+      if (!prod.finiteOutput || prod.denseMatrixStored || prod.pairWeightTableStored) return false;
+      if (!prod.ledger || prod.ledger.status !== "borrowed_repaid") return false;
+      const certificates = Array.isArray(prod.certificates) ? prod.certificates : [];
+      const certOk = (name, value) => certificates.some(cert => cert.name === name && cert.state === "pass" && (value == null || cert.value === value));
+      return certOk("ledger", "borrowed_repaid") &&
+        certOk("dense matrix", "not stored") &&
+        certOk("pair table", "not stored") &&
+        certOk("finite output", "yes");
+    }
+
+    function updateHeaderStatus(sol, localReady) {
+      let text = "diagnostic mode";
+      let warn = true;
+      if (sol.isEmpty && state.drawing) {
+        text = "drawing boundary";
+      } else if (sol.isEmpty) {
+        text = "draw boundary";
+      } else if (!state.solveRequested) {
+        text = "ready to solve";
+      } else if (state.interacting) {
+        text = "live autodiff preview";
+      } else if (sol.topology && !sol.topology.simple) {
+        text = "invalid boundary";
+      } else if (productionCertificateReady(sol)) {
+        text = "production Q certified";
+        warn = false;
+      } else if (state.backend.status === "pending") {
+        text = "awaiting production Q";
+      } else if (state.backend.status === "offline") {
+        text = "backend offline";
+      } else if (localReady) {
+        text = "local arithmetic ready";
+      }
+      els.statusText.textContent = text;
+      els.statusDot.classList.toggle("warn", warn);
+    }
+
+    function updatePanels(sol) {
+      const pdeName = els.pde.options[els.pde.selectedIndex].text;
+      els.statusMode.textContent = pdeName;
+      els.statusCost.textContent = "O(n log n)";
+      els.sampleValue.textContent = String(sol.n);
+      els.modeValue.textContent = `${sol.maxMode} modes`;
+      els.nodeReadout.textContent = `${sol.n} nodes`;
+      els.phaseValue.textContent = (Number(els.phase.value) / 100).toFixed(2);
+      els.rBoundary.textContent = fmt(sol.per, 3);
+      els.rArea.textContent = fmt(sol.area, 3);
+      els.rResidual.textContent = sol.dataRoundTripResidual.toExponential(1);
+      els.rTail.textContent = `1e${Math.floor(sol.goldenCert.logTail)}`;
+
+      if (sol.isEmpty) {
+        const metrics = [
+          ["interaction", sol.interactionState],
+          ["production overlay", "idle"],
+          ["field source", "blank"],
+          ["reference class", sol.refClass],
+          ["accuracy class", sol.accuracyClass],
+          ["geometry class", sol.geometryKind],
+          ["corner treatment", sol.cornerTreatment],
+          ["corner count", "0"],
+          ["pen closure", sol.drawRepairStatus],
+          ["topology", "blank"],
+          ["sampled arclength", "0.00000"],
+          ["signed area", "0.00000"],
+          ["metric source", sol.metricSource],
+          ["metric modes", "0"],
+          ["browser compute", `${fmt(sol.computeMs, 2)} ms`],
+          ["dense Q storage", "not formed"]
+        ];
+        els.metrics.innerHTML = metrics.map(([name, value]) =>
+          `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+        ).join("");
+        els.spectrum.innerHTML = [
+          ["Q eigenvalues", "none"],
+          ["PDE spectrum", "none"],
+          ["spectrum type", "awaiting boundary"],
+          ["generator", "not instantiated"]
+        ].map(([name, value]) =>
+          `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+        ).join("");
+        els.audits.innerHTML = [
+          ["QJet FFT roundtrip f", "n/a"],
+          ["curve roundtrip z", "n/a"],
+          ["truncated curve reconstruction", "n/a"],
+          ["PDE spectral reconstruction", "n/a"],
+          ["finite trace exact", "n/a"]
+        ].map(([name, value]) =>
+          `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+        ).join("");
+        updateProductionPanel();
+        els.certs.innerHTML = [
+          ["boundary", "warn", "not drawn"],
+          ["dense matrix", "good", "not stored"],
+          ["pair table", "good", "not stored"]
+        ].map(([name, state, value]) =>
+          `<div class="cert-row"><span class="cert-state ${state === "good" ? "" : state}"></span><span class="cert-name">${name}</span><span class="cert-value">${value}</span></div>`
+        ).join("");
+        updateHeaderStatus(sol, false);
+        els.ledgerBorrow.textContent = "awaiting closed pen boundary";
+        els.ledgerCompute.textContent = "idle";
+        els.ledgerRepay.textContent = "no QJet borrowed; dense matrix not formed";
+        return;
+      }
+
+      const metrics = [
+        ["interaction", sol.interactionState],
+        ["production overlay", state.solveRequested && state.production && state.production.uiProblem === sol.problem ? `${state.production.nodes} corrected nodes` : "idle"],
+        ["field source", state.solveRequested ? (productionFieldSource(sol) ? "production Q output" : "live preview") : "boundary only"],
+        ["reference class", sol.refClass],
+        ["accuracy class", sol.accuracyClass],
+        ["UI error bound", sol.uiErrorBound.toExponential(2)],
+        ["visual residual", sol.visualResidual.toExponential(2)],
+        ["geometry class", sol.geometryKind],
+        ["corner treatment", sol.cornerTreatment],
+        ["corner count", String(sol.cornerCount)],
+        ["pen closure", sol.drawRepairStatus],
+        ["topology", sol.topology.simple ? "simple closed" : `${sol.topology.intersections} crossings`],
+        ["orientation", sol.topology.orientation],
+        ["min turn", `${fmt(sol.topology.min_turn_deg, 2)} deg`],
+        ["sampled arclength", fmt(sol.per, 5)],
+        ["signed area", fmt(sol.signedArea, 5)],
+        ["speed anisotropy", fmt(sol.anisotropy, 4)],
+        ["metric source", sol.metricSource],
+        ["metric modes", String(sol.metricModeLimit)],
+        ["min edge", sol.minEdge.toExponential(2)],
+        ["edge anisotropy", fmt(sol.edgeAnisotropy, 4)],
+        ["browser compute", `${fmt(sol.computeMs, 2)} ms`],
+        ["mean DtN flux", sol.meanFlux.toExponential(2)],
+        ["visible trace residual", sol.spectralRel.toExponential(2)],
+        ["PDE spectrum residual", sol.pdeSpectralRel.toExponential(2)],
+        ["curve trunc residual", sol.geometryTruncResidual.toExponential(2)],
+        ["theta side", `${sol.thetaCert.side} / M=${sol.thetaCert.used}`],
+        ["dense Q storage", "not formed"]
+      ];
+      els.metrics.innerHTML = metrics.map(([name, value]) =>
+        `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+      ).join("");
+
+      const qSpectrum = [];
+      const pdeSpectrum = [];
+      for (let k = 0; k <= 6; k++) {
+        const label = k === 0 ? "0" : `±${k}`;
+        qSpectrum.push(`λ${label}=${k}`);
+        pdeSpectrum.push(`σ${label}=${cFmt(pdeEigenvalue(sol.problem, k), 3)}`);
+      }
+      const spectrumRows = [
+        ["Q eigenvalues", qSpectrum.join("  ")],
+        ["PDE spectrum", pdeSpectrum.join("  ")],
+        ["spectrum type", sol.problem === "helmholtz" ? "Q real; Helmholtz complex" : "real functional of Q"],
+        ["generator", "|k| on S1; metric replay by QJets"]
+      ];
+      els.spectrum.innerHTML = spectrumRows.map(([name, value]) =>
+        `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+      ).join("");
+
+      const audits = [
+        ["QJet FFT roundtrip f", sol.dataRoundTripResidual.toExponential(2)],
+        ["curve roundtrip z", sol.geometryRoundTripResidual.toExponential(2)],
+        ["truncated curve reconstruction", sol.geometryTruncResidual.toExponential(2)],
+        ["PDE spectral reconstruction", sol.pdeSpectralRel.toExponential(2)],
+        ["finite trace exact", sol.exactTrace ? "yes" : "no"],
+        ["theta3(τ*)", cFmt(sol.goldenCert.value, 6)],
+        ["golden fixed residual", sol.goldenCert.fixedResidual.toExponential(2)],
+        ["golden |q|", fmt(sol.goldenCert.qAbs, 6)]
+      ];
+      els.audits.innerHTML = audits.map(([name, value]) =>
+        `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+      ).join("");
+      updateProductionPanel();
+
+      const exactTheta = sol.thetaCert.logTail <= -16;
+      const exactGolden = sol.goldenCert.logTail <= -16 && sol.goldenCert.fixedResidual < 1e-14;
+      const roundTripOk = sol.dataRoundTripResidual < 1e-12 && sol.geometryRoundTripResidual < 1e-12;
+      const geometryOk = sol.anisotropy < 9 && sol.minEdge > 1e-4;
+      const topologyOk = sol.topology && sol.topology.simple;
+      const traceOk = sol.exactTrace || sol.spectralRel < 1e-10;
+      const pdeOk = sol.exactTrace || sol.pdeSpectralRel < 1e-10;
+      const certs = [
+        ["accuracy class", "good", sol.accuracyClass],
+        ["arithmetic bound", sol.uiErrorBound < 1e-12 ? "good" : "warn", sol.uiErrorBound.toExponential(1)],
+        ["visual residual", sol.visualResidual < 1e-10 ? "good" : "warn", sol.visualResidual.toExponential(1)],
+        ["FFT roundtrip", roundTripOk ? "good" : "warn", sol.dataRoundTripResidual.toExponential(1)],
+        ["curve roundtrip", roundTripOk ? "good" : "warn", sol.geometryRoundTripResidual.toExponential(1)],
+        ["theta tail", exactTheta ? "good" : "warn", `10^${sol.thetaCert.logTail.toFixed(1)}`],
+        ["golden temperature", exactGolden ? "good" : "warn", `10^${sol.goldenCert.logTail.toFixed(1)}`],
+        ["Q null mode", "good", "0 by generator"],
+        ["dense matrix", "good", "not stored"],
+        ["simple boundary", topologyOk ? "good" : "warn", topologyOk ? sol.topology.orientation : `${sol.topology.intersections} crossings`],
+        ["corner treatment", "good", sol.cornerCount ? `${sol.cornerCount} vertices` : "smooth chart"],
+        ["geometry", geometryOk ? "good" : "warn", `anis ${fmt(sol.anisotropy, 2)}`],
+        ["visible truncation", traceOk ? "good" : "warn", sol.spectralRel.toExponential(1)],
+        ["PDE truncation", pdeOk ? "good" : "warn", sol.pdeSpectralRel.toExponential(1)]
+      ];
+      els.certs.innerHTML = certs.map(([name, state, value]) =>
+        `<div class="cert-row"><span class="cert-state ${state === "good" ? "" : state}"></span><span class="cert-name">${name}</span><span class="cert-value">${value}</span></div>`
+      ).join("");
+      const ready = roundTripOk && geometryOk && topologyOk && exactTheta && exactGolden;
+      updateHeaderStatus(sol, ready);
+
+      const problem = sol.problem;
+      els.ledgerBorrow.textContent = "smooth boundary QJets, spectral autodiff speed, circle spectral generator, Dirichlet trace";
+      els.ledgerCompute.textContent = problem === "laplace"
+        ? "DtN modal multiplier |k| and harmonic interior reconstruction"
+        : `${pdeName} applied as a boundary spectral functional`;
+      els.ledgerRepay.textContent = "metric replay, null mode removal, theta/golden tail, full FFT and truncated reconstruction residuals";
+    }
+
+    function updateProductionPanel() {
+      const rows = state.backend && state.backend.rows ? state.backend.rows : [["backend", "offline"]];
+      els.production.innerHTML = rows.map(([name, value]) =>
+        `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+      ).join("");
+    }
+
+    function updateReferencePanel() {
+      const rows = state.reference && state.reference.rows ? state.reference.rows : [["exact backend", "offline"]];
+      els.reference.innerHTML = rows.map(([name, value]) =>
+        `<div class="metric"><span class="name">${name}</span><span class="value">${value}</span></div>`
+      ).join("");
+    }
+
+    function exportCertificate() {
+      if (!state.solution) computeSolution();
+      const sol = state.solution;
+      const production = state.production ? {
+        request_key: state.production.requestKey,
+        backend_status: state.backend.status,
+        problem: state.production.problem,
+        ui_problem: state.production.uiProblem,
+        nodes: state.production.nodes,
+        checksum: state.production.checksum,
+        elapsed_ms: state.production.elapsedMs,
+        accuracy_class: state.production.accuracyClass,
+        ui_error_bound: state.production.uiErrorBound,
+        visual_residual: state.production.visualResidual,
+        output_l2: state.production.outputL2,
+        output_mean_abs: state.production.outputMeanAbs,
+        finite_output: state.production.finiteOutput,
+        dense_matrix_stored: state.production.denseMatrixStored,
+        pair_weight_table_stored: state.production.pairWeightTableStored,
+        live_preview_delta: state.production.delta,
+        stats: state.production.stats,
+        ledger: state.production.ledger,
+        certificates: state.production.certificates,
+        points: state.production.points,
+        output: state.production.output.map(value => [value.re, value.im])
+      } : null;
+      const payload = {
+        generated_at: new Date().toISOString(),
+        ui: "Q Boundary Quadrature Engine",
+        backend_status: state.backend.status,
+        production_q_rows: state.backend.rows,
+        production_certificate: production,
+        exact_reference_suite: {
+          status: state.reference.status,
+          panel_rows: state.reference.rows,
+          exact_rows: state.reference.exactRows || [],
+          checksum: state.reference.checksum || "",
+          max_relative_error: state.reference.maxRelativeError,
+          elapsed_ms: state.reference.elapsedMs
+        },
+        problem: sol.problem,
+        nodes: sol.n,
+        modes: sol.maxMode,
+        reference_class: sol.refClass,
+        dense_matrix_stored: false,
+        pair_weight_table_stored: false,
+        geometry: {
+          accuracy_class: sol.accuracyClass,
+          ui_error_bound: sol.uiErrorBound,
+          visual_residual: sol.visualResidual,
+          class: sol.geometryKind,
+          corner_count: sol.cornerCount,
+          corner_treatment: sol.cornerTreatment,
+          pen_closure: sol.drawRepairStatus,
+          arclength: sol.per,
+          signed_area: sol.signedArea,
+          anisotropy: sol.anisotropy,
+          min_edge: sol.minEdge,
+          max_edge: sol.maxEdge,
+          topology: sol.topology
+        },
+        residuals: {
+          arithmetic_bound: sol.uiErrorBound,
+          visual_residual: sol.visualResidual,
+          trace_truncation: sol.spectralRel,
+          qjet_fft_roundtrip: sol.dataRoundTripResidual,
+          curve_roundtrip: sol.geometryRoundTripResidual,
+          curve_truncation: sol.geometryTruncResidual,
+          pde_spectral_reconstruction: sol.pdeSpectralRel,
+          theta_tail_log10: sol.thetaCert.logTail,
+          golden_tail_log10: sol.goldenCert.logTail,
+          golden_fixed_residual: sol.goldenCert.fixedResidual
+        },
+        q_spectrum_head: sol.spectrum,
+        boundary_head: sol.boundary.slice(0, 16),
+        boundary_certification_nodes: production ? production.nodes : 0,
+        note: "Live canvas preview uses the browser QJet FFT kernel; production_certificate is the corrected HarmonicZetaPlanarDomainQJet backend output used for the settled overlay."
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `q-engine-certificate-${Date.now()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function requestFrame() {
+      if (!state.framePending) {
+        state.framePending = true;
+        const run = () => {
+          if (!state.framePending) return;
+          computeSolution();
+          render();
+        };
+        if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+        setTimeout(run, 40);
+      }
+    }
+
+    function beginInteraction() {
+      state.solveRequested = false;
+      state.interacting = true;
+      invalidateProduction();
+      clearTimeout(state.backendTimer);
+      state.backendSeq++;
+    }
+
+    function endInteraction() {
+      state.interacting = false;
+      state.liveBoundary = null;
+      state.liveBoundaryN = 0;
+    }
+
+    function setPreset(name) {
+      state.preset = name;
+      state.customized = false;
+      state.dragIndex = -1;
+      state.solveRequested = false;
+      state.drawRepairStatus = "preset";
+      state.toolGesture = null;
+      state.boundaryStyle = name === "polygon" ? "polygon" : "smooth";
+      state.drawnCornerCount = name === "polygon" ? CORNER_POLYGON_VERTICES.length : 0;
+      endInteraction();
+      invalidateProduction();
+      state.points = makePreset(name, 280);
+      document.querySelectorAll(".preset").forEach(btn => btn.classList.toggle("active", btn.dataset.preset === name));
+      requestFrame();
+    }
+
+    function setBlankCanvas() {
+      state.preset = "blank";
+      state.customized = false;
+      state.dragIndex = -1;
+      state.dragStart = null;
+      state.dragOriginal = [];
+      state.rawDraw = [];
+      state.drawing = false;
+      state.toolGesture = null;
+      state.solveRequested = false;
+      state.drawRepairStatus = "blank";
+      state.boundaryStyle = "blank";
+      state.drawnCornerCount = 0;
+      endInteraction();
+      invalidateProduction();
+      state.points = [];
+      state.backend = {
+        status: "idle",
+        rows: [
+          ["backend", "idle"],
+          ["reason", "no boundary"],
+          ["dense matrix", "not stored"],
+          ["pair table", "not stored"]
+        ]
+      };
+      document.querySelectorAll(".preset").forEach(btn => btn.classList.remove("active"));
+      requestFrame();
+    }
+
+    function pointerPos(event) {
+      const rect = canvas.getBoundingClientRect();
+      const sx = canvas.width / Math.max(1, rect.width);
+      const sy = canvas.height / Math.max(1, rect.height);
+      return { x: (event.clientX - rect.left) * sx, y: (event.clientY - rect.top) * sy };
+    }
+
+    function isFreehandTool(tool = state.drawTool) {
+      return tool === "pen" || tool === "squiggle";
+    }
+
+    function toolLabel(tool) {
+      if (tool === "parallel") return "parallel-line strip";
+      if (tool === "polygon") return `${Number(els.polygonSides.value)}-gon`;
+      if (tool === "circle") return "circle compass";
+      if (tool === "arc") return "arc lens";
+      if (tool === "squiggle") return "squiggle";
+      if (tool === "edit") return "edit";
+      return "pen";
+    }
+
+    function syncDrawToolControls() {
+      document.querySelectorAll("[data-draw-tool]").forEach(btn => {
+        const active = btn.dataset.drawTool === state.drawTool && state.drawMode === (state.drawTool !== "edit");
+        btn.classList.toggle("active", active || (state.drawTool === "edit" && btn.dataset.drawTool === "edit"));
+        btn.classList.toggle("primary", active || (state.drawTool === "edit" && btn.dataset.drawTool === "edit"));
+      });
+      const penActive = state.drawMode && state.drawTool === "pen";
+      document.getElementById("draw-toggle").classList.toggle("active", penActive);
+      document.body.classList.toggle("pen-active", state.drawMode);
+      canvas.dataset.tool = state.drawTool;
+    }
+
+    function setDrawTool(tool) {
+      state.drawTool = tool;
+      state.drawMode = tool !== "edit";
+      state.drawing = false;
+      state.toolGesture = null;
+      state.rawDraw = [];
+      state.dragIndex = -1;
+      state.dragStart = null;
+      state.dragOriginal = [];
+      endInteraction();
+      syncDrawToolControls();
+      requestFrame();
+    }
+
+    function commitConstructedBoundary(gesture) {
+      const tool = gesture && gesture.tool;
+      if (!tool) return false;
+      const points = constructedBoundaryFromGesture(gesture, 260);
+      if (points.length < 3) {
+        state.points = [];
+        state.boundaryStyle = "blank";
+        state.drawnCornerCount = 0;
+        state.drawRepairStatus = `${toolLabel(tool)} too small`;
+        return false;
+      }
+      state.preset = "blank";
+      state.customized = true;
+      state.solveRequested = false;
+      state.points = points;
+      state.boundaryStyle = tool === "polygon" ? "polygon" : "smooth";
+      state.drawnCornerCount = tool === "polygon" ? points.length : 0;
+      state.drawRepairStatus = `${toolLabel(tool)} closed`;
+      document.querySelectorAll(".preset").forEach(btn => btn.classList.remove("active"));
+      invalidateProduction();
+      return true;
+    }
+
+    function nearestBoundaryIndex(world, boundary) {
+      let best = -1;
+      let bestDist = Infinity;
+      for (let i = 0; i < boundary.length; i++) {
+        const d = Math.hypot(boundary[i].x - world.x, boundary[i].y - world.y);
+        if (d < bestDist) {
+          bestDist = d;
+          best = i;
+        }
+      }
+      return bestDist < 0.09 ? best : -1;
+    }
+
+    function applySmoothDrag(index, delta) {
+      const original = state.dragOriginal;
+      const n = original.length;
+      if (!n) return;
+      const sigma = Math.max(8, n * 0.045);
+      const next = new Array(n);
+      for (let i = 0; i < n; i++) {
+        const ring = Math.min(Math.abs(i - index), n - Math.abs(i - index));
+        const w = Math.exp(-(ring * ring) / (2 * sigma * sigma));
+        next[i] = { x: original[i].x + delta.x * w, y: original[i].y + delta.y * w };
+      }
+      state.liveBoundary = next;
+      state.liveBoundaryN = n;
+      state.points = next;
+      state.customized = true;
+      state.drawRepairStatus = "dragged closed curve";
+    }
+
+    canvas.addEventListener("pointerdown", event => {
+      const world = canvasToWorld(pointerPos(event));
+      if (!state.drawMode) {
+        if (!state.solution) computeSolution();
+        const idx = nearestBoundaryIndex(world, state.solution.boundary);
+        if (idx >= 0) {
+          beginInteraction();
+          canvas.setPointerCapture(event.pointerId);
+          state.dragIndex = idx;
+          state.dragStart = world;
+          state.dragOriginal = state.solution.boundary.map(p => ({ x: p.x, y: p.y }));
+          state.liveBoundary = state.dragOriginal.map(p => ({ x: p.x, y: p.y }));
+          state.liveBoundaryN = state.solution.n;
+        }
+        return;
+      }
+      beginInteraction();
+      canvas.setPointerCapture(event.pointerId);
+      state.drawing = true;
+      state.customized = true;
+      state.points = [];
+      state.boundaryStyle = "smooth";
+      state.drawnCornerCount = 0;
+      document.querySelectorAll(".preset").forEach(btn => btn.classList.remove("active"));
+      if (isFreehandTool()) {
+        state.drawRepairStatus = `${toolLabel(state.drawTool)} drawing`;
+        state.rawDraw = [world];
+        state.toolGesture = null;
+      } else {
+        state.drawRepairStatus = `${toolLabel(state.drawTool)} construction`;
+        state.rawDraw = [];
+        state.toolGesture = { tool: state.drawTool, start: world, current: world };
+      }
+      requestFrame();
+    });
+
+    canvas.addEventListener("pointermove", event => {
+      if (state.dragIndex >= 0 && state.dragStart) {
+        const world = canvasToWorld(pointerPos(event));
+        applySmoothDrag(state.dragIndex, { x: world.x - state.dragStart.x, y: world.y - state.dragStart.y });
+        requestFrame();
+        return;
+      }
+      if (!state.drawMode || !state.drawing) return;
+      const p = canvasToWorld(pointerPos(event));
+      if (!isFreehandTool()) {
+        state.toolGesture = { ...(state.toolGesture || { tool: state.drawTool, start: p }), current: p };
+        requestFrame();
+        return;
+      }
+      const last = state.rawDraw[state.rawDraw.length - 1];
+      if (!last || Math.hypot(p.x - last.x, p.y - last.y) > 0.01) {
+        state.rawDraw.push(p);
+        state.points = [];
+        requestFrame();
+      }
+    });
+
+    canvas.addEventListener("pointerup", event => {
+      if (state.dragIndex >= 0) {
+        canvas.releasePointerCapture(event.pointerId);
+        state.dragIndex = -1;
+        state.dragStart = null;
+        state.dragOriginal = [];
+        state.points = smoothClosedCurvePreserveFrame(state.points, Math.max(160, state.points.length));
+        state.boundaryStyle = "smooth";
+        state.drawnCornerCount = 0;
+        endInteraction();
+        requestFrame();
+        return;
+      }
+      if (!state.drawMode) return;
+      canvas.releasePointerCapture(event.pointerId);
+      state.drawing = false;
+      if (isFreehandTool()) {
+        if (state.rawDraw.length > 2) {
+          state.points = closeDrawnBoundary(state.rawDraw, Math.max(180, state.rawDraw.length * 2), state.drawTool);
+          state.boundaryStyle = "smooth";
+          state.drawnCornerCount = 0;
+          state.solveRequested = false;
+        } else {
+          state.points = [];
+          state.solveRequested = false;
+          state.drawRepairStatus = `too few ${toolLabel(state.drawTool)} samples`;
+        }
+      } else {
+        commitConstructedBoundary(state.toolGesture);
+        state.toolGesture = null;
+      }
+      endInteraction();
+      requestFrame();
+    });
+    canvas.addEventListener("pointercancel", () => {
+      state.drawing = false;
+      state.dragIndex = -1;
+      state.dragStart = null;
+      state.dragOriginal = [];
+      state.toolGesture = null;
+      state.drawRepairStatus = "cancelled";
+      endInteraction();
+      requestFrame();
+    });
+
+    document.querySelectorAll(".preset").forEach(btn => btn.addEventListener("click", () => setPreset(btn.dataset.preset)));
+    document.querySelectorAll("[data-draw-tool]").forEach(btn => btn.addEventListener("click", event => {
+      const tool = event.currentTarget.dataset.drawTool;
+      if (tool === "pen" && state.drawTool === "pen" && state.drawMode) setDrawTool("edit");
+      else setDrawTool(tool);
+    }));
+    document.getElementById("smooth-shape").addEventListener("click", () => { state.solveRequested = false; invalidateProduction(); state.customized = true; state.boundaryStyle = "smooth"; state.drawnCornerCount = 0; state.drawRepairStatus = "manual smooth"; state.points = smoothClosedCurvePreserveFrame(state.points, Math.max(180, state.points.length)); requestFrame(); });
+    document.getElementById("reverse-shape").addEventListener("click", () => { state.solveRequested = false; invalidateProduction(); state.customized = true; state.drawRepairStatus = "manual reverse"; state.points.reverse(); requestFrame(); });
+    document.getElementById("clear-shape").addEventListener("click", setBlankCanvas);
+    document.getElementById("export-cert").addEventListener("click", exportCertificate);
+    document.getElementById("solve-boundary").addEventListener("click", () => { if (!state.solution) computeSolution(); if (state.solution && !state.solution.isEmpty && state.solution.topology.simple) { state.solveRequested = true; invalidateProduction(); requestFrame(); } });
+    document.getElementById("reset-view").addEventListener("click", () => { state.viewport = { scale: 1, x: 0, y: 0 }; requestFrame(); });
+    document.getElementById("show-field").addEventListener("click", event => { state.showField = !state.showField; event.currentTarget.classList.toggle("active", state.showField); requestFrame(); });
+    document.getElementById("show-reconstruction").addEventListener("click", event => { state.showReconstruction = !state.showReconstruction; event.currentTarget.classList.toggle("active", state.showReconstruction); requestFrame(); });
+    document.getElementById("show-flux").addEventListener("click", event => { state.showFlux = !state.showFlux; event.currentTarget.classList.toggle("active", state.showFlux); requestFrame(); });
+    document.getElementById("show-nodes").addEventListener("click", event => { state.showNodes = !state.showNodes; event.currentTarget.classList.toggle("active", state.showNodes); requestFrame(); });
+
+    els.polygonSides.addEventListener("change", () => {
+      if (state.customized && state.boundaryStyle === "polygon" && state.points.length >= 3) {
+        const c = centroid(state.points);
+        let far = state.points[0];
+        for (const p of state.points) {
+          if (Math.hypot(p.x - c.x, p.y - c.y) > Math.hypot(far.x - c.x, far.y - c.y)) far = p;
+        }
+        state.points = makeRegularPolygonVertices(c, far, Number(els.polygonSides.value));
+        state.drawnCornerCount = state.points.length;
+        state.drawRepairStatus = `${toolLabel("polygon")} closed`;
+        state.solveRequested = false;
+        invalidateProduction();
+        requestFrame();
+      }
+    });
+
+    ["sample", "mode", "pde", "data", "phase", "time", "mass", "wave", "damping"].forEach(key => {
+      els[key].addEventListener("input", () => { state.solveRequested = false; invalidateProduction(); requestFrame(); });
+      els[key].addEventListener("change", () => { state.solveRequested = false; invalidateProduction(); requestFrame(); });
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+    syncDrawToolControls();
+    setBlankCanvas();
+    resizeCanvas();
+    fetchReferenceSuite();
+    setTimeout(() => {
+      if (!state.solution) {
+        computeSolution();
+        render();
+      }
+    }, 0);
+  </script>
+</body>
+</html>

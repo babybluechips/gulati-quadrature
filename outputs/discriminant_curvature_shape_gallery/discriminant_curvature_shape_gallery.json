@@ -1,0 +1,454 @@
+{
+  "method": {
+    "dense_matrix_stored": false,
+    "q_diag": "q_j=sum_{k!=j}|z_j-z_k|^{-2}",
+    "normalization": "each generated complex point set is centered and scaled by max radius before q_diag is computed",
+    "chain": "z=exp(i theta) -> log discriminant Hessian -> Q -> local hard-part curvature"
+  },
+  "summary": {
+    "circle": {
+      "shape": "circle",
+      "family": "smooth normal form",
+      "hard_part": "none; constant chord-curvature density",
+      "sample_count": 260,
+      "q_min": 5633.249999999831,
+      "q_median": 5633.249999999992,
+      "q_max": 5633.250000000129,
+      "max_over_median": 1.0000000000000244,
+      "q90_over_q10": 1.0000000000000246,
+      "peak_points": [
+        {
+          "index": 185,
+          "real": -0.22756654269059035,
+          "imag": -0.9737625319593334,
+          "q_diag": 5633.250000000129
+        },
+        {
+          "index": 226,
+          "real": 0.6898139678473075,
+          "imag": -0.7239866640779744,
+          "q_diag": 5633.2500000001255
+        },
+        {
+          "index": 166,
+          "real": -0.6355601004807852,
+          "imag": -0.7720513963958969,
+          "q_diag": 5633.250000000123
+        },
+        {
+          "index": 208,
+          "real": 0.3204858189423091,
+          "imag": -0.9472533134578509,
+          "q_diag": 5633.250000000123
+        }
+      ]
+    },
+    "golden_ellipse": {
+      "shape": "golden_ellipse",
+      "family": "smooth conic",
+      "hard_part": "metric modulation from closed-form Laurent pullback",
+      "sample_count": 260,
+      "q_min": 5671.8911092995295,
+      "q_median": 7256.411995963632,
+      "q_max": 10068.651633822874,
+      "max_over_median": 1.387552366021051,
+      "q90_over_q10": 1.7238124749995891,
+      "peak_points": [
+        {
+          "index": 129,
+          "real": -0.9999594429460675,
+          "imag": 0.009006245776693195,
+          "q_diag": 10068.651633822874
+        },
+        {
+          "index": 0,
+          "real": 0.9999594429460675,
+          "imag": 0.009006245776693077,
+          "q_diag": 10068.651633822847
+        },
+        {
+          "index": 253,
+          "real": 0.987720385608885,
+          "imag": -0.11660314895459047,
+          "q_diag": 9882.298750153255
+        },
+        {
+          "index": 136,
+          "real": -0.9877203856088851,
+          "imag": -0.11660314895459017,
+          "q_diag": 9882.298750153232
+        }
+      ]
+    },
+    "rounded_square": {
+      "shape": "rounded_square",
+      "family": "smooth high-curvature",
+      "hard_part": "large but finite curvature bands",
+      "sample_count": 260,
+      "q_min": 836.3043651927647,
+      "q_median": 13359.769196805253,
+      "q_max": 21959.913574424,
+      "max_over_median": 1.6437345025148575,
+      "q90_over_q10": 7.518248451210252,
+      "peak_points": [
+        {
+          "index": 97,
+          "real": -0.7071067811865475,
+          "imag": 0.7071067811865476,
+          "q_diag": 21959.913574424
+        },
+        {
+          "index": 227,
+          "real": 0.7071067811865475,
+          "imag": -0.7071067811865476,
+          "q_diag": 21959.913574423892
+        },
+        {
+          "index": 32,
+          "real": 0.7071067811865476,
+          "imag": 0.7071067811865475,
+          "q_diag": 21959.913574423736
+        },
+        {
+          "index": 162,
+          "real": -0.7071067811865476,
+          "imag": -0.7071067811865475,
+          "q_diag": 21959.913574423717
+        }
+      ]
+    },
+    "flower_nonconvex": {
+      "shape": "flower_nonconvex",
+      "family": "smooth nonconvex",
+      "hard_part": "oscillatory metric/chord modulation",
+      "sample_count": 260,
+      "q_min": 3803.682501599781,
+      "q_median": 6003.8732228015915,
+      "q_max": 16151.789744320591,
+      "max_over_median": 2.6902283151115025,
+      "q90_over_q10": 2.6252161265373677,
+      "peak_points": [
+        {
+          "index": 234,
+          "real": 0.462464209273399,
+          "imag": -0.3275361360711199,
+          "q_diag": 16151.789744320591
+        },
+        {
+          "index": 76,
+          "real": -0.16107636292458866,
+          "imag": 0.5645997849153849,
+          "q_diag": 15182.094178700261
+        },
+        {
+          "index": 132,
+          "real": -0.6213434433873217,
+          "imag": -0.037584354111043015,
+          "q_diag": 13633.289757595208
+        },
+        {
+          "index": 180,
+          "real": -0.2266903468400188,
+          "imag": -0.6202344305729738,
+          "q_diag": 12293.971917979006
+        }
+      ]
+    },
+    "cardioid_one_cusp": {
+      "shape": "cardioid_one_cusp",
+      "family": "cusp",
+      "hard_part": "one vanishing tangent; one tangent cone",
+      "sample_count": 260,
+      "q_min": 3223.455142854779,
+      "q_median": 6483.991880394124,
+      "q_max": 723019771682.6256,
+      "max_over_median": 111508432.61677212,
+      "q90_over_q10": 44.766987027849794,
+      "peak_points": [
+        {
+          "index": 259,
+          "real": 0.33338740414204354,
+          "imag": -5.880300399400914e-07,
+          "q_diag": 723019771682.6256
+        },
+        {
+          "index": 6,
+          "real": 0.34144559395134866,
+          "imag": 0.0012839993977531378,
+          "q_diag": 1001111.1399502654
+        },
+        {
+          "index": 252,
+          "real": 0.3440801054600757,
+          "imag": -0.001968428127255209,
+          "q_diag": 662295.5154421568
+        },
+        {
+          "index": 13,
+          "real": 0.36664893023960327,
+          "imag": 0.011269892844015549,
+          "q_diag": 147660.90405809612
+        }
+      ]
+    },
+    "nephroid_two_cusps": {
+      "shape": "nephroid_two_cusps",
+      "family": "multi-cusp",
+      "hard_part": "two vanishing tangents",
+      "sample_count": 260,
+      "q_min": 2594.9889530740074,
+      "q_median": 5265.5715327315775,
+      "q_max": 80336527586.39827,
+      "max_over_median": 15256943.541078959,
+      "q90_over_q10": 65.89273592342737,
+      "peak_points": [
+        {
+          "index": 259,
+          "real": 0.5001368646528725,
+          "imag": -1.764093697090118e-06,
+          "q_diag": 80336527586.39827
+        },
+        {
+          "index": 130,
+          "real": -0.5001368646528725,
+          "imag": -1.764093697090118e-06,
+          "q_diag": 80336527586.39822
+        },
+        {
+          "index": 123,
+          "real": -0.5180429866615296,
+          "imag": 0.003828433447648266,
+          "q_diag": 175316.4524754878
+        },
+        {
+          "index": 6,
+          "real": 0.5180429866615296,
+          "imag": 0.0038284334476482384,
+          "q_diag": 175316.45247548673
+        }
+      ]
+    },
+    "astroid_four_cusps": {
+      "shape": "astroid_four_cusps",
+      "family": "multi-cusp",
+      "hard_part": "four tangent-cone endpoints",
+      "sample_count": 260,
+      "q_min": 2771.4894953335324,
+      "q_median": 6012.397391041726,
+      "q_max": 80307874658.53177,
+      "max_over_median": 13357047.020575827,
+      "q90_over_q10": 302.6927628115542,
+      "peak_points": [
+        {
+          "index": 130,
+          "real": -0.9999999999984435,
+          "imag": -1.7643834822196428e-06,
+          "q_diag": 80307874658.53177
+        },
+        {
+          "index": 259,
+          "real": 0.9999999999984435,
+          "imag": -1.7643834822198031e-06,
+          "q_diag": 80307874658.52762
+        },
+        {
+          "index": 65,
+          "real": -1.7643834821780874e-06,
+          "imag": 0.9999999999984435,
+          "q_diag": 80307874658.52296
+        },
+        {
+          "index": 195,
+          "real": 1.7643834822499704e-06,
+          "imag": -0.9999999999984435,
+          "q_diag": 80307874658.52293
+        }
+      ]
+    },
+    "joukowski_airfoil": {
+      "shape": "joukowski_airfoil",
+      "family": "Joukowski cusp",
+      "hard_part": "critical-point cusp from zeta+a^2/zeta",
+      "sample_count": 260,
+      "q_min": 6133.085108336303,
+      "q_median": 14812.293946972317,
+      "q_max": 14619236082920.266,
+      "max_over_median": 986966376.3936096,
+      "q90_over_q10": 29.237814008994413,
+      "peak_points": [
+        {
+          "index": 259,
+          "real": 0.9992753214869432,
+          "imag": -0.03805868239734661,
+          "q_diag": 14619236082920.266
+        },
+        {
+          "index": 6,
+          "real": 0.9854789646052875,
+          "imag": -0.03583573670844966,
+          "q_diag": 3432800.1395622436
+        },
+        {
+          "index": 252,
+          "real": 0.9803047234688139,
+          "imag": -0.035664640680228336,
+          "q_diag": 1568868.9860866487
+        },
+        {
+          "index": 136,
+          "real": -0.9198485232748564,
+          "imag": -0.039963387606035676,
+          "q_diag": 207673.8157463452
+        }
+      ]
+    },
+    "square_polygon": {
+      "shape": "square_polygon",
+      "family": "polygonal corners",
+      "hard_part": "four tangent jumps / Kondrat'ev vertices",
+      "sample_count": 260,
+      "q_min": 6935.894108047758,
+      "q_median": 7015.024414848144,
+      "q_max": 7848.342205273049,
+      "max_over_median": 1.1187904333819692,
+      "q90_over_q10": 1.034205815480484,
+      "peak_points": [
+        {
+          "index": 194,
+          "real": -0.6853496494577307,
+          "imag": 0.7071067811865475,
+          "q_diag": 7848.342205273049
+        },
+        {
+          "index": 131,
+          "real": 0.6853496494577307,
+          "imag": 0.7071067811865475,
+          "q_diag": 7848.342205273047
+        },
+        {
+          "index": 259,
+          "real": -0.7071067811865475,
+          "imag": -0.6853496494577307,
+          "q_diag": 7848.342205273042
+        },
+        {
+          "index": 66,
+          "real": 0.7071067811865475,
+          "imag": -0.6853496494577307,
+          "q_diag": 7848.342205273039
+        }
+      ]
+    },
+    "star_polygon": {
+      "shape": "star_polygon",
+      "family": "re-entrant polygon",
+      "hard_part": "alternating convex/re-entrant corner channel",
+      "sample_count": 260,
+      "q_min": 4519.749653499222,
+      "q_median": 4876.20249387551,
+      "q_max": 7834.771616674966,
+      "max_over_median": 1.6067363130459422,
+      "q90_over_q10": 1.1938709656036837,
+      "peak_points": [
+        {
+          "index": 155,
+          "real": 0.5651781272043007,
+          "imag": -0.7940548022836029,
+          "q_diag": 7834.771616674966
+        },
+        {
+          "index": 209,
+          "real": 0.9239724120516033,
+          "imag": 0.3102004614235062,
+          "q_diag": 7834.771616674947
+        },
+        {
+          "index": 105,
+          "real": -0.5651781272043013,
+          "imag": -0.7940548022836028,
+          "q_diag": 7834.771616674885
+        },
+        {
+          "index": 53,
+          "real": -0.9298406401624155,
+          "imag": 0.29213991237446985,
+          "q_diag": 7834.771616674841
+        }
+      ]
+    },
+    "double_concave_stealth": {
+      "shape": "double_concave_stealth",
+      "family": "concave polygon",
+      "hard_part": "symmetric concave vertex scattering",
+      "sample_count": 260,
+      "q_min": 11044.070084312592,
+      "q_median": 11414.675228287273,
+      "q_max": 34946.116919378255,
+      "max_over_median": 3.0615077713973453,
+      "q90_over_q10": 1.1259174217920869,
+      "peak_points": [
+        {
+          "index": 1,
+          "real": 0.983110896282517,
+          "imag": 0.003411940144946068,
+          "q_diag": 34946.116919378255
+        },
+        {
+          "index": 254,
+          "real": 0.8986653776951017,
+          "imag": -0.020471640869676372,
+          "q_diag": 14445.025756706891
+        },
+        {
+          "index": 8,
+          "real": 0.8648871702601362,
+          "imag": 0.027295521159568455,
+          "q_diag": 13596.920580003285
+        },
+        {
+          "index": 131,
+          "real": -0.936388639101577,
+          "imag": -0.0112431678992542,
+          "q_diag": 12966.219389860895
+        }
+      ]
+    },
+    "rational_asymptote_chart": {
+      "shape": "rational_asymptote_chart",
+      "family": "open rational chart",
+      "hard_part": "Q asymptote plus R/D touch-cross residual",
+      "sample_count": 260,
+      "q_min": 27558.748537258336,
+      "q_median": 54825.36619890198,
+      "q_max": 55165.312565683875,
+      "max_over_median": 1.0062005307096098,
+      "q90_over_q10": 1.0286491190306473,
+      "peak_points": [
+        {
+          "index": 198,
+          "real": 0.5202415770180446,
+          "imag": 0.10025356594789792,
+          "q_diag": 55165.312565683875
+        },
+        {
+          "index": 140,
+          "real": 0.07974505925094123,
+          "imag": 0.012387632568272737,
+          "q_diag": 55150.432013029014
+        },
+        {
+          "index": 205,
+          "real": 0.5734049498520055,
+          "imag": 0.10898427459719838,
+          "q_diag": 55135.04397923363
+        },
+        {
+          "index": 191,
+          "real": 0.46707820418408386,
+          "imag": 0.09143847849043339,
+          "q_diag": 55113.51878187328
+        }
+      ]
+    }
+  }
+}

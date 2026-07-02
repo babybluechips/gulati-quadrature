@@ -1,0 +1,307 @@
+{
+  "conservation_psd_cauchy_gram": {
+    "ellipse": {
+      "cauchy_gram_error_inf": 2.0761170560490427e-13,
+      "constant_residual_inf": 1.2789769243681803e-13,
+      "first_positive_eigenvalue": 22.66619609876146,
+      "min_eigenvalue": -2.3659697590886626e-13,
+      "n": 64.0,
+      "perimeter": 7.1367614495375555
+    },
+    "piecewise_curved": {
+      "cauchy_gram_error_inf": 7.690514891578459e-13,
+      "constant_residual_inf": 3.979039320256561e-13,
+      "first_positive_eigenvalue": 91.26461873134969,
+      "min_eigenvalue": -9.13562733489016e-13,
+      "n": 64.0,
+      "perimeter": 3.7151323277002533
+    },
+    "smooth_star": {
+      "cauchy_gram_error_inf": 3.741729148742934e-13,
+      "constant_residual_inf": 1.2789769243681803e-13,
+      "first_positive_eigenvalue": 29.689510818470254,
+      "min_eigenvalue": -2.494702161746721e-13,
+      "n": 64.0,
+      "perimeter": 6.396926219335893
+    }
+  },
+  "failures": [],
+  "low_mode_weyl_pairs": {
+    "ellipse": {
+      "n": 256,
+      "perimeter": 7.141612425370791,
+      "ratio_max": 0.9893217494563386,
+      "ratio_mean": 0.9675056794200864,
+      "ratio_min": 0.9477435970856751,
+      "ratios": [
+        {
+          "expected": 22.111767064876933,
+          "mode": 8.0,
+          "observed": 21.875652076195095,
+          "ratio": 0.9893217494563386
+        },
+        {
+          "expected": 24.87573794798655,
+          "mode": 9.0,
+          "observed": 24.455805901389287,
+          "ratio": 0.9831188104861326
+        },
+        {
+          "expected": 27.639708831096165,
+          "mode": 10.0,
+          "observed": 27.014390344013144,
+          "ratio": 0.9773760826894274
+        },
+        {
+          "expected": 30.40367971420578,
+          "mode": 11.0,
+          "observed": 29.55139372026721,
+          "ratio": 0.9719676696390027
+        },
+        {
+          "expected": 33.1676505973154,
+          "mode": 12.0,
+          "observed": 32.06680992619813,
+          "ratio": 0.9668098086149529
+        },
+        {
+          "expected": 35.93162148042501,
+          "mode": 13.0,
+          "observed": 34.560636683406514,
+          "ratio": 0.9618446165095726
+        },
+        {
+          "expected": 38.69559236353463,
+          "mode": 14.0,
+          "observed": 37.03287277403048,
+          "ratio": 0.9570307756531197
+        },
+        {
+          "expected": 41.459563246644244,
+          "mode": 15.0,
+          "observed": 39.483517735826794,
+          "ratio": 0.9523380046465542
+        },
+        {
+          "expected": 44.223534129753865,
+          "mode": 16.0,
+          "observed": 41.91257131197405,
+          "ratio": 0.9477435970856751
+        }
+      ],
+      "zero_mode_abs": 1.4117692619757811e-14
+    },
+    "piecewise_curved": {
+      "n": 256,
+      "perimeter": 3.7157513844621617,
+      "ratio_max": 0.988222812028813,
+      "ratio_mean": 0.9670016048680089,
+      "ratio_min": 0.9474919509530288,
+      "ratios": [
+        {
+          "expected": 42.49844892146545,
+          "mode": 8.0,
+          "observed": 41.99793670003346,
+          "ratio": 0.988222812028813
+        },
+        {
+          "expected": 47.81075503664864,
+          "mode": 9.0,
+          "observed": 46.964009363476535,
+          "ratio": 0.9822896402174983
+        },
+        {
+          "expected": 53.12306115183182,
+          "mode": 10.0,
+          "observed": 51.89364225173995,
+          "ratio": 0.9768571525541788
+        },
+        {
+          "expected": 58.435367267014996,
+          "mode": 11.0,
+          "observed": 56.765204978279726,
+          "ratio": 0.9714186396552688
+        },
+        {
+          "expected": 63.74767338219818,
+          "mode": 12.0,
+          "observed": 61.607725094023465,
+          "ratio": 0.9664309585803282
+        },
+        {
+          "expected": 69.05997949738136,
+          "mode": 13.0,
+          "observed": 66.40163373092675,
+          "ratio": 0.96150671074909
+        },
+        {
+          "expected": 74.37228561256454,
+          "mode": 14.0,
+          "observed": 71.15202127454623,
+          "ratio": 0.9567007479803166
+        },
+        {
+          "expected": 79.68459172774773,
+          "mode": 15.0,
+          "observed": 75.86736758638071,
+          "ratio": 0.9520958310935564
+        },
+        {
+          "expected": 84.9968978429309,
+          "mode": 16.0,
+          "observed": 80.53387656215389,
+          "ratio": 0.9474919509530288
+        }
+      ],
+      "zero_mode_abs": 1.343208274405496e-13
+    },
+    "smooth_star": {
+      "n": 256,
+      "perimeter": 6.399680040095337,
+      "ratio_max": 0.9705436558786525,
+      "ratio_mean": 0.9543658453625103,
+      "ratio_min": 0.9383715609554794,
+      "ratios": [
+        {
+          "expected": 24.67524461036606,
+          "mode": 8.0,
+          "observed": 23.948402113844693,
+          "ratio": 0.9705436558786525
+        },
+        {
+          "expected": 27.759650186661823,
+          "mode": 9.0,
+          "observed": 26.82782384900365,
+          "ratio": 0.9664323458187559
+        },
+        {
+          "expected": 30.84405576295758,
+          "mode": 10.0,
+          "observed": 29.683149576989887,
+          "ratio": 0.9623620773192255
+        },
+        {
+          "expected": 33.92846133925333,
+          "mode": 11.0,
+          "observed": 32.51437958457943,
+          "ratio": 0.9583216656796079
+        },
+        {
+          "expected": 37.0128669155491,
+          "mode": 12.0,
+          "observed": 35.321513960664255,
+          "ratio": 0.9543036490865747
+        },
+        {
+          "expected": 40.09727249184485,
+          "mode": 13.0,
+          "observed": 38.10455274098556,
+          "ratio": 0.9503028603438158
+        },
+        {
+          "expected": 43.181678068140606,
+          "mode": 14.0,
+          "observed": 40.86349593894357,
+          "ratio": 0.946315608079451
+        },
+        {
+          "expected": 46.266083644436364,
+          "mode": 15.0,
+          "observed": 43.598343559314266,
+          "ratio": 0.9423391851010302
+        },
+        {
+          "expected": 49.35048922073212,
+          "mode": 16.0,
+          "observed": 46.30909560397496,
+          "ratio": 0.9383715609554794
+        }
+      ],
+      "zero_mode_abs": 4.605286341876469e-14
+    }
+  },
+  "near_boundary_coercivity": {
+    "ellipse": [
+      {
+        "coercivity": 35.869369672142,
+        "delta": 0.08,
+        "delta_times_coercivity_over_pi": 0.9134059982259066
+      },
+      {
+        "coercivity": 74.7416624683909,
+        "delta": 0.04,
+        "delta_times_coercivity_over_pi": 0.9516404029400323
+      },
+      {
+        "coercivity": 153.03392448943373,
+        "delta": 0.02,
+        "delta_times_coercivity_over_pi": 0.9742442217298094
+      },
+      {
+        "coercivity": 309.9735662278929,
+        "delta": 0.01,
+        "delta_times_coercivity_over_pi": 0.9866765058598429
+      },
+      {
+        "coercivity": 624.0578776137131,
+        "delta": 0.005,
+        "delta_times_coercivity_over_pi": 0.993218959976595
+      }
+    ],
+    "piecewise_curved": [
+      {
+        "coercivity": 43.87913193450079,
+        "delta": 0.08,
+        "delta_times_coercivity_over_pi": 1.1173729193531585
+      },
+      {
+        "coercivity": 84.41808432458876,
+        "delta": 0.04,
+        "delta_times_coercivity_over_pi": 1.0748444325285398
+      },
+      {
+        "coercivity": 164.60138365037966,
+        "delta": 0.02,
+        "delta_times_coercivity_over_pi": 1.0478849539089363
+      },
+      {
+        "coercivity": 323.4280843054469,
+        "delta": 0.01,
+        "delta_times_coercivity_over_pi": 1.0295035670390826
+      },
+      {
+        "coercivity": 639.2174523221421,
+        "delta": 0.005,
+        "delta_times_coercivity_over_pi": 1.0173461724767685
+      }
+    ],
+    "smooth_star": [
+      {
+        "coercivity": 37.722148715786844,
+        "delta": 0.08,
+        "delta_times_coercivity_over_pi": 0.9605866291464109
+      },
+      {
+        "coercivity": 76.95280426409207,
+        "delta": 0.04,
+        "delta_times_coercivity_over_pi": 0.9797935346730667
+      },
+      {
+        "coercivity": 155.47185038463465,
+        "delta": 0.02,
+        "delta_times_coercivity_over_pi": 0.9897645400143278
+      },
+      {
+        "coercivity": 312.5407744187739,
+        "delta": 0.01,
+        "delta_times_coercivity_over_pi": 0.9948481833303372
+      },
+      {
+        "coercivity": 626.6945786596312,
+        "delta": 0.005,
+        "delta_times_coercivity_over_pi": 0.9974154000257294
+      }
+    ]
+  },
+  "passed": true
+}

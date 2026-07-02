@@ -1,0 +1,109 @@
+{
+  "boundary_solves": [
+    {
+      "n": 4096,
+      "residual_inf": 1.3141792878334206e-13
+    },
+    {
+      "n": 16384,
+      "residual_inf": 6.515372292058419e-13
+    },
+    {
+      "n": 65536,
+      "residual_inf": 3.4402136003536476e-12
+    }
+  ],
+  "coercivity": [
+    {
+      "delta": 0.01,
+      "delta_times_gulati_over_pi": 0.9950248756218902
+    },
+    {
+      "delta": 0.0001,
+      "delta_times_gulati_over_pi": 0.9999500025002891
+    },
+    {
+      "delta": 1e-06,
+      "delta_times_gulati_over_pi": 0.9999995000380663
+    }
+  ],
+  "condition_numbers": {
+    "n_512": 128.2504892367906,
+    "n_64": 16.253968253968253
+  },
+  "conservation": [
+    {
+      "gulati_ones_inf": 0.0,
+      "n": 4096
+    },
+    {
+      "gulati_ones_inf": 0.0,
+      "n": 16384
+    },
+    {
+      "gulati_ones_inf": 0.0,
+      "n": 65536
+    }
+  ],
+  "dense_spectrum": {
+    "max_abs_error": 1.4210854715202004e-13,
+    "n": 32
+  },
+  "failures": [],
+  "near_singular": [
+    {
+      "delta": 0.1,
+      "n_delta": 409.6,
+      "spectral_relative_error": 2.0330178828023808e-16,
+      "trapezoid_relative_error": 0.0
+    },
+    {
+      "delta": 0.01,
+      "n_delta": 40.96,
+      "spectral_relative_error": 1.8666800560276406e-16,
+      "trapezoid_relative_error": 1.8666800560276406e-16
+    },
+    {
+      "delta": 0.001,
+      "n_delta": 4.096,
+      "spectral_relative_error": 1.8500462733501662e-16,
+      "trapezoid_relative_error": 3.912294855818659e-06
+    },
+    {
+      "delta": 0.0001,
+      "n_delta": 0.4096,
+      "spectral_relative_error": 1.848382895082419e-16,
+      "trapezoid_relative_error": 0.0001779953262172624
+    },
+    {
+      "delta": 1e-05,
+      "n_delta": 0.04096,
+      "spectral_relative_error": 1.8482165572556444e-16,
+      "trapezoid_relative_error": 0.0002544376203456317
+    },
+    {
+      "delta": 1e-06,
+      "n_delta": 0.004096,
+      "spectral_relative_error": 1.8481999234729668e-16,
+      "trapezoid_relative_error": 0.0002632979698234547
+    }
+  ],
+  "passed": true,
+  "timings": [
+    {
+      "n": 4096,
+      "ns_per_n_log2_n": 1.3071697798257749,
+      "wall_clock_ms": 0.06425000901799649
+    },
+    {
+      "n": 16384,
+      "ns_per_n_log2_n": 1.1249738918195362,
+      "wall_clock_ms": 0.25804201140999794
+    },
+    {
+      "n": 65536,
+      "ns_per_n_log2_n": 1.1879205674691917,
+      "wall_clock_ms": 1.2456249969545752
+    }
+  ]
+}

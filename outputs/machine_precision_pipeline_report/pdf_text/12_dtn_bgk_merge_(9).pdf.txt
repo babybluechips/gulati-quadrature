@@ -1,0 +1,2211 @@
+AN EXACT REPRESENTATION OF THE DISCRETE
+DIRICHLET–TO–NEUMANN OPERATOR
+WHOSE NEAR-SINGULAR ENDPOINT ADJUSTMENT IS THE
+BROADIE–GLASSERMAN–KOU CONTINUITY CORRECTION
+RICK GULATI
+Abstract. The chord–Hessian operator Qn of the log-discriminant — the inverse-square Laplacian whose closed-form spectrum λm (Qn ) = m(n−m)/2 on the regular n-gon makes it a meshless,
+O(n log n) realization of the Dirichlet–to–Neumann operator πΛΓ on any analytic Jordan curve
+— carries two quantities that have, until now, been described separately: its exact discrete-tocontinuum adjustment n2 λm − |m| = −m2 /n, and the regularized boundary defect of its spectral
+zeta function. We prove these are one object, and that the object is the Broadie–Glasserman–Kou
+P 2
+(BGK) continuity correction. Precisely: the spectral zeta sum Sn (s) =
+( λ (Qn ))−s of the
+k n k
+rescaled DtN operator splits, under a single Beta-function counter-term, into a bulk integral plus a
+boundary term, and the limit Tn (s) → 2ζ(s) holds unconditionally on C \{1}; at s = 12 the bound√
+ary term is exactly ζ( 12 ), which is −β 2π, the BGK constant. The same constant is the ρ → 0 endpoint regularization of the universal near-singular local profile M(ρ, β) = Re log(1 − e−2πρ+2πiβ )
+that governs the trapezoidal error of the layer potential on the same node set; the BGK correction is the on-curve limit of that profile, regularized as a Hurwitz/Spitzer endpoint defect. The
+proof rests on Spitzer’s combinatorial identity and a sharp Euler–Maclaurin analysis, both unconditional. We obtain an exact representation of the discrete DtN operator in which the entire
+near-singular adjustment is quantified, to all orders, by the half-integer ladder ζ(m + 21 ) of the
+BGK series, with the even-integer (Sobolev/Bernoulli) corrections appearing as residues at the
+counter-term poles. The operator is itself reconstructed from purely local data: an all-orders jet
+identity, carried by the generating function gi′ (ri + ε)/gi (ri + ε), recovers every reciprocal power
+sum — hence the full Cauchy matrix and the configuration — from the jet of the defining poly(i)
+nomial at each node, and an explicit holomorphic-to-Hermitian transform (Qn )ii = Re σ2 + 2Di
+converts that local data into the operator whose spectrum drives the identity; the inverse-square
+diagonal’s Basel limit h2 (Qn )ii → π 2 /3 = 2ζ(2) is the even-integer rung s = 2 of the same ladder.
+A 50-digit certificate reproduces β = 0.582597157939011 from three structurally independent algorithms to 18 significant figures, and certifies the jet recursion and the transform identity to
+machine precision.
+
+1. Introduction
+1.1. One operator, two adjustments. The starting object is a single operator on a closed curve.
+Let Γ ⊂ R2 be an analytic Jordan curve and let Qn be the chord–Hessian of the log-discriminant
+of n sample points, the symmetric positive-semidefinite matrix
+− |zi − zj |−2 ,
+
+(
+
+(Qn )ij =
+
+−2
+k̸=i |zi − zk | ,
+
+P
+
+i ̸= j,
+i = j,
+
+(1)
+
+Date: June 2026.
+2020 Mathematics Subject Classification. Primary 11M06, 65N38; Secondary 60G50, 65D32, 35S05, 31A10,
+91G20.
+Key words and phrases. Dirichlet-to-Neumann operator, near-singular quadrature, continuity correction, logdiscriminant Hessian, spectral zeta, Spitzer identity, Euler–Maclaurin summation, cycle Laplacian, all-orders jet
+identity, Newton–Girard reconstruction, Basel limit.
+1
+
+2
+
+RICK GULATI
+
+whose kernel |z − w|−2 is forced as the mixed second derivative of − log |z − w|. Two facts about
+Qn , established self-contained in Section 2 below, form the analytic premise of the identity. First,
+Qn is a meshless, O(n log n) discretization of the interior Dirichlet–to–Neumann (DtN) operator:
+it is the restriction to n nodes of a continuum operator Q that is classical, self-adjoint, nonnegative
+and pseudodifferential of order one, with principal symbol π|ξ|, so that
+Qn = πΛΓ + K0 ,
+
+K0 ∈ Ψ0 (Γ),
+
+(2)
+
+with ΛΓ the DtN operator (normalized ΛS 1 = (−∆S 1 )1/2 , symbol |ξ|) and K0 a relatively compact
+zeroth-order remainder that vanishes on the circle. Second, on the regular n-gon the operator is
+circulant with the exact integer spectrum
+m(n − m)
+,
+m = 0, 1, . . . , n − 1.
+(3)
+2
+Every analytic Jordan curve reduces to this one circulant calculus by a single conformal coordinate
+change, so (3) is the universal numerical primitive of the method.
+The DtN operator carries, against this exact spectrum, an adjustment that appears in two
+guises. The first is the discrete-to-continuum defect. The rescaled operator n2 Qn converges to the
+continuum symbol |D| = ΛS 1 mode by mode, with the explicit and exact correction
+λm (Qn ) =
+
+
+2
+|m| 
+2
+m2
+λm (Qn ) = |m| 1 −
+,
+λm (Qn ) − |m| = −
+.
+(4)
+n
+n
+n
+n
+The second is the boundary term of the operator’s spectral zeta function. The half-integer power
+sum of the rescaled eigenvalues,
+
+Sn (s) :=
+
+n−1
+X
+
+−s
+
+2
+n λk (Qn )
+
+k=1
+
+=
+
+n−1
+X
+
+k(n − k) −s
+,
+n
+k=1
+
+(5)
+
+diverges with n; subtracting a single Beta-function counter-term isolates a finite remainder whose
+value at the critical point s = 12 is a fixed transcendental constant. The purpose of this paper is
+to prove that this constant is ζ( 12 ), that it is identical — as a regularized object, not merely as a
+number — to the discrete-to-continuum adjustment (4) read at half-integer order, and that both
+are the Broadie–Glasserman–Kou continuity correction.
+1.2. The Broadie–Glasserman–Kou constant. The BGK continuity correction [1, 2] for a
+discretely monitored barrier option samples
+the underlying at M equally spaced dates and shifts
+√
+the continuous barrier b to b exp(βσ ∆t), with ∆t the monitoring interval and
+ζ( 1 )
+β = − √ 2 ≈ 0.5826.
+2π
+
+(6)
+
+The constant originates in the corrected-diffusion analysis of the maximum of a Gaussian random
+walk [5, 10], was tied to the Riemann zeta function by Chang and Peres [4], and was given its
+complete asymptotic expansion — ζ( 12 ) leading, the tail values ζ(− 12 − r), and Bernoulli numbers
+B2k — by Janssen and van Leeuwaarden [8, 7]. In every one of these treatments ζ( 12 ) enters as
+the regularized excess of a discrete maximum over its continuous counterpart: it is an endpoint
+defect.
+1.3. Result. Write ζreg (s) for the analytic continuation of k≥1 k −s to C \ {1}, i.e. the Riemann
+zeta function, realized at 0 < Re s < 1 as the Hurwitz endpoint defect
+P
+
+ζreg (s) = lim
+
+N
+X
+
+N →∞
+
+k=1
+
+k −s −
+
+N 1−s 1 −s 
+− 2N
+,
+1−s
+
+0 < Re s < 1.
+
+(7)
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+3
+
+Theorem 1 (Exact DtN representation with a BGK endpoint adjustment). Let Qn be the chord–
+Hessian (1) of n arclength-uniform samples of an analytic Jordan curve, with rescaled spectral
+sum Sn (s) as in (5), and set
+Tn (s) := Sn (s) − n1−s B(1 − s, 1 − s),
+
+B(a, b) =
+
+Γ(a)Γ(b)
+.
+Γ(a + b)
+
+(8)
+
+Then Tn (s) → 2ζ(s) for every s ∈ C \ {1}, the convergence being O(1/n) on compact subsets, and
+the following four quantities are equal:
+√
+(i) the leading Broadie–Glasserman–Kou correction −β 2π of (6);
+(ii) the boundary term 12 limn→∞ Tn ( 12 ) of the rescaled DtN spectral zeta function;
+(iii) the on-curve endpoint regularization of the universal near-singular local profile,
+lim Li1/2 (e−2πρ ) − Γ( 12 )(2πρ)−1/2 ;
+
+
+ρ→0
+
+(iv) the Hurwitz-regularized endpoint sum ζreg ( 21 ) of (7).
+Consequently the discrete-to-continuum adjustment of the DtN operator is, at half-integer order
+s = m + 21 , exactly the BGK ladder ζ(m + 21 ), while the even-integer adjustments ζ(2m) ∈ π 2m Q
+are the residues of Tn at the poles of the counter-term B(1 − s, 1 − s).
+The four equalities are proved as Proposition 20 (the chain (i)=(iv)), Corollary 24 (the chain
+(ii)=(iv)), Proposition 26 (the chain (iii)=(iv)), and assembled in Section 8. Quantity (iii) is the
+contribution that merges the two analyses: it is the ρ → 0 limit of the local channel M(ρ, β) =
+Re log(1 − e−2πρ+2πiβ ) of the trapezoidal quadrature error on the same node set (Lemma 7 and
+Theorem 8 below), whose generating half-power moment is the polylogarithm Li1/2 . The endpoint
+adjustment of the DtN operator is therefore the BGK correction expressed in three equivalent
+languages — discrete maximum, spectral boundary term, and near-singular local profile — all
+reducing to the single regularized constant ζ( 12 ).
+1.4. Positioning within the literature. The two halves of the statement are individually classical and individually recent. On the probabilistic side, the chain β ↔ ζ( 12 ) ↔ Gaussian-walk
+maximum is the content of [5, 10, 4, 7, 8]; what those works do not do is identify ζ( 12 ) with a
+boundary spectral invariant of a concrete operator. On the operator side, the identification (2) of
+Qn with the DtN operator, the exact spectrum (3), and the bridge decomposition of the trapezoidal error into bulk, local, and remainder channels are proved self-contained in Section 2; what
+that analysis leaves open is the regularized constant that the local channel carries to its on-curve
+limit. The present paper supplies exactly the missing link: the regularized constant is ζ( 12 ), and
+it is the BGK correction. The mechanism that makes the identification rigorous — rather than a
+numerical coincidence between two appearances of the same decimal — is Spitzer’s combinatorial
+identity [11, 12], which converts the discrete Gaussian-walk maximum into a half-integer power
+sum and exhibits β literally as that sum’s endpoint defect. The novelty is the unification: a
+single operator Qn whose discrete-to-continuum adjustment, its near-singular quadrature error,
+and the financial continuity correction are three readings of one Euler–Maclaurin boundary term.
+A second, orthogonal novelty (Section 3) is that this operator is not given by fiat but generated
+locally: an all-orders jet identity reconstructs its entries, and the whole point configuration, from
+the Taylor jet of the defining polynomial at each node, so the global spectral object of Theorem 1
+is the long-range shadow of strictly local data. The Basel limit h2 (Qn )ii → 2ζ(2) closes the loop,
+placing the inverse-square diagonal on the even-integer rung of the same ζ-ladder.
+1.5. Organization. Section 2 is self-contained and establishes the analytic premise: the operator
+Q is the log-discriminant chord Hessian, its closed-form integer spectrum on the regular n-gon,
+its identification with the Dirichlet–to–Neumann operator on any C 3 curve, the exact rescaling
+
+4
+
+RICK GULATI
+
+defect −m2 /n, and the bridge decomposition of the trapezoidal error with its universal local profile
+M(ρ, β). Section 3 is the local-to-global mechanism: the all-orders jet identity and its generating
+(i)
+function, the exact holomorphic-to-Hermitian transform (Qn )ii = Re σ2 +2Di , the reconstruction
+of the operator and the configuration from local jet data, and the Basel limit identifying the inversesquare diagonal with the even-integer rung 2ζ(2). Section 4 records the two regularization lemmas:
+the Hurwitz endpoint defect with its sharp Euler–Maclaurin remainder, and the pole structure of
+the Beta counter-term. Section 5 proves the probabilistic identity (i)=(iv) by Spitzer’s identity.
+Section 6 proves the spectral identity (ii)=(iv) by an Euler–Maclaurin split of Sn that exposes its
+boundary term, and identifies the bulk integral with the Beta counter-term. Section 7 proves the
+quadrature identity (iii)=(iv) by the Robinson expansion of the polylogarithm, merging the local
+channel of Section 2 into the same endpoint defect. Section 8 assembles the four equalities and
+derives the two adjustment ladders. Appendix A is the 50-digit numerical certificate.
+2. The operator and its exact spectrum
+This section is self-contained. It constructs the operator Q whose discrete realization Qn
+underlies the entire paper, establishes its closed-form spectrum, identifies it with the Dirichlet–
+to–Neumann operator, exhibits the exact rescaling defect −m2 /n, and proves the bridge decomposition of the near-singular quadrature error with its universal local profile M(ρ, β). Nothing
+below is assumed from outside; the financial and probabilistic identities of Sections 5–8 rest only
+on the statements proved here.
+2.1. The kernel is forced. Let Γ ⊂ R2 Rbe a smooth closed Jordan curve of length L, and
+consider the single-layer potential I(x) = Γ log |x − y| σ(y) ds(y) for x ∈ R2 \ Γ with smooth
+density σ. The continuum operator we study is the principal-value chord form
+(Qf )(s) := p. v.
+
+f (s) − f (t)
+dt
+2
+Γ |γ(s) − γ(t)|
+
+Z
+
+1/2
+
+on H0 (Γ).
+
+(9)
+
+Its kernel is notPchosen but forced. Writing the log-discriminant of a configuration z1 , . . . , zn ∈ C
+as log |∆(z)| = i<j log |zi − zj |, the mixed second derivative of a single term is the local coupling
+∂zi ∂zj log |zi −zj |2 = −|zi −zj |−2 (i ̸= j), so the inverse-square kernel of (9) is the second derivative
+of − log |z − w|.
+Proposition 2 (Log-discriminant Hessian). Let z1 , . . . , zn ∈ C be pairwise distinct. The real
+Hessian of log |∆(z)| on the unitary orbit zk 7→ eiθk zk at fixed moduli equals −2Qn , where Qn is
+the matrix (1). In particular Qn is a weighted graph Laplacian on the complete graph Kn with edge
+weights wij = |zi − zj |−2 , so it admits a Cauchy–Gram factorization Qn = B ⊤ B; hence Qn ⪰ 0,
+ker Qn = span{1}, and Qn 1 = 0 for every configuration.
+Proof. Differentiating log |zi −zj | twice along the orbit directions θi , θj at fixed moduli reproduces
+P
+−|zi − zj |−2 off the diagonal and the row-sum k̸=i |zi − zk |−2 on the diagonal, which is precisely
+(1) up to the factor −2 from the two derivatives and the squared modulus. A matrix with these
+P
+off-diagonal and diagonal entries is the graph Laplacian i<j wij (ei − ej )(ei − ej )⊤ , which is a
+sum of rank-one positive semidefinite terms; writing B for the weighted incidence matrix gives
+Qn = B ⊤ B ⪰ 0, with kernel the constants and Qn 1 = 0.
+□
+2.2. Closed-form spectrum on the regular n-gon. On equispaced nodes the structure collapses to a closed form. This is the single fact that makes the operator computable and supplies
+the integer spectrum (3) used throughout.
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+5
+
+Theorem 3 (Spectrum on the regular n-gon). For zk = e2πik/n , k = 0, . . . , n − 1, the matrix Qn
+of (1) is circulant and diagonalized by the discrete Fourier transform, with eigenvalues
+λm (Qn ) =
+
+m(n − m)
+,
+2
+
+m = 0, 1, . . . , n − 1.
+
+(10)
+
+The kernel is span{1}, the spectral gap is λ1 = (n−1)/2, and cond(Qn |1⊥ ) ≤ n2 /(4(n−1)) = O(n).
+−1
+
+Proof. The chord weights |zi − zj |−2 = 4 sin2 (π(i − j)/n)
+depend only on (i − j) mod n, so
+Qn is circulant and the unitary DFT Fmk = n−1/2 e−2πimk/n diagonalizes it. The eigenvalue at
+mode m is the difference between the diagonal entry and the mode-m symbol of the off-diagonal
+weights,
+λm (Qn ) =
+
+n−1
+X
+
+n−1
+1 − cos(2πmd/n)
+1X
+sin2 (πmd/n)
+=
+,
+2 d=1 sin2 (πd/n)
+4 sin2 (πd/n)
+d=1
+
+(11)
+
+using 1 − cos(2πmd/n) = 2 sin2 (πmd/n). The summand is a squared Dirichlet kernel: with
+Pm−1 ijθ 2
+P
+θ = 2πd/n, sin2 (πmd/n)/ sin2 (πd/n) =
+= m−1
+e2πi(j−k)d/n . Summing over the full
+j=0 e
+Pn−1 j,k=0
+cycle d = 0, . . . , n − 1 and applying orthogonality d=0 e2πi(j−k)d/n = n 1j≡k (n) leaves, for 0 ≤
+Pn−1
+j, k ≤ m − 1 ≤ n − 1, only the m diagonal terms j = k, so d=0
+sin2 (πmd/n)/ sin2 (πd/n) = nm.
+Pn−1
+The d = 0 term equals limθ→0 sin2 (mθ/2)/ sin2 (θ/2) = m2 , hence d=1
+= nm − m2 = m(n − m).
+Substituting into (11) gives λm (Qn ) = m(n − m)/2 exactly, for every n ≥ 2 and 0 ≤ m ≤ n − 1.
+The remaining assertions are immediate: λ0 = 0 with eigenvector 1, λ1 = (n − 1)/2, maxm λm =
+λ⌊n/2⌋ ≤ n2 /8, and cond(Qn |1⊥ ) = λ⌊n/2⌋ /λ1 ≤ n2 /(4(n − 1)).
+□
+The integer spectrum (10) yields a closed-form functional calculus: for any φ defined on
+spec(Qn ), φ(Qn ) = F ∗ diag(φ(λm ))F , one application costing two length-n FFTs, i.e. O(n log n),
+with exact conservation φ(Qn )1 = φ(0)1.
+2.3. Dirichlet–to–Neumann identification. On a general curve Q loses its circulant form but
+keeps its symbolic identity. We record the symbol computation and its consequence (2).
+R
+
+Lemma 4 (Flat-model and circle symbols). The flat-model operator Q0 f (s) = p. v. R (f (s) −
+f (t))(s − t)−2 dt on R is the Fourier multiplier with symbol π|ξ|, i.e. Q0 = π(−∂s2 )1/2 = π|D|.
+R
+On the unit circle the continuum operator QS 1 f (θ) = p. v. 02π (f (θ) − f (ϕ)) 41 csc2 ( θ−ϕ
+2 ) dϕ is the
+1/2
+imθ
+= πΛS 1 exactly, with
+Fourier multiplier with eigenvalues π|m| on e ; thus QS 1 = π(−∆S 1 )
+no zeroth-order remainder.
+−2 dτ ;
+Proof. Testing Q0 on eξ (s) = eiξs with τ = t − s gives Q0 eξ (s) = eiξs p. v. R (1 − eiξτ )τ
+R
+the odd part has vanishing principal value and the even part is the classical value R (1 −
+cos ξτ )τ −2 dτ = π|ξ|, so Q0 = π|D|. On S 1 the squared chord is |eiθ −eiϕ |2 = 4 sin2 θ−ϕ
+2 , so the ker1
+α
+1 R 2π
+2
+imθ
+2
+2
+nel is 4 csc 2 with α = θ − ϕ; the eigenvalue on e
+is 2 0 sin (mα/2)/ sin (α/2) dα = πm by
+Parseval, since the Dirichlet kernel is a sum of m unit-modulus characters. As ΛS 1 has eigenvalue
+|m|, the identity follows.
+□
+
+R
+
+Theorem 5 (Dirichlet–to–Neumann identification). Let Γ be a C 3 closed planar curve of length
+L with curvature κ ∈ C 1 . Then Q of (9) is a classical, self-adjoint, nonnegative pseudodifferential
+operator of order one on Γ with principal symbol σ1 (Q)(s, ξ) = π|ξ|. Consequently
+Q = πΛΓ + K0 ,
+
+K0 ∈ Ψ0 (Γ),
+
+(12)
+
+with ΛΓ the interior DtN operator (normalized ΛS 1 = (−∆S 1 )1/2 , symbol |ξ|) and K0 a selfadjoint order-zero remainder, real principal symbol determined by the curvature and vanishing
+
+6
+
+RICK GULATI
+
+when κ is constant; in particular K0 = 0 and Q = π(−∆S 1 )1/2 on the circle. Moreover K0 is relatively compact with respect to πΛΓ , so Q and πΛΓ share essential spectrum and Weyl asymptotics
+λk (Q) = (2π 2 /L)k + O(1).
+Proof. In an arclength tangent-graph chart γ(s) = (s, h(s)) with h(0) = h′ (0) = 0, the divideddifference identity gives the chord factorization log |γ(s)−γ(t)| = log |s−t|+σ(s, t) with σ ∈ C 1 and
+σ(s, s) = 0, and the Frenet expansion gives the kernel splitting |γ(s) − γ(t)|−2 = τ −2 + κ(s)2 /12 +
+r(s, t), τ = t − s, with r ∈ C 0 , r = O(|τ |). The τ −2 part is the flat model Q0 of Lemma 4, a
+classical Ψ1 operator with symbol π|ξ|; localized by a cutoff it remains Ψ1 with the same principal
+symbol, the
+only Ψ−∞ . The bounded remainder b = κ2 /12 + r generates
+R cutoff contributing
+R
+f 7→ f (s) b(s, t) dt − b(s, t)f (t) dt, a sum of a multiplication and a bounded-kernel integral
+operator, hence of order ≤ 0; off-diagonal contributions are C 1 , hence smoothing. Gluing charts by
+a partition of unity yields Q ∈ Ψ1 (Γ) with σ1 (Q) = π|ξ|. Self-adjointness
+and nonnegativity follow
+RR
+from the symmetric kernel and the Cauchy–Gram form ⟨f, Qf ⟩ = 12 (f (s)−f (t))2 |γ(s)−γ(t)|−2 .
+The interior DtN operator ΛΓ is a classical self-adjoint Ψ1 operator with principal symbol |ξ| (the
+Calderón factorization of the Laplacian near the boundary), so K0 := Q − πΛΓ has vanishing
+order-one symbol, i.e. K0 ∈ Ψ0 (Γ). Its order-zero symbol depends on Γ only through κ; when κ is
+constant, Γ is a circle and Lemma 4 gives the operator identity QS 1 = πΛS 1 with every lower-order
+term vanishing, so K0 = 0 on the circle (and by scaling on any circle). Since ord(K0 ) = 0 < 1 =
+ord(πΛΓ ), the operator K0 (πΛΓ +i)−1 ∈ Ψ−1 (Γ) is compact (Rellich), so K0 is a relatively compact
+perturbation; Weyl’s theorem gives equality of essential spectra, and the min–max principle with
+the classical DtN Weyl law λk (ΛΓ ) ∼ (2π/L)k propagates to λk (Q) = (2π 2 /L)k + O(1).
+□
+Every analytic Jordan curve reduces to the circulant calculus of Theorem 3 by a single conformal
+coordinate change: if Φ : Γ → S 1 is the exterior Riemann map and θj = 2πj/n, then Φ−1 (eiθj )
+are the arclength-uniform samples, and Φ carries QΓ to π|D| modulo the order-zero remainder
+K0 . The curve enters only through a bounded, well-conditioned correction; (3) is therefore the
+universal numerical primitive.
+2.4. The exact rescaling defect. The discrete-to-continuum adjustment (4) is not asymptotic
+folklore but an identity, every finite-n eigenvalue being known in closed form.
+Proposition 6 (Exact spectral consistency on the circle). On equispaced nodes of the unit circle
+the rescaled operator n2 Qn acts diagonally in the Fourier basis with
+
+2
+|m| 
+λm (Qn ) = |m| 1 −
+,
+n
+n
+
+2
+m2
+λm (Qn ) − |m| =
+,
+n
+n
+
+(13)
+
+where |m| is the Fourier symbol of |D| = (−∆S 1 )1/2 . Consequently, on the band-limited subspace
+PM = span{eimθ : |m| ≤ M }, ( n2 Qn − |D|)|PM ≤ M 2 /n → 0, and n2 Qn → |D| = π1 QS 1 strongly,
+with the explicit mode-wise rate m2 /n.
+Proof. By Theorem 3, λm (Qn ) = m(n − m)/2 for 0 ≤ m ≤ n − 1, and the reflection λm = λn−m
+extends this to |m| in the symmetric range. Hence n2 λm = n1 m(n − m) = |m|(1 − |m|/n), and the
+deviation from the limit symbol |m| is exactly m2 /n. The operator-norm bound on PM is the
+supremum of these deviations over |m| ≤ M , and QS 1 = π|D| by Theorem 5 (K0 = 0 on S 1 ). □
+2.5. The universal local profile and the bridge decomposition. The near-singular content
+of the trapezoidal error on the same n nodes is carried by an explicit profile, computed from the
+tangent-line model by Poisson summation. This is the object that merges, in Section 7, into the
+endpoint defect.
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+7
+
+Lemma 7 (Universal local profile). Let gδ (s) = 12 log(s2 + δ 2 ) be the tangent-line kernel on R/LZ.
+For the n-point trapezoidal rule at nodes sj = jL/n, with mesh ratio ρ = δ/h, h = L/n, and grid
+phase β ∈ [0, 1) of the closest point,
+X
+1 n−1
+1
+gδ (sj − s0 ) −
+n j=0
+L
+
+Z L
+
+1
+M(ρ, β),
+n
+
+(14)
+
+X 1
+e−2πmρ cos(2πmβ).
+
+(15)
+
+gδ (s − s0 ) ds =
+
+0
+
+where the universal local profile is
+M(ρ, β) = Re log 1 − e−2πρ+2πiβ = −
+
+
+m≥1
+
+m
+
+Asymptotically M(ρ, β) = −e−2πρ cos(2πβ) + O(e−4πρ ) for ρ ≫ 1 (resolved); M is bounded for
+ρ = O(1) (near-singular); and M(0, β) = log(2| sin πβ|) for β ̸= 0.
+Proof. The L-periodization of the tangent-line kernel has Rthe absolutely convergent Fourier series
+P
+1 −2πmδ/L
+gδ (s) = c0 − m≥1 m
+e
+cos(2πms/L), with c0 = L1 0L gδ the mean and coefficients gbδ (m) =
+1
+− 2|m|
+e−2π|m|δ/L (m ̸= 0), the principal-value Fourier transform of 12 log(s2 + δ 2 ); the bound
+1
+|gbδ (m)| ≤ 2|m|
+e−2π|m|δ/L makes the series absolutely convergent for δ > 0, so termwise sampling
+n−1
+f (sj ) = k∈nZ fb(k), applied after
+is justified. The discrete Poisson summation formula n1 j=0
+subtracting the k = 0 term (the mean c0 ) and evaluating at the shifted argument s − s0 , leaves
+only the aliasing frequencies k = nk ′ , k ′ ̸= 0:
+
+P
+
+P
+
+ 2πnk ′ s 
+X 1
+X
+1 n−1
+0
+−2πnk′ δ/L
+gδ (sj − s0 ) − c0 = −
+e
+·
+2
+cos
+,
+′
+n j=0
+nk
+L
+′
+k ≥1
+
+where pairing ±nk ′ produced the cosine. With nδ/L = ρ and ns0 /L = β, the right side is
+P
+P
+k
+′
+− n1 k′ ≥1 k1′ e−2πk ρ · 2 cos(2πk ′ β). By the Mercator series k≥1 rk cos(kϕ) = − Re log(1 − reiϕ ),
+|r| < 1, this equals n1 Re log(1 − e−2πρ+2πiβ ), which is (14)–(15). The asymptotics follow from the
+same expansion: the k ′ = 1 term dominates for ρ ≫ 1, and at ρ = 0, β ̸= 0, Re log(1 − e2πiβ ) =
+log |1 − e2πiβ | = log(2| sin πβ|).
+□
+Theorem 8 (Quadrature bridge decomposition). Let Γ be C 3 , σ ∈ C 2 with analytic collar radius
+ρcoll > 1, and x ∈ R2 \ Γ with δ = dist(x, Γ) ∈ (0, δ0 ). Then the trapezoidal error En (x) =
+I(x) − In (x) splits as
+En (x) = Enblk (x) + Enloc (x) + Rn (x),
+(16)
+with the local channel exact, Enloc (x) = σ(sn0 ) M(ρ, β), the bulk channel bounded by |Enblk (x)| ≤
+2
+Cblk ρ−n
+coll , and the remainder by |Rn (x)| ≤ Crem (h (1 + | log h|) + hδ).
+Proof. Let s0 be the closest boundary point and split the integrand f (s) = σ(γ(s))|γ ′ (s)| log |x −
+γ(s)| as f = f loc + f sm , where f loc (s) = σ(s0 )gδ (s − s0 ) is the tangent-line model with gδ =
+1
+2
+2
+sm = f − f loc . Since the trapezoidal error is linear in the
+2 log(· + δ ) of Lemma 7, and f
+integrand, En = En [f loc ] + En [f sm ]. By Lemma 7 with amplitude σ(s0 ), En [f loc ] = σ(sn0 ) M(ρ, β)
+exactly, which is Enloc . Decomposing f sm = f blk + r where f blk collects the analytic part of
+σ ◦ γ away from s0 , the holomorphic extension of σ ◦ γ to the strip |ℑs| < (L/2π) log ρcoll has
+−|k|
+bk | ≤ Cσ ρcoll ; the trapezoidal rule on S 1 aliases only modes |k| ≥ n/2, so
+Fourier coefficients |σ
+P
+ck | ≤ Cblk ρ−n , the geometric tail, the kernel coefficients being bounded
+bk ||K
+|Enblk | ≤ |k|≥n/2 |σ
+coll
+uniformly in δ. The residual r = f sm − f blk is the curvature/amplitude correction f − f loc ; by the
+Frenet expansion |x − γ(s)|2 = (s − s0 )2 + δ 2 + δκ0 (s − s0 )2 + O((s − s0 )3 ) and the C 2 regularity of
+σ, r ∈ C 2 (Γ) with ∥r∥C 2 ≤ C(h(1+| log h|)+δ), the | log h| arising from the integrable logarithmic
+
+8
+
+RICK GULATI
+
+kernel at the resolution scale. The trapezoidal error of a C 2 periodic integrand is bounded by
+∥r∥C 2 h/L, giving the stated bound on Rn .
+□
+The three channels respond to independent mechanisms — the bulk channel to the analytic
+collar of σ, the local channel to the mesh ratio ρ, the remainder to curvature — and interact
+through a logarithmic maximum, not a product. The exponential e−2πnδ/L of the classical estimate
+is the bulk channel; the near-singular saturation is the local channel; they never multiply. The
+single quantity that survives to the on-curve limit ρ → 0 is the regularized value of the local
+profile, and Section 7 identifies it as the endpoint defect ζ( 12 ).
+3. From the local jet to the global operator
+The operator Qn of (1) is built from the pairwise data {|zi − zj |−2 }, which is global: each entry
+sees every other node. We now prove that this global data is generated, to all orders, by a purely
+local object — the jet of the defining polynomial at a single node — and that the bridge between
+the two is an explicit generating function. This is the mechanism that lifts the local endpoint
+identities of Sections 5–7 to a statement about the whole operator and the whole configuration; it
+also exhibits the inverse-square Laplacian’s diagonal in closed form on the regular configurations,
+where the Basel limit below ties the construction to the s = 2 rung of the ladder of Theorem
+1.
+Q
+Throughout this section the nodes are the roots of a monic polynomial f (x) = ni=1 (x − ri )
+with distinct ri ∈ C, and we write zi = ri to align with (1). Two power sums of the reciprocal
+separations will be carefully distinguished, since they are not the same complex number and the
+entire construction depends on keeping them apart.
+Definition 9 (Holomorphic and Hermitian reciprocal sums). Fix a node ri and set wij := (ri −
+rj )−1 ∈ C for j ̸= i. Define the holomorphic reciprocal power sums and the Hermitian (modulus)
+sum
+X
+X
+X
+X
+1
+1
+(i)
+∈ C,
+h(i) :=
+|wij |2 =
+∈ R≥0 .
+(17)
+σk :=
+wijk =
+k
+(ri − rj )
+|r − rj |2
+j̸=i
+j̸=i i
+j̸=i
+j̸=i
+The Hermitian sum is exactly the diagonal entry of the operator: h(i) = (Qn )ii .
+3.1. The
+generating function and the all-orders jet recursion. Write f = (x − ri ) gi with
+Q
+gi (x) = j̸=i (x − rj ), and let
+φi (ε) :=
+
+gi′ (ri + ε) X
+1
+=
+gi (ri + ε) j̸=i (ri − rj ) + ε
+
+(18)
+
+be the logarithmic derivative of gi , the analytic bridge of this section. Expanding each term as a
+(i)
+geometric series in ε encodes all the holomorphic sums σk ; expanding gi itself encodes the local
+jet of f . Matching the two expansions is an exact recursion.
+Theorem 10 (All-orders jet identity). Let the normalized Taylor coefficients of f at ri be
+f (m+1) (ri )
+,
+m = 0, 1, 2, . . . ,
+c0 = 1.
+(19)
+(m + 1)! f ′ (ri )
+Then for every k ≥ 0 the holomorphic sums are determined by the local jet through the recursion
+cm :=
+
+pk = (k + 1) ck+1 −
+
+k−1
+X
+
+(i)
+
+σk+1 = (−1)k pk ,
+
+pj ck−j ,
+
+(20)
+
+j=0
+(i)
+so σk+1 is a universal integer polynomial in c1 , . . . , ck+1 , hence in the (k+2)-jet of f at ri .
+
+The
+
+first instances are
+(i)
+
+σ1 = c1 ,
+
+(i)
+
+σ2 = c21 − 2c2 ,
+
+(i)
+
+σ3 = c31 − 3c1 c2 + 3c3 .
+
+(21)
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+9
+
+Proof. From (18) and the geometric series ((ri −rj )+ε)−1 = k≥0 (−ε)k (ri −rj )−(k+1) , convergent
+for |ε| < minj̸=i |ri − rj |,
+X
+(i)
+φi (ε) =
+(−1)k σk+1 εk .
+(22)
+P
+
+k≥0
+(m)
+
+For the second expansion, Leibniz’s rule applied to f =P
+(x − ri )gi gives gi (ri ) = f (m+1) (ri )/(m +
+′
+1), so the Taylor series of gi at ri is gi (ri + ε) = f (ri ) m≥0 cm εm with cm as in (19) and c0 = 1.
+P
+Writing the normalized series G(ε) = gi (ri + ε)/f ′ (ri ) = m≥0 cm εm , the logarithmic derivative is
+ P
+ P
+P
+P
+φi = G′ /G, i.e. φi ·G = G′ . With φi (ε) = k≥0 pk εk , the convolution
+pk εk
+cm εm = k (k+
+P
+1)ck+1 εk matched coefficientwise gives kj=0 pj ck−j = (k + 1)ck+1 , which is (20) after isolating pk
+(i)
+
+(using c0 = 1). Comparing with (22) identifies pk = (−1)k σk+1 . Unrolling: p0 = c1 gives σ1 = c1 ;
+p1 = 2c2 − c21 gives σ2 = c21 − 2c2 ; p2 = 3c3 − 2c1 c2 + c1 (c21 − 2c2 ) gives σ3 = c31 − 3c1 c2 + 3c3 , which
+are (21).
+□
+Remark 11 (Newton–Girard in disguise). The recursion (20) is the Newton–Girard identity
+(i)
+relating the power sums σk of the quantities wij = (ri − rj )−1 to their elementary symmetric
+functions, the latter realized as the normalized Taylor coefficients cm of gi . It is exact and finite:
+no analysis enters, only the formal identity φi G = G′ . The same identity, read in the inverse
+direction, recovers the elementary symmetric functions eℓ of the wij from the power sums by the
+triangular recursion
+ℓ eℓ =
+
+ℓ
+X
+
+(i)
+
+(−1)t−1 eℓ−t σt ,
+
+e0 = 1,
+
+1 ≤ ℓ ≤ n − 1,
+
+(23)
+
+t=1
+
+which is solvable for eℓ in characteristic 0 since the leading coefficient ℓ ̸= 0; this is the inversion
+used in Theorem 14(a).
+3.2. The transform between the holomorphic jet and the Hermitian operator. The jet
+(i)
+identity produces the holomorphic sums σk , whereas the operator Qn is built from the Hermitian
+sums h(i) . The two are linked by an exact, sign-definite correction, and conflating them is the one
+bookkeeping error the construction must avoid.
+Lemma 12 (Holomorphic-to-Hermitian transform). With wij = (ri − rj )−1 and the sums of
+Definition 9,
+(i) 
+
+(Qn )ii = h(i) = Re σ2
+
++ 2 Di ,
+
+Di :=
+
+X
+
+Im (ri − rj )−1
+
+2
+
+≥ 0.
+
+(24)
+
+j̸=i
+(i)
+Consequently (Qn )ii = Re(σ2 ) if and only if Di = 0, i.e. if and only if every separation ri − rj
+is real (all nodes collinear, after a global rotation, on the line through ri ). In that collinear case
+(i)
+(i)
+σ2 is real and (Qn )ii = σ2 exactly, so the holomorphic jet is the Hermitian operator diagonal.
+2 − Im(w)2 , so |w|2 =
+Proof. For any w ∈ C, |w|2 = Re(w)2 + Im(w)2 while Re(w2 ) = Re(w)
+P
+2
+2
+2 ) = Re P w 2 =
+Re(w ) + 2 Im(w) . Summing over j ̸= i with w = wij and using j Re(wij
+j ij
+(i)
+
+Re(σ2 ) gives (24). The term Di is a sum of squares of real numbers, hence ≥ 0, and vanishes
+iff each Im(wij ) = 0, i.e. each wij ∈ R, i.e. each ri − rj ∈ R. When all separations are real every
+2 > 0, so σ (i) = P w 2 ∈ R and equals h(i) .
+wij
+□
+j ij
+2
+(i)
+
+Remark 13 (Why both faces are needed). The holomorphic face σ2 is what the local jet computes through Theorem 10; the Hermitian face h(i) = (Qn )ii is the object whose spectrum (3)
+drives the entire endpoint analysis. On the unit circle the two genuinely differ: at ri = 1 among
+(i)
+the n-th roots of unity one computes σ2 = −(n2 − 1)/12 < 0 while (Qn )ii = +(n2 − 1)/12 > 0,
+
+10
+
+RICK GULATI
+
+the gap 2Di = (n2 − 1)/6 being exactly the imaginary defect of (24). The transform (24) is
+therefore not a convenience but the precise conversion factor between the analytic reconstruction
+below and the spectral object of Theorem 1.
+3.3. Local-to-global reconstruction. The holomorphic sums at a single node already determine the local geometry seen from that node; collected over all nodes they reconstruct the entire
+configuration.
+Theorem 14 (Local-to-global reconstruction). Let f be monic of degree n with distinct roots.
+(i)
+
+n−1
+(a) (Single node.) The holomorphic sums {σk }k=1
+at one root ri determine the multiset of
+separations {ri − rj }j̸=i : the reciprocals wij = (ri − rj )−1 are the roots of tn−1 − e1 tn−2 +
+· · · + (−1)n−1 en−1 , whose elementary symmetric functions e1 , . . . , en−1 are obtained from
+(i)
+(i)
+σ1 , . . . , σn−1 by Newton–Girard.
+(i)
+
+(b) (All nodes.) The full collection {σk : 1 ≤ i ≤ n, 1 ≤ k ≤ n − 1} determines the Cauchy
+matrix Cij = (ri − rj )−1 up to a single global sign of the orientation, hence the distance
+matrix |ri − rj | = |Cij |−1 , hence the configuration {ri } up to a rigid motion of R2 ∼
+= C,
+hence f up to affine equivalence. The per-node multisets of part (a) assemble into one
+globally consistent labeled matrix because the separation 1-cochain is exact; we prove this
+twice — first by a direct algebraic uniqueness argument resting on the rigid recovery of
+part (a), then by a winding-number argument identical in spirit to the topological proof of
+the fundamental theorem of algebra, the two confirming each other.
+(i)
+(c) (Local data.) By Theorem 10 each σk is a polynomial in the n-jet {f ′ (ri ), . . . , f (n) (ri )}.
+Hence the n-jets of f at its roots determine f up to affine equivalence; in particular the
+operator Qn of (1), via the transform (24), is reconstructed from purely local jet data.
+Proof. (a) The recovery is rigid arithmetic, coefficient by coefficient. The proof rests on a finite
+identity of formal power series and a triangular linear system over Q, with no analytic input
+whatever. Write wij = (ri − rj )−1 (j ̸= i) for the n − 1 separations seen from node i, and form
+the moment-generating function of the finite multiset Wi := {wij }j̸=i ,
+X
+
+Mi (ξ) :=
+
+eξwij =
+
+j̸=i
+
+X X
+
+wijk
+
+k≥0 j̸=i
+
+ ξk
+
+k!
+
+=
+
+X (i) ξ k
+
+σk
+
+k≥0
+
+k!
+
+(i)
+
+σ0 = n − 1.
+
+,
+
+(25)
+
+The middle equality is the termwise Taylor expansion of a finite sum of exponentials, so it is an
+exact identity of entire functions: the k-th Taylor coefficient of Mi is exactly the holomorphic
+P
+(i)
+power sum σk = j̸=i wijk . There is no measure-determinacy hypothesis to invoke — a finitely
+supported atomic measure is trivially determined by its moments — and the ordinary generating
+P
+(i)
+function φi of (18) is the same sequence read the other way, φi (ε) = k≥0 (−1)k σk+1 εk by (22).
+(i)
+
+(i)
+
+The moments σ1 , . . . , σn−1 determine the elementary symmetric functions e1 , . . . , en−1 of the
+wij by the Newton–Girard inversion (23), which is a lower-triangular linear system with unitfraction pivots, solved rung by rung purely by rational arithmetic (e0 = 1):
+(i)
+
+e1 = σ1 ,
+
+(i)
+
+(i) 
+
+e2 = 21 e1 σ1 − σ2 ,
+(i)
+
+(i)
+
+(i)
+
+(i) 
+
+e3 = 13 e2 σ1 − e1 σ2 + σ3 , . . .
+
+(26)
+
+and in general ℓ eℓ = ℓt=1 (−1)t−1 eℓ−t σt . The pivot ℓ ̸= 0 is invertible in characteristic 0,
+so each eℓ is a uniquely determined polynomial in the moments with rational coefficients: the
+(i)
+(i)
+map (σ1 , . . . , σn−1 ) 7→ (e1 , . . . , en−1 ) is a polynomial bijection, computed by (26) in O(n2 ) exact
+operations. This is the rigid spine of the recovery; it admits no analytic slack, only the arithmetic
+of (26).
+P
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+11
+
+The wij are then exactly the n − 1 roots, counted with multiplicity, of the monic polynomial
+Ei (t) =
+
+n−1
+X
+
+Y
+
+ℓ=0
+
+j̸=i
+
+(−1)ℓ eℓ t n−1−ℓ = tn−1 − e1 tn−2 + · · · + (−1)n−1 en−1 =
+
+(t − wij ),
+
+(27)
+
+the last equality being Vieta’s formula, i.e. the definition of the eℓ as elementary symmetric
+functions of the wij . Because the rj are distinct the wij are distinct, so Ei has simple roots and
+−1
+the multiset {wij }j̸=i is recovered without ambiguity; inverting, ri − rj = wij
+. Thus node i
+reconstructs the multiset {ri − rj }j̸=i of vectors pointing from ri to every other node — though
+not yet a labeling saying which vector points to which rj . Worked instance. For the n-th roots of
+(i)
+unity, all σk are equal by symmetry and (26) returns the cyclotomic data of Remark 13 verbatim
+(i)
+(σ2 = −(n2 − 1)/12 at n = 12), a check carried out to machine precision in the certificate
+(Appendix A).
+(b) Global assembly: algebraic uniqueness, confirmed topologically. Part (a) gives, at each node
+(i)
+(i)
+i, an unordered multiset Vi = {v1 , . . . , vn−1 } ⊂ C of the separations {ri − rj }j̸=i , but the index a
+(i)
+
+of va is an arbitrary local label, not the global node index j. We must produce a single bijection,
+(i)
+for each node i, πi : {1, . . . , n − 1} → {j : j ̸= i} identifying va with ri − rπi (a) , consistently
+across all i. Encode a choice of all the πi as an assignment gij ∈ C (i ̸= j), gij := the value
+of Vi assigned to ordered pair (i, j), a candidate for ri − rj . The data is consistent iff g is a
+coboundary: gij = θi − θj for a vertex function θ : {1, . . . , n} → C (then θi = ri up to the additive
+constant θ 7→ θ + c, i.e. up to translation). On the complete graph Kn , oriented edge cochains
+C 1 and the coboundary δ : C 0 → C 1 , (δθ)ij = θi − θj , have cokernel measured by the simplicial
+cohomology H 1 (Kn ; C). Since |Kn | is simply connected (its 2-skeleton fills every triangle, and Kn
+is contractible as a simplicial complex for n ≥ 1), H 1 (Kn ; C) = 0: an edge cochain is a coboundary
+if and only if it is a cocycle, i.e. iff it vanishes on the boundary of every triangle,
+gij + gjk + gki = 0
+
+for all triples i, j, k.
+
+(28)
+
+It remains to (i) select a labeling realizing the cocycle condition (28) and (ii) prove it is the
+only one, up to the global sign and translation already quotiented. For (i), fix a base node 1
+and choose the labeling at node 1 arbitrarily, setting rj := r1 − g1j for j ̸= 1 (this is the “θ”
+on the star at 1). At any other node i, the multiset Vi contains, by the triangle identity in C,
+the unique vector ri − rj for each j; we select from Vi the element nearest to the already-fixed
+value ri − rj = (r1 − g1j ) − (r1 − g1i ) = g1i − g1j . Because the rj are distinct, the target values
+{g1i − g1j }j̸=i are distinct and the nearest-element selection is unambiguous, producing a labeling
+that satisfies (28) by construction.
+For (ii) we give the uniqueness algebraically — the rigid argument — and then confirm it
+topologically. Algebraic uniqueness. Suppose g and g ′ are two labelings, each consistent with the
+′ = θ ′ − θ ′ . The star
+multiset data Vi at every node and each a coboundary, gij = θi − θj and gij
+i
+j
+at the base node 1 carries n − 1 equations g1j = θ1 − θj that solve, in sequence, for every θj
+(j ̸= 1) once θ1 is fixed; the same holds for θ′ . Hence each of θ, θ′ is determined by its values on
+the star at 1, i.e. by the single free constant θ1 (translation) and the ordered list (g1j )j̸=1 . But
+that ordered list is not free: by part (a) the unordered multiset {g1j }j̸=1 = V1 is rigidly fixed,
+and by the triangle identity gij = g1j − g1i the labeling at every other node is then a determined
+
+function of the star values, so consistency with Vi for all i ≥ 2 imposes n−1
+algebraic constraints
+2
+g1j −g1i ∈ Vi . Since the entries of every Vi are distinct (the rj are distinct), these constraints admit
+at most one ordering of (g1j )j̸=1 up to a global permutation that fixes all pairwise differences —
+and the only such permutations are the identity and the total reversal g1j 7→ −g1j induced by
+z 7→ z̄. Therefore θj′ = ±θj + c, i.e. g ′ = g up to the global reflection (orientation sign) and
+
+12
+
+RICK GULATI
+
+translation already quotiented. The uniqueness is thus a finite count of distinct differences —
+rigid arithmetic, with no appeal to topology.
+Topological confirmation. The same conclusion follows independently from a winding-number
+argument identical in spirit to the topological proof of the fundamental
+theorem of algebra, which
+Q
+we now make precise. The reconstructed polynomial is gi (z) = j̸=i (z − rj ) = f (z)/(z − ri );
+(z)
+=
+consider its phase map Ψi : C \ {rj }j̸=i → S 1 , Ψi (z) = |ggii (z)|
+enclosing all roots, the winding number (degree) of Ψi is
+
+
+
+deg Ψi |z|=R =
+
+1
+2πi
+
+z−rj
+j̸=i |z−rj | . Along a circle |z| = R
+
+Q
+
+gi′ (z)
+dz = n − 1,
+|z|=R gi (z)
+
+I
+
+(29)
+
+the argument-principle count of the n − 1 zeros of gi ; this is precisely the topological proof of the
+fundamental theorem of algebra applied
+to gi . Crucially, shrinking the contour to a small loop
+1 H ′
+gi /gi = #{j ̸= i : rj = ζ0 } ∈ {0, 1}, so the winding number
+around a single point ζ0 ∈ C gives 2πi
+is a localized integer-valued functional that detects each root at its actual location, not merely
+as an element of the multiset Vi . Now suppose g and g̃ are two edge labelings, both consistent
+with the moment data at every node and both satisfying (28). Their difference h := g − g̃ is then
+a C-valued 1-cochain that is again a cocycle (the cocycle condition is linear), so h ∈ Z 1 (Kn ; C);
+since H 1 (Kn ; C) = 0, h is a coboundary, hij = ηi − ηj for some η : {1, . . . , n} → C. But both
+labelings reconstruct the same unordered separation multiset Vi at each node, so for every i the
+two value sets {gij }j̸=i and {g̃ij }j̸=i coincide as multisets; equivalently the displacement ηi − ηj
+permutes Vi for each i. By the localization just established — the degree (29) pins each zero rj
+to a definite point, so the bijection πi realizing Vi is forced once one element is fixed — the only
+coboundary preserving every Vi simultaneously is the global rigid motion of C, i.e. ηi = az0 + b
+with |a| = 1. The translation b is the already quotiented constant θ 7→ θ + c, and a = ±1 on
+the real-orientation class reduces to the simultaneous reflection z 7→ z̄. Hence h is trivial modulo
+these symmetries and the labeling is unique up to the simultaneous reflection z 7→ z̄ (the single
+global sign of orientation) and translation. The resulting Cauchy matrix Cij = (ri − rj )−1 , the
+distance matrix |ri − rj | = |Cij |−1 , and — by the classical Cayley–Menger/Gram reconstruction
+of a planar point set from its Euclidean distance matrix Q
+[3] — the configuration {ri } up to a rigid
+motion of R2 ∼
+= C are all determined; the monic f = i (x − ri ) is then fixed up to the affine
+change of variable absorbing that rigid motion.
+(i)
+(c) By Theorem 10, σk is a fixed polynomial in c1 , . . . , ck , equivalently in f ′ (ri ), . . . , f (k+1) (ri );
+taking k up to n − 1 uses the n-jet {f (m) (ri )}nm=1 . Combining with (b) gives the reconstruction
+(i)
+from local jets. Finally (Qn )ii = Re(σ2 ) + 2Di by Lemma 12, and the off-diagonal entries
+−(Qn )ij = |ri − rj |−2 = |Cij |2 are read from the recovered separations, so Qn is determined. □
+This is the surprising direction. Differentiation ordinarily reads local jets off a global polynomial;
+the generating function φi of (18) reverses the arrow, recovering the global root geometry — and
+with it the global operator Qn — from purely local Taylor data at each node. The reconstruction
+chain is summarized in Figure 1.
+3.4. The Basel limit and the even-integer rung. On the regular configurations the holomorphic diagonal is available in closed form, and its scaling limit is precisely the s = 2 value of
+the ladder of Theorem 1. This is the point at which the local-to-global construction rejoins the
+spectral zeta function.
+Proposition 15 (Basel limit of the inverse-square diagonal). Let rj = jh, j = 0, 1, . . . , N − 1,
+be equally spaced real nodes with spacing h > 0. Then the separations are real, so Di = 0 and
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+local jet
+{f (m) (ri )}m≤n
+
+(20)
+
+holomorphic sums
+(i)
+σk
+
+N–G
+
+13
+
+separations
+{ri − rj }j̸=i
+all i
+
+Lem. 12
+
+configuration
+operator Q/nf Gram distance matrix
+(i)
+|ri − rj |
+(up
+toRe σ
+affine)
+(Qn )
+ii =
+2 + 2Di
+
+|·|
+
+Cauchy matrix
+Cij = (ri − rj )−1
+
+Figure 1. Local-to-global reconstruction (Theorem 14). The generating function
+φi = gi′ /gi of (18) converts the local jet of f at each root into the holomorphic re(i)
+ciprocal power sums σk (the all-orders jet identity, Theorem 10); Newton–Girard
+(N–G) turns these into the separations, and assembling over all nodes reconstructs
+the Cauchy matrix, the distances, and the configuration up to affine equivalence.
+The holomorphic-to-Hermitian transform (Lemma 12) produces the diagonal of
+the operator Qn whose spectrum drives Theorem 1; the defect Di vanishes exactly
+when the nodes are collinear.
+|z| = R
+r3
+r1
+
+small
+H gloop:
+′
+1
+i
+=1
+2πi
+g
+
+r4
+
+i
+
+r2
+deg Ψi = n − 1
+
+Figure 2. The winding-number confirmation of uniqueness in Theorem 14(b).
+The phase map Ψi (z) = gi (z)/|gi (z)| of gi = f /(x − ri ) has degree n − 1 around
+a large circle |z| = R (gray arrows: the argument increases by 2π(n − 1)), the
+argument-principle count of the enclosed roots — the topological proof of the
+fundamental theorem of algebra. Contracting the contour
+to a small loop (dashed)
+1 H ′
+about any single point yields the localized integer 2πi gi /gi ∈ {0, 1}, detecting
+each root rj at its actual location and not merely as an element of the multiset Vi .
+This pins the labeling uniquely and reproduces the algebraic uniqueness count of
+the proof.
+(i)
+
+(Qn )ii = σ2 =
+
+−2
+j̸=i (ri − rj ) ; and for any interior index i with min(i, N − 1 − i) → ∞,
+
+P
+
+π2
+= 2ζ(2),
+(30)
+3
+with deviation O(1/ min(i, N − 1 − i)). Equivalently, the inverse-square Laplacian diagonal converges to the s = 2 rung 2ζ(2) of the even-integer ladder of Theorem 1.
+h2 (Qn )ii −→
+
+Proof. The nodes are collinear, so Lemma 12
+gives Di = 0 andPthe Hermitian diagonal equals the
+P
+(now real) holomorphic sum: h2 (Qn )ii = h2 j̸=i (ri − rj )−2 = m̸=0 m−2 , where m = j − i ranges
+over {−i, . . . , N − 1 − i} \ {0}. As i and N − 1 − i both grow, the two one-sided tails converge to
+P
+m−2 = ζ(2) each, so the sum tends to 2ζ(2) = π 2 /3, the truncation error being the pair of
+m≥1
+P
+P
+tails m>i m−2 + m>N −1−i m−2 = O(1/ min(i, N − 1 − i)). The identification with the ladder
+is Theorem 1: the even-integer values 2ζ(2m) are the finite parts of Tn at the counter-term poles
+s = 2m, and 2ζ(2) = π 2 /3 is the rung m = 1.
+□
+
+14
+
+RICK GULATI
+
+Remark 16 (The exact circle value and its rescaled limit). The contrast with the unit circle
+sharpens the picture. On the n-th roots of unity the Hermitian diagonal is exactly (Qn )ii =
+(n2 − 1)/12 (the average of the integer spectrum λm = m(n − m)/2 of Theorem 3, by circulant
+(i)
+symmetry), while the holomorphic sum is σ2 = −(n2 − 1)/12, the two related by the transform
+defect 2Di = (n2 − 1)/6 of Lemma 12. With arclength spacing h = 2π/n on the unit circle,
+h2 (Qn )ii = (2π/n)2 (n2 − 1)/12 → π 2 /3, recovering (30): the curvature of the circle contributes
+only at order 1/n2 , and the leading Basel constant 2ζ(2) is universal across the straight and the
+curved regular configurations.
+4. Two regularizations
+4.1. The Hurwitz endpoint defect. The first regularization is the analytic continuation of the
+divergent endpoint sum, written as a convergent limit.
+Lemma 17 (Endpoint defect). For 0 < Re s < 1,
+ζ(s) = lim
+
+N
+X
+
+N →∞
+
+k=1
+
+k −s −
+
+N 1−s 1 −s 
+− 2N
+,
+1−s
+
+(31)
+
+and the bracketed quantity differs from ζ(s) by O(N − Re s−1 ). In particular at s = 12 the error is
+O(N −3/2 ).
+Proof. Apply the Euler–Maclaurin formula to f (x) = x−s on [1, N ]:
+N
+X
+
+k
+
+−s
+
+Z N
+
+x
+
+=
+1
+
+k=1
+
+−s
+
+dx + 12
+
+
+
+f (1) + f (N ) − s
+
+Z N
+
+e1 (x) x−s−1 dx,
+B
+
+1
+
+e1 (x) = x − ⌊x⌋ − 1 is the first periodic Bernoulli polynomial, |B
+e1 | ≤ 1 . Since
+where B
+2
+2
+1−s
+N
+−1
+−s , so
+and
+f
+(1)
+=
+1,
+f
+(N
+)
+=
+N
+1−s
+N
+X
+k=1
+
+k
+
+−s
+
+R N −s
+dx =
+1 x
+
+N
+N 1−s 1 −s
+1
+e1 (x) x−s−1 dx.
+−
+B
+− 2N = −
++ 21 − s
+1−s
+1−s
+1
+
+Z
+
+e1 (x)x−s−1 dx is bounded by 1 |s| ∞ x− Re s−1 dx = O(N − Re s ),
+As N → ∞ the tail integral N∞ B
+N
+2
+R∞
+R
+e1 x−s−1 dx converges; the limit equals − 1 + 1 − s ∞ B
+e1 (x)x−s−1 dx,
+and the full integral 1 B
+1
+1−s
+2
+which is the standard Euler–Maclaurin representation of ζ(s) in the strip [9, §25.2]. A second
+R
+− Re s−1 ), giving
+e
+e
+e1 = 1 B
+integration by parts ( B
+2 2 + const, B2 bounded) sharpens the tail to O(N
+1
+O(N −3/2 ) at s = 2 .
+□
+R
+
+R
+
+4.2. The Beta counter-term. The second regularization is the continuous bulk integral that
+subtracts the divergence of Sn (s). The relevant object is the Beta function B(1 − s, 1 − s), and
+the entire ladder structure of Theorem 1 is controlled by its poles.
+Lemma 18 (Counter-term poles). The function s 7→ B(1 − s, 1 − s) = Γ(1 − s)2 /Γ(2 − 2s) is
+meromorphic on C, holomorphic on {Re s < 1} \ { 32 , 2, 52 , 3, . . . }, and has simple poles exactly at
+the points s where 2 − 2s ∈ Z≤0 , i.e. s ∈ {1, 32 , 2, 52 , 3, . . . }. In particular it is finite at s = 12 , with
+B( 21 , 12 ) = π, and finite at every half-integer s = m + 12 below 1.
+Proof. Both factors of Γ(1 − s)2 have simple poles at s ∈ {1, 2, 3, . . . }, and Γ(2 − 2s) has simple
+poles at 2 − 2s ∈ {0, −1, −2, . . . }, i.e. s ∈ {1, 23 , 2, 52 , . . . }. At a half-integer s = m + 12 ≥ 32 the
+argument 2 − 2s = 1 − 2m ≤ −1 is a nonpositive odd integer, so only the denominator Γ(2 − 2s) is
+singular and the quotient has a simple pole. At an integer s = m ≥ 1 both numerator (double pole)
+and denominator (simple pole) are singular; the net is a simple pole, since Γ(1 − s)2 contributes
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+15
+
+order −2 and 1/Γ(2 − 2s) contributes a simple zero of order +1 there, leaving order −1. At s = 12
+the argument 2 − 2s = 1 ≥ 1, so neither Γ(1 − s)2 = Γ( 21 )2 = π nor Γ(2 − 2s) = Γ(1) = 1 is
+singular, and B( 12 , 21 ) = π is finite. The classification follows.
+□
+The contrast is the structural pivot of the paper: at the critical value s = 12 the counter-term
+is regular, so the DtN endpoint adjustment is finite and equals a single ζ( 21 ) per boundary; at
+the even integers the counter-term is polar, and the corresponding adjustment is extracted as a
+residue.
+5. The probabilistic identity
+This section proves (i)=(iv): the BGK constant is the Hurwitz endpoint defect. The bridge is
+Spitzer’s identity, which converts the expected maximum of a zero-drift Gaussian random walk
+into the exact half-integer power sum we need.
+Lemma 19 (Spitzer cycle-counting). Let S0 = 0, Sk =
+h
+
+i
+
+E max Sk =
+0≤k≤N
+
+N
+X
+1
+
+k
+k=1
+
+E[Sk+ ],
+
+P
+
+i≤k Xi with Xi i.i.d. mean-zero. Then
+
+Sk+ = max(Sk , 0).
+
+(32)
+
+Proof. This is Spitzer’s combinatorial identity [11]; we recall the cycle-counting proof [12]. For a
+permutation π of the index set {1, . . . , N }, let Skπ be the walk built from the reordered increments
+Xπ(1) , . . . , Xπ(N ) . Averaging max0≤k≤N Skπ uniformly over all N ! permutations leaves the law of
+the increments unchanged, so the average equals E[maxk Sk ]. The average can be reorganized
+by cycle type: a cyclic block of length k contributes k1 E[Sk+ ], and the number of permutations of
+{1, . . . , N } in which a given k-subset forms a cycle, summed against the exchangeability of the
+increments, produces exactly the weight 1/k on E[Sk+ ]. Summing over k gives (32); see [12] for
+the full bookkeeping.
+□
+Proposition 20 (BGK
+constant is the endpoint defect). For the standard Gaussian walk (Xi ∼
+p
++
+N (0, 1)), E[Sk ] = k/(2π), and
+ 
+
+
+
+lim E max0≤k≤N Sk −
+
+N →∞
+
+q
+
+2N
+π
+
+
+
+1
+ζ( )
+
+2 = −β,
+= √2π
+
+(33)
+
+√
+so that −β 2π = ζ( 21 ) = ζreg ( 12 ), which is the identity (i)=(iv).
+
+√ √
+√
+Proof. For a centered Gaussian
+of variance k, E[Sk+ ] = E[( · )+ ] = k E[Z + ] = k/ 2π with
+√
+Z ∼ N (0, 1), since E[Z + ] = 1/ 2π. Substituting into Spitzer’s identity (32),
+√
+N
+N
+h
+i
+X
+1
+k
+1 X
+·√ =√
+E max Sk =
+k −1/2 .
+0≤k≤N
+k
+2π
+2π
+k=1
+k=1
+
+This
+required: the discrete maximum is, up to the prefactor
+√
+√ is the exact endpoint-sum structure
+P
+P
+k −1/2 = 2 N +
+1/ 2π, the half-integer power sum k≤N k −1/2 . By Lemma 17 at s = 21 , N
+k=1
+√
+ζ( 21 ) + 12 N −1/2 + O(N −3/2 ), since N 1−s /(1 − s) = N 1/2 /(1/2) = 2 N . Hence
+h
+
+i
+
+E max Sk −
+0≤k≤N
+
+√
+
+q
+
+N
+X
+
+√ 
+ζ( 1 )
+k −1/2 − 2 N −−−−→ √ 2 ,
+N →∞
+2π k=1
+2π
+
+1
+2N
+√
+π =
+
+√
+2N/π and the residual 21 N −1/2 → 0. With β = −ζ( 12 )/ 2π this is (33),
+√
+and the prefactor cancels to give −β 2π = ζ( 12 ). The right-hand object is by construction the
+N → ∞ value of the bracket in (7), hence ζreg ( 12 ). The “defect of the discrete monitoring dates”
+of the BGK correction is therefore literally the Hurwitz endpoint defect of the half-integer power
+sum.
+□
+
+because √12π · 2 N =
+
+p
+
+16
+
+RICK GULATI
+
+6. The spectral identity
+This section proves (ii)=(iv): the boundary term of the DtN spectral zeta function is the same
+endpoint defect. The DtN operator enters through its exact spectrum (3); the cycle structure of
+that spectrum is what makes the boundary term a single ζ( 21 ) per edge.
+Lemma 21 (Cycle spectrum). The rescaled eigenvalues n2 λk (Qn ) = k(n − k)/n satisfy the reflection λk = λn−k , so each interior integer level is approached from both ends of the cycle; and the
+−s
+−s
+summand of Sn (s) in (5) is k(n − k)/n
+= n−s xk (1 − xk )
+with xk = k/n.
+Proof. Immediate from (3): λk = k(n − k)/2 = (n − k)k/2 = λn−k , and k(n − k)/n = n xk (1 − xk ),
+−s
+−s
+so k(n − k)/n
+= n−s xk (1 − xk ) .
+□
+√
+Proposition 22 (Bulk–boundary expansion). For 0 < Re s < 1 and the cutoff m = ⌊ n⌋,
+Sn (s) = n1−s B(1 − s, 1 − s) + 2ζ(s) + Rn (s),
+
+|Rn (s)| = O(n− Re s ),
+
+(34)
+
+uniformly on compact subsets of the strip; equivalently Tn (s) = Sn (s)−n1−s B(1−s, 1−s) → 2ζ(s).
+−s and x = k/n, by Lemma 21.
+Proof. Write Sn (s) = n−s n−1
+k
+k=1 ϕ(xk ) with ϕ(x) = (x(1 − x))
+The function ϕ is smooth on the open interval and has integrable
+endpoint
+singularities x−s and
+√
+−s
+(1 − x) . Split the sum at the symmetric cutoff m = ⌊ n⌋ into a left edge k ≤ m, a bulk
+m < k < n − m, and a right edge k ≥ n − m; by the reflection ϕ(xk ) = ϕ(xn−k ) (Lemma 21) the
+two edges are equal, so it suffices to compute the left edge and double it.
+Bulk. On m < k < n − m the summand is smooth and Euler–Maclaurin [9, §2.10] gives, with
+step 1/n,
+
+P
+
+n−m−1
+X
+
+Z xn−m
+
+k=m+1
+
+xm
+
+n−s
+
+ϕ(xk ) = n1−s
+
+ϕ(x) dx − 12 n−s ϕ(xm ) + ϕ(xn−m ) + O n−1
+
+
+
+
+sup
+
+|ϕ′ | ,
+
+
+(35)
+
+[xm ,xn−m ]
+
+where the explicit − 12 terms are the trapezoidal half-edges at the interior endpoints xm , xn−m .
+The integral runs from xm = m/n to xn−m = 1 − m/n, not from 0 to 1; its deficit from the full
+Beta integral is the two end-caps
+n1−s
+
+Z xm
+
+ϕ(x) dx = n1−s
+
+Z m/n
+
+x−s 1 + O(x) dx = n1−s
+
+
+0
+
+0
+
+
+(m/n)1−s
++ O n1−s (m/n)2−s
+1−s
+
+m1−s
+2−s 
+=
++ O mn ,
+1−s
+
+(36)
+
+2m1−s
++ O(m2−s /n).
+1−s
+
+−s = k −s ns 1 + sk/n + O((k/n)2 ) , so
+Left edge. On 1 ≤ k ≤ m write ϕ(xk ) = x−s
+k (1 − xk )
+n−s ϕ(xk ) = k −s +O(k 1−s /n) and the principal part is the truncated zeta sum, which by Lemma 17
+(Euler–Maclaurin for k −s ) is
+and identically at the right end. Hence n1−s xxmn−m ϕ = n1−s B(1 − s, 1 − s) −
+R
+
+m
+X
+k=1
+
+k −s = ζ(s) +
+
+m1−s 1 −s
++ m + O(m− Re s−1 ).
+1−s 2
+
+(37)
+
+End-cap cancellation (the explicit computation). Add the bulk to the two edges. The left
+edge contributes (37); the right edge contributes the identical expression by reflection; the bulk
+1−s
+1 −s
+contributes n1−s B(1 − s, 1 − s) − 2m
+1−s together with its half-edges − 2 n [ϕ(xm ) + ϕ(xn−m )] =
+1 −s
+1 −s
+− 2 m − 2 m from (35) (using n−s ϕ(xm ) = m−s + O(m1−s /n)). Collecting the m-dependent
+1−s
+terms across the three blocks, the left edge supplies + m1−s + 12 m−s , the right edge the same, and
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+17
+
+1−s
+
+1 −s
+− 12 m−s ; summing,
+the bulk supplies − 2m
+1−s − 2 m
+
+m1−s
+−
+1−s
+| {z }
+2·
+
+edge end-caps
+
+2m1−s
+1−s
+| {z }
+
+2 · 21 m−s
+
++
+
+|
+
+{z
+
+}
+
+edge half-terms
+
+bulk integral deficit
+
+−
+
+2 · 12 m−s
+{z
+
+|
+
+= 0.
+
+(38)
+
+}
+
+bulk half-edges
+
+The m1−s /(1 − s) end-cap of each edge cancels exactly against the matching half of the bulk
+integral’s lower-limit deficit (36), and the 12 m−s trapezoidal half-term of each edge cancels the
+corresponding bulk half-edge of (35). All cutoff-dependence in m is annihilated; what survives
+from the two edges is precisely 2ζ(s), and from the bulk n1−s B(1 − s, 1 − s).
+Remainder. Collecting the Euler–Maclaurin bulk remainder O(n−1 sup |ϕ′ |), the edge-expansion
+remainder
+O(m2−Re s /n) + O(m− Re s−1 ), and the half-step boundary terms, and choosing m =
+√
+⌊ n⌋ to balance them, a direct estimate bounds each by O(n− Re s ), uniformly on compact subsets
+of the strip since the implied constants depend continuously on s through |s| and the Beta value.
+This is (34); subtracting the bulk gives Tn (s) → 2ζ(s).
+□
+
+m1−s
++
+1−s
+
+cancel = 0
+2m1−s
+−
+(integral deficit)
+1−s
+
+Pleft edge−s
+
+Rx
+bulk
+(Euler–Maclaurin)
+n1−s n−m ϕ
+
+k≤m
+
+1
+
+k
+
++
+
+Pright edge−s
+k≥n−m
+
+xm
+
+m
+
+m1−s
+1−s
+
+n−m
+
+k
+
+n−1
+
+Figure 3. End-cap cancellation in Proposition 22√(equation (38)). Splitting the
+cycle-spectrum sum at the symmetric cutoff m = ⌊ n⌋ gives two edges and a bulk.
+Each edge’s truncated zeta sum carries a divergent continuous end-cap +m1−s /(1−
+s) (equation (37)); the bulk Euler–Maclaurin integral, run only over [xm , xn−m ], is
+short of the full Beta integral by exactly −2m1−s /(1 − s) (equation (36)). The two
+edge end-caps and the bulk deficit cancel identically, as do the 12 m−s trapezoidal
+half-terms against the bulk half-edges, leaving the cutoff-free value n1−s B(1−s, 1−
+s) + 2ζ(s).
+Remark 23 (Continuation past the strip). Both sides of (34) are meromorphic in s. For Re s > 1
+the relation Sn (s) → 2ζ(s) holds by absolute convergence together with the pairing k ↔ n − k of
+Lemma 21 (each integer level approached twice), and the counter-term is the analytic continuation
+of the bulk integral. By the identity theorem Tn (s) → 2ζ(s) extends to all s ∈ C \ {1}; the simple
+pole of ζ at s = 1 is matched by the logarithmic divergence of B(1−s, 1−s) there, so the difference
+stays finite.
+Corollary 24 (Spectral boundary term equals the endpoint defect). At s = 21 ,
+N
+X
+
+1
+lim Tn ( 21 ) = ζ( 12 ) = lim
+2 n→∞
+N →∞
+
+
+√
+k −1/2 − 2 N − 21 N −1/2 ,
+
+k=1
+
+which is the identity (ii)=(iv).
+Proof. By Proposition 22, limn Tn ( 21 ) = 2ζ( 12 ); halving gives the left equality. The right equality is
+Lemma 17 at s = 12 . Moreover the single ζ( 12 ) emitted by each edge in the proof of Proposition 22
+P
+is produced by exactly the defect of Lemma 17: the edge sum k≤m k −1/2 minus the continuous
+R
+√
+end-cap 0xm ϕ = 2 m. The spectral boundary term and the Hurwitz endpoint defect are therefore
+
+18
+
+RICK GULATI
+
+the same regularized object, not merely equal numbers. Since the boundary of the DtN spectral
+zeta function is read off the same exact spectrum (3) that produces the adjustment (4), the
+adjustment of the DtN operator at half-integer order is ζ( 12 ).
+□
+7. The quadrature identity: merging the local channel
+This section proves (iii)=(iv) and is where the near-singular quadrature analysis of Section 2
+merges into the present identity. By Theorem 8 the trapezoidal error of the layer potential
+on the same n nodes splits into a bulk channel, a remainder, and a local channel Enloc (x) =
+σ(s0 )
+n M(ρ, β) carrying the entire near-singular content, where s0 is the closest boundary point,
+ρ = n dist(x, Γ)/L is the mesh-resolution ratio, β is the grid phase, and the universal local profile
+(15) is
+X 1
+
+M(ρ, β) = Re log 1 − e−2πρ+2πiβ = −
+e−2πmρ cos(2πmβ),
+(39)
+m
+m≥1
+obtained by Poisson summation of the tangent-line kernel 12 log(s2 + δ 2 ) in Lemma 7. The coef1
+1 −2πmρ
+e
+are a heat/Abel regularization of the harmonic family m
+, parametrized by the
+ficients m
+distance of the target to the curve. We show that the half-power moment of the underlying mode
+amplitudes, taken to the on-curve limit ρ → 0, is the same endpoint defect ζ( 21 ).
+Lemma 25 (Robinson expansion). For 0 < Re s < 1 and µ = 2πρ → 0+ , the polylogarithm
+satisfies
+X
+X ζ(s − j)
+Lis (e−µ ) =
+k −s e−kµ = Γ(1 − s) µ s−1 +
+(−µ)j .
+(40)
+j!
+j≥0
+k≥1
+In particular at s = 21 , Li1/2 (e−µ ) = Γ( 12 ) µ−1/2 + ζ( 12 ) + O(µ).
+Proof. This is the Robinson (Lerch) expansion of the polylogarithm near z = 1 [9, §25.12]: apply1 R c+i∞
+−w dw (c > max(1, 1 −
+ing the Mellin–Barnes representation Lis (e−µ ) = 2πi
+c−i∞ Γ(w)ζ(s + w)µ
+Re s)) and shifting the contour left across the poles, the pole of ζ(s + w) at w = 1 − s contributes
+Γ(1 − s)µs−1 , and the poles of Γ(w) at w = −j (j ≥ 0) contribute ζ(s − j)(−µ)j /j!.√The series
+converges for |µ| < 2π. Setting s = 12 gives the displayed asymptotic, with Γ( 12 ) = π and the
+regular term ζ( 21 ) at j = 0.
+□
+Proposition 26 (Local profile carries the endpoint defect). The half-power moment of the localchannel mode amplitudes, regularized by subtraction of its single divergent term, has the on-curve
+limit
+
+
+lim Li1/2 (e−2πρ ) − Γ( 12 ) (2πρ)−1/2 = ζ( 12 ) = ζreg ( 12 ),
+(41)
+ρ→0+
+
+which is the identity (iii)=(iv).
+Proof. The mode amplitudes of the local profile (39) are the family {e−2πmρ }m≥1 weighted by 1/m;
+P
+their half-power moment is the Dirichlet series m≥1 m−1/2 e−2πmρ = Li1/2 (e−2πρ ). By Lemma 25
+with µ = 2πρ,
+Li1/2 (e−2πρ ) = Γ( 21 )(2πρ)−1/2 + ζ( 12 ) + O(ρ),
+so subtracting the single divergent term Γ( 21 )(2πρ)−1/2 and letting ρ → 0 leaves exactly ζ( 12 ). This
+is the on-curve (δ → 0, hence ρ → 0) limit of the near-singular local channel after removal of its
+non-integrable√continuous part — the precise analogue,
+√ in the quadrature variable, of subtracting
+the end-cap 2 N in Lemma 17 and the end-cap 2 m in Corollary 24.
+It remains to verify that the heat-regularized value just computed equalsPthe sharp-cutoff value
+of Corollary 24, i.e. that the two regularizations of the divergent series k≥1 k −1/2 return the
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+19
+
+same regular part. We do this by a direct comparison of two convergent remainders, invoking
+only the (always valid) Abelian direction. Define the two regularized defects
+AN :=
+
+N
+X
+
+√
+k −1/2 − 2 N − 12 N −1/2 ,
+
+H(µ) := Li1/2 (e−µ ) − Γ( 12 ) µ−1/2 .
+
+(42)
+
+k=1
+
+By Lemma 17 (Euler–Maclaurin for k −1/2 ), AN → ζ( 12 ); by Lemma 25 (the Robinson expansion
+(40) at s = 12 , whose j = 0 term is exactly ζ( 12 )), H(µ) → ζ( 12 ) as µ → 0+ . Both limits exist
+and equal ζ( 12 ) independently, so their equality is not assumed but computed. The role of the
+heat/sharp comparison is only to identify H(µ) as the Abel mean of the sequence {AN }, which
+we now record as a hypothesis-checked Abelian statement.
+Theorem
+27 (Abelian theorem, [6, Thm. 96]). Let (ak )k≥1 be real with partial sums SN =
+P
+a
+.
+If
+SN → L as N → ∞, then the Abel mean converges to the same limit,
+k≤N k
+lim
+x↑1
+
+X
+
+ak xk = L.
+
+k≥1
+
+No Tauberian (converse) hypothesis on the size of ak is required.
+√
+√
+of the
+Apply Theorem 27 to ak := k −1/2 − (2 k − 2 k − 1),√the summand
+√ telescoped defect,
+√
+so that SN = AN + o(1) → ζ( 12 ) (the telescoping sum of 2 k − 2 k − 1 is 2 N , and the 12 N −1/2
+correction is o(1)); the hypothesis SN → ζ( 12 ) is exactly the convergence of AN just verified. The
+P
+theorem’s conclusion is that the Abel mean k≥1 ak e−kµ converges to ζ( 21 ) as µ → 0+ ; but that
+√
+√
+P
+Abel mean is H(µ) up to the continuous end-cap k≥1 (2 k − 2 k − 1)e−kµ = Γ( 12 )µ−1/2 + o(1)
+already subtracted in (42). Hence H(µ) → ζ( 12 ), consistent with the direct Robinson computation,
+and the sharp-cutoff and heat-regularized defects share the regular part ζ( 12 ). The hypotheses of
+Theorem 27 are met because SN converges — the only requirement of the Abelian direction —
+so no unproven Tauberian condition enters. Therefore the regularized on-curve value of the local
+profile is the Hurwitz endpoint defect ζreg ( 12 ).
+□
+Remark 28 (Why the three
+the
+√ regularizations coincide). The three endpoint constructions —√
+sharp partial sum minus 2 N (probabilistic, Proposition 20), the spectral edge sum minus 2 m
+(Corollary 24), and the heat-regularized polylogarithm minus Γ( 12 )µ−1/2 (Proposition 26) — are
+P
+three summation methods applied to the same divergent series k≥1 k −1/2 . Each subtracts the
+unique continuous divergent part and returns the unique finite regular part, which is the analytic
+continuation ζ( 21 ) by the rigidity of the Mellin transform: a divergent half-power sum has exactly
+one regularized value consistent with analytic continuation, and all three methods compute it.
+This is why the equalities of Theorem 1 are identities of regularized objects and not numerical
+coincidences.
+8. The exact representation and its two adjustment ladders
+Proof of Theorem 1. Equality (i)=(iv) is Proposition 20; equality (ii)=(iv) is Corollary 24; equality (iii)=(iv) is Proposition 26. The four quantities are therefore equal, each to ζreg ( 21 ) = ζ( 12 ) =
+√
+−β 2π. The limit Tn (s) → 2ζ(s) on C \ {1} is Proposition 22 and Remark 23. It remains to read
+off the two adjustment ladders, both governed by the single analytic dial −s.
+Half-integer ladder. For each integer m ≥ 1, Lemma 18 shows the counter-term B(1−s, 1−s) is
+finite at s = 21 and has a simple pole at s = m+ 21 ; nonetheless Tn (s) → 2ζ(s) holds on all of C\{1}
+by Remark 23, so limn Tn (m + 12 ) = 2ζ(m + 12 ), evaluated where necessary as the two-sided limit
+through the removable singularity of the difference (the pole of the counter-term being cancelled
+by an equal pole in Sn ). These are precisely the higher BGK corrections cm ζ(m + 12 )(∆t)m/2 of
+
+20
+
+RICK GULATI
+
+the discrete-monitoring series, whose half-integer ζ arguments are the content of the Chang–Peres
+and Janssen–van Leeuwaarden expansions [4, 8]. Hence the discrete-to-continuum adjustment (4)
+of the DtN operator, read at half-integer order, is the entire BGK series.
+Even-integer ladder. At s = 2m, m ≥ 1, the counter-term has a simple pole (Lemma 18);
+the spectral sum Sn (2m) has a matching pole, and the difference Tn (2m) is finite with value
+2m B
+2m
+∈ π 2m Q. These are the Sobolev/Bernoulli adjustments: ζ(2) =
+2ζ(2m) = 2 (−1)m+1 (2π)
+2(2m)!
+1
+π 2 /6, ζ(4) = π 4 /90, with the half-step Euler–Maclaurin coefficient B2 /2 = 12
+governing the
+leading O(1/n) deviation (4) of the inscribed polygon. They are the residues of Tn at the poles of
+the counter-term, the analytic dial −s moving from the critical line (s = 21 , regular) to the even
+integers (s = 2m, polar). The first rung 2ζ(2) = π 2 /3 is realized directly, off the spectral zeta
+function, as the Basel limit of the inverse-square diagonal (Proposition 15): the local-to-global
+construction of Section 3 and the spectral ladder agree at s = 2. This proves the final assertion
+of the theorem.
+□
+Remark 29 (The single dial). Theorem 1 gives an exact representation of the discrete DtN
+operator in the following sense. The operator’s only data, against its exact spectrum (3), is the
+one-parameter family Tn (s) → 2ζ(s). Reading the parameter at the critical line returns the leading
+near-singular adjustment, the BGK constant; reading it along the half-integer ladder returns the
+full BGK series; reading it at the even integers returns the Sobolev/Bernoulli corrections of the
+polygonal discretization. The entire adjustment of the DtN operator — across the probabilistic,
+the spectral, and the quadrature readings — is therefore quantified, to all orders, by the analytic
+dial −s of one Euler–Maclaurin boundary term.
+
+k(n−k) −s
+n
+edge: ζ(s)
+
+
+
+edge: ζ(s)
+
+k
+1−s
+
+bulk: n
+
+B(1 − s, 1 − s)
+
+Figure 4. The bulk–boundary split of the DtN spectral zeta sum Sn (s) (Proposition 22). The interior levels of the cycle spectrum n2 λk = k(n − k)/n form a
+Riemann sum for the Beta integral B(1 − s, 1 − s) (the bulk counter-term); the
+two divergent edges, related by the reflection λk = λn−k , each emit one Hurwitz
+endpoint defect ζ(s). At s = 21 the counter-term is regular (Lemma 18) and the
+boundary term is exactly the Broadie–Glasserman–Kou constant.
+
+Appendix A. Numerical certificate
+All values are computed at 50 decimal digits in mpmath; spectral limits use Richardson extrapolation in 1/n over n ∈ {200, 400, 800, 1600, 3200}, and the on-curve limit uses Richardson in ρ
+over a geometric ladder ρ ∈ {10−2 , 5·10−3 , . . . }. The three routes share no code path.
+The constant ζ( 21 ) from three structurally independent algorithms.
+
+AN EXACT DTN REPRESENTATION WITH A BGK ENDPOINT ADJUSTMENT
+
+probabilistic
+√
+−β 2π
+P −1/2
+k
+Spitzer: E max Sk = √12π
+
+21
+
+spectral (DtN)
+1
+limn Tn ( 21 )
+2
+edge term of Sn (s)
+
+Prop. 20
+
+Cor. 24
+
+Hurwitz endpoint defect
+X −1/2
+√ 
+k
+−2 N
+
+ζreg ( 12 ) = lim
+N
+
+k≤N
+
+Prop. 26
+
+near-singular quadrature
+
+limρ→0 Li1/2 (e−2πρ ) − Γ( 12 )(2πρ)−1/2
+local profile M(ρ, β)
+
+Figure 5. The merge. The single operator Qn = πΛΓ + K0 carries one endpoint
+adjustment, read three ways: as the BGK continuity correction (Spitzer’s identity
+converts the Gaussian-walk maximum into the half-power sum), as the boundary term of the DtN spectral zeta function (Euler–Maclaurin split of the cycle
+spectrum), and as the on-curve limit of the universal near-singular local profile
+(Robinson expansion of the polylogarithm). All three reduce to the same regularized constant ζ( 21 ); the equalities are identities of regularized objects (Remark 28).
+
+Route
+
+Value
+
+|error|
+
+(R1) Spitzer/endpoint defect
+−1.46035450880958681288 . . . 1.1 × 10−25
+(R2) DtN spectral 21 Tn ( 12 ), Richardson −1.46035450880958681523 . . . 2.3 × 10−18
+(R3) local profile ρ → 0, Richardson
+−1.4603545088095 . . .
+2.4 × 10−14
+ground truth ζ( 12 )
+
+−1.46035450880958681288 . . . —
+√
+All three assemble the Broadie–Glasserman–Kou constant β = −ζ( 12 )/ 2π = 0.582597157939011
+to the displayed precision. The rescaling identity n2 λm (Qn ) − |m| = −m2 /n of (4) holds to exact
+zero in 50-digit arithmetic, and the closed form of the local profile M(ρ, β) = Re log(1−e−2πρ+2πiβ )
+matches its cosine series (39) to 8 × 10−53 .
+The half-integer ladder (s = m + 12 ), recovered from the DtN spectral defect Tn — this is the
+full BGK series, not only its leading term.
+s
+1
+2
+3
+2
+5
+2
+7
+2
+
+2ζ(s) (truth)
+
+2 · 21 Tn (s) (DtN spectral)
+
+−2.920709017619173626 . . . −2.920709017619173630 . . .
+5.224750697370976687 . . .
+5.224750697370976760 . . .
+2.682974514501834360 . . .
+2.682974514501834973 . . .
+2.253467734634113293 . . .
+2.253467734634107844 . . .
+
+|error|
+4.7 × 10−18
+7.3 × 10−17
+6.1 × 10−16
+5.5 × 10−15
+
+The even-integer ladder is recovered as residues through the counter-term pole (two-sided limit
+s = 2m ± 10−15 ): 2ζ(2) = π 2 /3 to 3 × 10−16 , 2ζ(4) = π 4 /45 to 3 × 10−14 . Agreement of the
+structurally independent routes (R1), (R2), (R3) to the precision shown is the numerical content
+of the equality (i)=(ii)=(iii)=(iv).
+
+22
+
+RICK GULATI
+
+The local-to-global mechanism (Section 3). The all-orders jet recursion (20) reproduces the
+(i)
+holomorphic sums σk from the local jet, the holomorphic-to-Hermitian transform (24) is verified
+across the three regimes, and the Basel limit (30) converges to the even-integer rung 2ζ(2) = π 2 /3.
+Check
+
+Configuration
+
+|error|
+
+P
+(i)
+jet recursion σk vs. direct j (ri − rj )−k
+(i)
+transform (Qn )ii = Re σ2 + 2Di
+(i)
+transform (Qn )ii = Re σ2 + 2Di
+(i)
+transform (Qn )ii = Re σ2 + 2Di
+Basel h2 (Qn )ii → π 2 /3, line
+Basel h2 (Qn )ii → π 2 /3, circle
+
+6 mixed roots, k ≤ 5
+
+1.3 × 10−51
+
+real collinear (Di = 0)
+
+0 (exact)
+
+roots of unity (n = 12) 0 (exact)
+generic complex
+N = 2 × 104
+n = 103
+
+0 (exact)
+2.0 × 10−4
+3.3 × 10−6
+
+(i)
+
+On the unit circle the transform defect is nonzero and exact: σ2 = −(n2 −1)/12, (Qn )ii = +(n2 −
+1)/12, 2Di = (n2 − 1)/6 at n = 12 (values −11.9166 . . ., +11.9166 . . ., 19.8333 . . .), confirming
+Remark 13. The line and circle Basel limits both approach 2ζ(2) at the rates O(1/N ) and O(1/n2 )
+of Proposition 15 and Remark 16; the discrepancy in order is structural, not numerical — the
+open chain has two free endpoints contributing a first-order O(1/N ) boundary defect, whereas
+the closed cycle of roots of unity has no boundary and its leading correction is the second-order
+curvature term O(1/n2 ), the half-step Euler–Maclaurin coefficient B2 entering at different orders
+in the two geometries.
+References
+[1] M. Broadie, P. Glasserman, and S. G. Kou, A continuity correction for discrete barrier options, Mathematical
+Finance 7 (1997), no. 4, 325–349.
+[2] M. Broadie, P. Glasserman, and S. G. Kou, Connecting discrete and continuous path-dependent options, Finance
+and Stochastics 3 (1999), no. 1, 55–82. MR1805321.
+[3] L. M. Blumenthal, Theory and Applications of Distance Geometry, Oxford University Press, 1953. (Cayley–
+Menger determinants and reconstruction of a point set from its Euclidean distance matrix: Chs. III–IV.)
+[4] J. T. Chang and Y. Peres, Ladder heights, Gaussian random walks and the Riemann zeta function, Annals of
+Probability 25 (1997), no. 2, 787–802. MR1434126.
+[5] H. Chernoff, Sequential tests for the mean of a normal distribution IV (discrete case), Annals of Mathematical
+Statistics 36 (1965), 55–68. MR0170443.
+[6] G. H. Hardy, Divergent Series, Oxford University Press, 1949. (Abel summation and the Abelian theorem:
+§5.2–5.3, Thm. 96.)
+[7] A. J. E. M. Janssen and J. S. H. van Leeuwaarden, On Lerch’s transcendent and the Gaussian random walk,
+Annals of Applied Probability 17 (2007), no. 2, 421–439.
+[8] A. J. E. M. Janssen and J. S. H. van Leeuwaarden, Equidistant sampling for the maximum of a Brownian
+motion with drift on a finite horizon, Electronic Communications in Probability 14 (2009), 143–150.
+[9] F. W. J. Olver, D. W. Lozier, R. F. Boisvert, and C. W. Clark (eds.), NIST Handbook of Mathematical
+Functions, Cambridge University Press, 2010. (Euler–Maclaurin: §2.10; zeta: §25.2; polylogarithm/Lerch:
+§25.12.)
+[10] D. Siegmund, Sequential Analysis: Tests and Confidence Intervals, Springer-Verlag, New York, 1985.
+[11] F. L. Spitzer, A combinatorial lemma and its application to probability theory, Transactions of the American
+Mathematical Society 82 (1956), 323–339. MR0079851.
+[12] J. M. Steele, The Bohnenblust–Spitzer algorithm and its applications, Journal of Computational and Applied
+Mathematics 142 (2002), no. 1, 235–249.
+BlueChips Research & The Wharton School, University of Pennsylvania
+Email address: rkgulati@wharton.upenn.edu
+
+

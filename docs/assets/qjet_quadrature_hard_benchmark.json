@@ -1,0 +1,223 @@
+{
+  "circle_spectral_cases": [
+    {
+      "case": "circle_or_cylinder_cross_section",
+      "delta": 0.01,
+      "dimension": "2D planar boundary",
+      "n": 4096,
+      "spectral_ms": 4.658707999624312,
+      "spectral_relative_error": 2.0906816627509575e-14,
+      "status": "ok",
+      "trapezoid_ms": 13.52475001476705,
+      "trapezoid_relative_error": 7.466720224110562e-16
+    },
+    {
+      "case": "circle_or_cylinder_cross_section",
+      "delta": 0.0001,
+      "dimension": "2D planar boundary",
+      "n": 4096,
+      "spectral_ms": 4.660041013266891,
+      "spectral_relative_error": 2.107156500393958e-14,
+      "status": "ok",
+      "trapezoid_ms": 12.711332994513214,
+      "trapezoid_relative_error": 0.00017799532621652305
+    },
+    {
+      "case": "circle_or_cylinder_cross_section",
+      "delta": 1e-06,
+      "dimension": "2D planar boundary",
+      "n": 4096,
+      "spectral_ms": 4.643958993256092,
+      "spectral_relative_error": 2.0699839142897227e-14,
+      "status": "ok",
+      "trapezoid_ms": 12.497499992605299,
+      "trapezoid_relative_error": 0.0002632979698201279
+    },
+    {
+      "case": "circle_or_cylinder_cross_section",
+      "delta": 1e-08,
+      "dimension": "2D planar boundary",
+      "n": 4096,
+      "spectral_ms": 4.443541984073818,
+      "spectral_relative_error": 2.0884638459452656e-14,
+      "status": "ok",
+      "trapezoid_ms": 12.635874969419092,
+      "trapezoid_relative_error": 0.0002642863215269186
+    }
+  ],
+  "engine": "self-contained planar QJet quadrature",
+  "existing_pressure_table": [
+    {
+      "delta": 0.01,
+      "n_delta": 10.24,
+      "spectral_relative_error": 8.586728257727148e-15,
+      "trapezoid_relative_error": 6.478360940120162e-08
+    },
+    {
+      "delta": 0.0001,
+      "n_delta": 0.1024,
+      "spectral_relative_error": 9.057076185903855e-15,
+      "trapezoid_relative_error": 0.0013738061384192014
+    },
+    {
+      "delta": 1e-06,
+      "n_delta": 0.001024,
+      "spectral_relative_error": 9.056179625017538e-15,
+      "trapezoid_relative_error": 0.0013131438386471033
+    }
+  ],
+  "planar_hard_cases": [
+    {
+      "bridge_abs_error": 6.0502330274436744e-05,
+      "bridge_improvement": 285.76083500847324,
+      "bridge_ms": 0.8699169848114252,
+      "case": "ellipse_3p3_to_1",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 21.64645801531151,
+      "ref_n": 32768,
+      "reference_ms": 41.446832998190075,
+      "status": "ok",
+      "trapezoid_abs_error": 0.017289196419181474,
+      "trapezoid_ms": 0.5822500097565353
+    },
+    {
+      "bridge_abs_error": 5.360188042957681e-05,
+      "bridge_improvement": 355.18131324205376,
+      "bridge_ms": 0.9604159859009087,
+      "case": "funky_flower_curve",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 22.218541998881847,
+      "ref_n": 32768,
+      "reference_ms": 52.82862501917407,
+      "status": "ok",
+      "trapezoid_abs_error": 0.019038386283220632,
+      "trapezoid_ms": 0.6682500243186951
+    },
+    {
+      "bridge_abs_error": 4.188314371667001e-05,
+      "bridge_improvement": 366.2184496862364,
+      "bridge_ms": 0.920457998290658,
+      "case": "kidney_nonconvex_curve",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 21.972040995024145,
+      "ref_n": 32768,
+      "reference_ms": 48.76791703281924,
+      "status": "ok",
+      "trapezoid_abs_error": 0.015338379959904724,
+      "trapezoid_ms": 0.666750012896955
+    },
+    {
+      "bridge_abs_error": 3.47298148146713e-05,
+      "bridge_improvement": 481.36165725850213,
+      "bridge_ms": 1.0086669935844839,
+      "case": "rounded_square_superellipse",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 21.36287500616163,
+      "ref_n": 32768,
+      "reference_ms": 40.3503340203315,
+      "status": "ok",
+      "trapezoid_abs_error": 0.016717601215471056,
+      "trapezoid_ms": 0.655875017400831
+    },
+    {
+      "bridge_abs_error": 6.617830124922008e-05,
+      "bridge_improvement": 262.14162355465544,
+      "bridge_ms": 0.918709032703191,
+      "case": "square_polygon",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 21.015999955125153,
+      "ref_n": 32768,
+      "reference_ms": 39.901249983813614,
+      "status": "ok",
+      "trapezoid_abs_error": 0.017348087333559636,
+      "trapezoid_ms": 0.5879160016775131
+    },
+    {
+      "bridge_abs_error": 0.003118967212975332,
+      "bridge_improvement": 6.730635373860676,
+      "bridge_ms": 0.8667079964652658,
+      "case": "star_polygon",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 21.060166996903718,
+      "ref_n": 32768,
+      "reference_ms": 41.99962498387322,
+      "status": "ok",
+      "trapezoid_abs_error": 0.020992631053563415,
+      "trapezoid_ms": 0.5848750006407499
+    },
+    {
+      "bridge_abs_error": 0.001287919832863249,
+      "bridge_improvement": 5.898627848229943,
+      "bridge_ms": 0.9745419956743717,
+      "case": "naca0012_airfoil",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 20.947417011484504,
+      "ref_n": 32768,
+      "reference_ms": 41.56545799924061,
+      "status": "ok",
+      "trapezoid_abs_error": 0.007596959792414815,
+      "trapezoid_ms": 0.6551249534823
+    },
+    {
+      "bridge_abs_error": 0.00021435826843996253,
+      "bridge_improvement": 77.2083470278555,
+      "bridge_ms": 0.8913339697755873,
+      "case": "airplane_planar_silhouette",
+      "delta_over_h": 0.05,
+      "dimension": "2D planar boundary",
+      "n": 512,
+      "q_apply_ms": 22.10237499093637,
+      "ref_n": 32768,
+      "reference_ms": 42.989999987185,
+      "status": "ok",
+      "trapezoid_abs_error": 0.01655024757800283,
+      "trapezoid_ms": 0.6317920051515102
+    }
+  ],
+  "surface_support_audit": [
+    {
+      "case": "finite_cylinder_surface",
+      "dimension": "3D surface",
+      "reason": "unsupported by the current planar logarithmic layer engine: requires a 3D surface kernel, surface QJets, and surface quadrature reference",
+      "status": "unsupported"
+    },
+    {
+      "case": "cube_polyhedron",
+      "dimension": "3D surface",
+      "reason": "unsupported by the current planar logarithmic layer engine: requires a 3D surface kernel, surface QJets, and surface quadrature reference",
+      "status": "unsupported"
+    },
+    {
+      "case": "tetrahedron_polyhedron",
+      "dimension": "3D surface",
+      "reason": "unsupported by the current planar logarithmic layer engine: requires a 3D surface kernel, surface QJets, and surface quadrature reference",
+      "status": "unsupported"
+    },
+    {
+      "case": "airplane_3d_mesh",
+      "dimension": "3D surface",
+      "reason": "unsupported by the current planar logarithmic layer engine: requires a 3D surface kernel, surface QJets, and surface quadrature reference",
+      "status": "unsupported"
+    },
+    {
+      "case": "torus_higher_genus_surface",
+      "dimension": "3D surface",
+      "reason": "unsupported by the current planar logarithmic layer engine: requires a 3D surface kernel, surface QJets, and surface quadrature reference",
+      "status": "unsupported"
+    }
+  ]
+}

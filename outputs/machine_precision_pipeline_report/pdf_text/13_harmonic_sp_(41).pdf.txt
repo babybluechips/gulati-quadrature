@@ -1,0 +1,2545 @@
+ON EPSILON.
+R. GULATI
+Abstract. We follow ε. Across tuning, quant finance, signal processing, and numerical quadrature, ε is the residual that appears when a continuum harmonic object is forced onto the
+finite chromatic circle Z/nZ ∼
+= µn — the same character each time, mistaken in each field for a
+private nuisance to be minimized and swept under the rug. We treat ε instead as a first–rate
+object, follow it across the four fields, and identify what it is. The discretization error is the
+defect of an admissible factorization: the sampled observable fails to split into a continuum bulk
+and an independent residue, and the obstruction to that splitting — the quantity that vanishes
+exactly when the factorization is exact and is otherwise strictly positive — is the parity check
+Synn (s) = 12 [Yn (s) − Y0 (s)]. Its value across the critical strip is the Riemann zeta function,
+Synn (s) → ζ(s). The transmitted word is the continuum observable, the received word the finite
+sample, the channel error the endpoint defect −m2 /n; at the tritone s = 12 the decoder is exact,
+Dn = 2ζ( 12 ) + ζ(− 12 )/n + 34 ζ(− 23 )/n2 + O(n−3 ), a term structure in the sampling vol h = 1/n
+whose correction bits ζ( 21 ), ζ(− 21 ), ζ(− 32 ), . . . descend the negative half–integers — exactly the
+P 1/2 P 3/2
+Euler–Maclaurin endpoint corrections, the regularized divergent endpoint sums
+m , m
+of numerical quadrature. This places the comma of temperament, the discrete–monitoring bias
+of a variance swap, the aperture bias of a line–spectral estimator, and the quadrature endpoint
+defect under one error model with one syndrome. Only two of the field corrections we recover
+are genuinely known — the Pythagorean/syntonic comma of temperament and the Broadie–
+Glasserman–Kou continuity shift of discrete–barrier finance — and we claim neither; everything
+else here is new. We contribute, and prove inline, three things that have not appeared before:
+(i) the identification of ε across all four fields as a single computable obstruction, the syndrome
+Synn (s) → ζ(s), vanishing exactly on the factorizable class and pricing the defect to a finite zeta
+alphabet; (ii) the local–to–global reconstruction, recovering the global aperture (Schelkunoff array,
+root–MUSIC/ESPRIT estimator, mmWave channel, ISAC scene) exactly from the per–root local
+jet through a Cauchy/distance step, with linear noise gain — a domain–specific estimator that is
+structurally new, not a repackaging of any known method; and (iii) the quadrature regularization
+that exhibits the Euler–Maclaurin endpoint staircase as the decoder’s correction ladder, so that
+one extra zeta coefficient buys several digits at fixed budget. We read the correction the way
+Scarry reads beauty: as the felt recognition of a prior error and the obligation to correct it by
+moving to the coordinates in which the object was always conditioned — error is bad conditioning, the symptom of a wrong basis, and the comma is the same defect wearing two faces,
+an infinitesimal smooth deformation of the configuration (a Hadamard variation, analytic in the
+shape parameter) and a discrete topological obstruction (a parity class on Z/nZ that refuses to
+b is the canonical discretization πΛ of
+close), reconciled only by passing to the geometry, where Q
+the boundary half–Laplacian and the right coordinates are forced. The deepest reading is that
+the need for choice is itself the error: a tuning temperament, a regularization parameter, a basis
+of radicals — every free knob is the symptom of a wrong representation, and in the canonical
+coordinates there is nothing to choose. The quintic is the paradigm; it is unsolvable by radicals
+not because its roots are missing but because the radical alphabet is too small, and changing
+the representation to a symbolic radical–free iterative solve on the circle — the jet recursion that
+reads the reciprocal–separation power sums off the Taylor coefficients, corrected by the same zeta
+ladder — dissolves the obstruction with no choice left to make. Correctness is recognition of
+geometry, and beauty is the state of zero degrees of freedom. All numerics are verified to fifty
+digits.
+
+Date: June 5, 2026.
+1
+
+2
+
+R. GULATI
+
+1. On ε
+In 212 BCE a Roman soldier found Archimedes in the sand at Syracuse, drawing circles. He
+had spent a life trying to square one of them — to lay a straightedge–and–compass square exactly
+over the disk, to make the curve and the polygon agree, to square away the little gap between
+the inscribed n–gon and the circle it approximates. That gap is the oldest character in this
+note: call it ε. Archimedes had it cornered, between an inscribed and a circumscribed 96–gon,
+10
+< π < 3 17 , squeezing ε toward nothing without ever closing it; “noli turbare circulos meos,”
+3 71
+do not disturb my circles, and then the sword. He died still chasing ε around the rim of a circle,
+and the chase was not a failure of skill — it was the discovery, twenty–one centuries early, that
+ε cannot be squared away in that alphabet at all. We will meet ε again and again, wearing a
+different costume in every field, and the burden of this note is to learn its real name.
+ε is not a pathology and not noise around a true value. It is a structured object, the same one
+each time, and its name is a failure of factorization. We take it as a first–rate character and follow
+it across tuning, quant finance, signal processing, and numerical quadrature — the four rooms in
+which it keeps reappearing under four aliases.
+The stance has a long pedigree, because every field that ever
+Q corrected an error first had
+to decide what its error was. Consider the discriminant ∆ = i<j (zi − zj )2 of a tone set: it
+is not merely a number, it is the obstruction to a clean
+Q factorization, vanishing exactly when
+two tones collide and the monic polynomial f (z) = k (z − zk ) loses a simple root. A root
+collision is the degeneration of a factorization, and ∆ measures the distance from it — error as
+the curvature of factorizability. The Greeks met the same structure first: a consonance is an
+interval zi /zj that factorizes into small primes (octave 2:1, fifth 3:2, fourth 4:3), a dissonance one
+that does not, so that the ear is a factorization detector and a beat is the audible defect of a
+near–miss factorization. The logarithm
+that carries
+Q A(xy) = A(x) + A(y) is the homomorphism
+P
+the multiplicative discriminant ∆ = |zi − zj | to the additive energy Φ =
+log |zi − zj |, and its
+curvature F ′′ (r) = −1/r2 is the inverse–square crowding σ2 that runs the rest of this note —
+log
+
+∇2
+
+b=
+∆(×) −−−→ Φ(+) −−−→ Q
+
+1
+.
+|zi − zj |2
+
+This is exactly what
+√ defeated Archimedes. When a factorization cannot be completed in the
+given alphabet — π not constructible by straightedge and compass, the quintic not solvable
+by radicals — the obstruction is representational, not intrinsic. The constructible numbers form
+the field reached from Q by iterated square roots, a tower of degree–2k extensions, so every
+constructible
+length is algebraic of degree a power of two; since π is transcendental (Lindemann),
+√
+π lies in no such tower, and the circle cannot be squared. The disk is not at fault and the area
+πr2 is perfectly definite; what fails is the straightedge–and–compass
+alphabet, which can name
+√
+k
+only the degree–2 lengths. ε here is the distance from π to the nearest word that alphabet can
+spell, and it is irreducible because it is an invariant of the representation under every change of
+coordinates within it. Error lives in the alphabet, not in the object — the lesson of the circles in
+the sand.
+The history of error correction is a history of fields naming this defect and pricing it. In tuning,
+twelve just fifths overshoot seven octaves by the Pythagorean comma (3/2)12 /27 = 1.0136 . . .
+(23.46 cents), and four fifths overshoot a just major third by the syntonic comma 81/80 (21.51
+cents): the circle of fifths does not close, the multiplicative interval lattice fails to factor through
+Z/12Z, and the comma is exactly that failure measured in cents. Equal temperament does not
+remove the comma; it distributes it, spreading the defect uniformly so that the fifth
+√ becomes
+27/12 = 1.4983 . . . rather than 3/2 and the tritone is pinned to its own inversion ♭5 = 2 [17, 12].
+In quant finance the discretely–monitored barrier option does not factor into its continuum price,
+and Broadie, Glasserman and Kou priced the gap exactly: the discrete barrier is the continuum
+
+ON EPSILON
+
+3
+
+√
+√
+barrier shifted by βσ h with β = −ζ( 12 )/ 2π = 0.5826 . . ., the same ζ( 21 ) that heads our ladder,
+the discrete–monitoring basis carried on the sampling vol h [14]. In quantum information the
+logical state does not factor through the noisy physical Hilbert space; the stabilizer formalism
+reads a syndrome off commuting parity checks and decodes the error to the coset it names,
+correcting without measuring the encoded word [15, 16]. In integration the Cauchy principal
+value is the regularized defect of a divergent integral, the finite part assigned to a quantity
+that does not converge [18]; in valuation the discount factor is the price of the Pacioli invariant
+Assets = Liabilities + Equity failing to factor through a certain future, the homomorphic erT = 2
+rendered additive as rT = log 2. Each field built a bespoke correction — a comma split, a
+continuity correction, a stabilizer decoder, a principal value, a discount — and each correction is
+the same act: restoring a factorization that the discretization broke.
+To name ε precisely we work with the object that vanishes exactly on the factorizable class
+and is otherwise a strictly positive certificate of non–factorizability. Define it here. Given an
+observable one wishes to split into independent components, a defect operator is a map D that
+vanishes precisely on the factorizable subspace; its norm, minimized over the admissible reparameterizations g in a group G,
+δ = inf D [ g · (observable) ] ,
+g∈G
+
+is zero iff an exact admissible factorization exists and strictly positive otherwise. It is Lipschitz–
+stable (if two observables are within η in the working norm, their defects differ by at most η,
+since δ is an infimum of 1–Lipschitz maps) and computable. This certificate — ε given a number
+that is exactly zero when the factorization closes — is the register in which we work. The
+continuum observable Y0 (s) = n1−s B(1 − s, 1 − s) is the bulk that would factor off; the finite
+P
+−s
+sample Yn (s) = n−1
+m=1 µn,m is the received word that does not; and the syndrome
+
+
+Synn (s) = 21 Yn (s) − Y0 (s)
+is the defect operator. It vanishes to leading order exactly when the sample factors into the
+continuum bulk plus an independent residue, and its value is ζ(s): the obstruction is not an error
+bar, it is the zeta function read as a parity check. We do not propose that the comma, the BGK
+shift, the stabilizer syndrome, the principal value, and the Euler–Maclaurin endpoint correction
+are analogous; we show they are one syndrome evaluated on one circle, and we price the defect
+to the negative half–integers ζ( 21 ), ζ(− 12 ), ζ(− 32 ), . . . with fifty–digit certificates.
+Correction is recognition of the right coordinates. The correction is not an apology for
+the defect; it is the recognition of the coordinates in which the defect was never there. Scarry’s
+account of beauty is the exact phenomenology of this act: standing on the balcony she discovers
+that the palm was beautiful all along, that her years of dismissing it were the error, and that
+the recognition carries an obligation to correct — “the perceptual slap, the felt discovery of a
+prior error, and the obligation to correct it,” with the further, contrarian insistence that the error
+is beneficent, the only mechanism by which a frame built around the wrong invariant can be
+repaired [20]. This is the same motion by which a theorem is recognized before it is proved and
+the proof arrives, if at all, centuries later as a translation of the recognition into the procedural
+dialect the century happens to run: the comma is recognized as curvature long before equal
+temperament is computed,
+the BGK shift is recognized as a half–integer continuity correction
+√
+before β = −ζ( 21 )/ 2π is pinned. To correct the error is to recognize the canonical object under
+the cultural envelope of one’s chosen basis, and the syndrome Synn (s) → ζ(s) is that canonical
+object: it is what every field’s bespoke correction was approximating without naming.
+Read this way, error is bad conditioning. The regular n–gon is the origin of moment coordinates
+b carries its clean Bernoulli
+on configuration space Mn = Conf n (C)/Sn , the critical locus at which Q
+spectrum { 21 m(n − m)} — diagonal in the Fourier basis em (j) = ω mj , ω = e2πi/n , with eigenvalue
+
+4
+
+R. GULATI
+
+1
+1
+2
+2 m(n − m), as one verifies directly by summing the circulant 4 csc kernel against em — and the
+
+inversion of a shape from one spectral readout is perfectly conditioned. The defect directions —
+eccentricity, conjugation, anisotropy — are precisely the coordinates that move the configuration
+off this origin, and along them the inversion’s relative condition number grows as cosh2 (nµ0 ) ∼
+e2nµ0 /4, the hyperbolic blow–up of reading a near–collinear configuration back from a single
+channel: the further the shape sits from its canonical coordinates, the worse the conditioning and
+the larger the error in reading it back. The wrong basis is not merely inconvenient; it is the source
+of the error, and recognition of the right coordinates — the canonical origin — is the correction.
+This is why the correction prices to a finite alphabet of zeta values: the canonical coordinates
+diagonalize the defect, and a diagonal object has only its eigenvalues to report.
+The defect wears two faces, and only the geometry reconciles them. On the smooth face it is an
+infinitesimal deformation: the discretization error is a Hadamard variation of the first Dirichlet
+b as its
+eigenvalue, λ1 (ε) analytic in the shape parameter ε, with the inverse–square Hessian Q
+second variation — a calculus object, smooth and differentiable, the error a tangent vector. On
+the discrete face the same defect is a topological obstruction: the circle of twelve fifths does
+not close, the multiplicative interval lattice fails to factor through Z/12Z, and the comma is a
+nonzero parity class on the finite chromatic circle — an obstruction in Z/nZ that no amount of
+local smoothing removes, because it is the winding that survives the loop. A small persistent
+error accumulated around a closed loop of pure ratios is curvature, and curvature is exactly the
+quantity that is simultaneously an infinitesimal (the second derivative of the holonomy) and a
+discrete invariant (the total turning, an integer or a residue). The two faces are one defect, and the
+b is the canonical discretization πΛ of the boundary Dirichlet–to–Neumann
+bridge is geometric: Q
+b
+half–Laplacian, Q = πΛ + K up to a bounded correction K (the circulant 41 csc2 kernel is, term
+q
+by term, the discretized boundary half–Laplacian on the rim, the csc2 Green’s function of −∂θ2
+on the circle, plus a smoothing remainder), so the smooth variation and the discrete parity class
+are read off the same operator on the same circle. One does not choose between the analyst’s
+ε–expansion and the topologist’s residue; one moves to the geometry where both are values of
+ζ(s), and the choice dissolves.
+The need for choice is itself the error. The last sentence is the thesis in miniature, and
+it generalizes. Wherever a problem presents a free parameter — which temperament to adopt,
+which regularization to impose, which branch of a radical to take, which basis to expand in —
+the parameter is not a degree of freedom to be optimized but a symptom that the object is being
+read in the wrong representation. A correctly conditioned problem in its canonical coordinates
+b is the unique Euclidean–invariant,
+has nothing to choose: the regular n–gon is the origin, Q
+1
+vertex–local, Fourier–diagonal form with eigenvalues 2 m(n − m), and the syndrome is the one
+parity check that returns ζ(s). There are no knobs because a diagonal operator in its eigenbasis
+has only its spectrum, and the spectrum is not chosen, it is recognized. Equal temperament looks
+like a free design — where to put the twelve frets — only because the comma is being read in the
+multiplicative interval lattice; recognized on the chromatic circle Z/12Z ∼
+= µ12 it is forced, the
+unique distribution that closes the loop. Choice is the cost a wrong basis charges, and beauty is
+the state in which that cost is zero: Scarry’s recognition is precisely the collapse of an apparent
+menu of options into the single object that was always there. Beauty removes all choice.
+The paradigm is the quintic. The general quintic is not solvable by radicals — Abel and
+Ruffini, then Galois: the obstruction is that S5 is not a solvable group, so no finite tower of
+radical extensions reaches the splitting field [21]. But the√
+roots are not missing, and the failure is
+not in the polynomial; it is in the alphabet. Exactly as π is not constructible by straightedge
+and compass while the circle is perfectly well behaved — Archimedes’ gap again, the squaring of
+the circle closed, not solved, the impossibility representational and not geometric, the obstruction
+
+ON EPSILON
+
+5
+
+living in the alphabet and not in the shape — the quintic’s insolubility is a property of the
+radical representation, not of its roots. Change the representation and the obstruction dissolves.
+We give that change of representation here, and it is one of the contributions of this note: a
+symbolic, radical–free iterative solve carried on the circle. The jet identity reads the reciprocal–
+P
+(i)
+separation power sums σℓ = j̸=i (ri − rj )−ℓ directly off the normalized Taylor coefficients cm =
+P
+(i)
+ℓ
+f (m+1) (ri )/[(m + 1)! f ′ (ri )] through the recursion pℓ = (ℓ + 1)cℓ+1 − ℓ−1
+j=0 pj cℓ−j , σℓ+1 = (−1) pℓ
+— this is the Newton–Girard identity applied to log f , established and verified inline in (15)
+and App. A D, requiring no extraction of any root — with the truncation defect of the finite jet
+removed by the same endpoint ladder 2ζ( 12 )+ζ(− 12 )/n+ 34 ζ(− 32 )/n2 +O(n−3 ) that runs this note.
+No radical is ever extracted; the solve is a sequence of recognitions on Z/nZ ∼
+= µn , where the
+irregular root configuration is pulled back to the canonical equispaced nodes, regularized where
+the circle pays no debt, and pushed back with a curvature remainder one order below the principal
+payment. At the pentagon n = 5 the jet returns σ1 = 2, σ2 = 0 — the signed inverse–square
+diagonal −(n − 1)(n − 5)/12 vanishing at the perfect fifth (verified to 3 × 10−51 , App. A E) —
+exactly the value the geometry forces and the radicals could not name. The quintic was never
+unsolvable; it was being asked in a language with too few letters.
+Tetration as the fractional–time coordinate of the solve. The radical alphabet is the
+wrong one; the right one is the fractional iterate, and its natural clock is tetration. Take any
+coefficient–only map with the roots as fixed points — the damped Newton voicing
+Tf (z) = z − α
+
+f (z)
+,
+f ′ (z)
+
+0 < |α| < 2,
+
+(1)
+
+built entirely from (a4 , . . . , a0 ) through f, f ′ . Each root is a fixed point with one and the same
+multiplier: Tf (ri ) = ri and, since f (ri ) = 0, f ′ (ri ) ̸= 0,
+Tf′ (ri ) = 1 − α
+
+f ′2 − f f ′′
+=1−α
+f ′2
+ri
+
+for every i,
+
+(2)
+
+verified to forty digits at all five roots of a generic quintic (App. A M). For 0 < |1 − α| < 1 every
+root is attracting, and Koenigs’ linearization gives a local Schröder coordinate σi — the Abel
+coordinate of the flow at ri — conjugating Tf to the scalar multiplier,
+
+
+σi ◦ Tf = (1 − α) σi ,
+σi (z) = lim (1 − α)−h Tf◦h (z) − ri ,
+(3)
+h→∞
+
+so the iterate is read at any real or complex height through the tetration–style fractional power,
+exactly the form T [h] = σ −1 (λh σ) of the golden–base tetration construction:
+
+
+[h]
+[h ]
+Tf (z) = σi−1 (1 − α)h σi (z) ,
+ri = Tf i (z⋆ ) = σi−1 (1 − α)hi σi (z⋆ ) .
+(4)
+The root is named at a finite height hi — the fractional–time coordinate of the ith tone — not as
+the h → ∞ limit of the bare iteration: no radical, and no infinite process, only the Schröder chart
+and one height. Pinning the multiplier to the golden tetration base µ⋆ = 1/(2ϕ) (so 1 − α = µ⋆ ,
+α = 1 − 1/(2ϕ), |µ⋆ | = 0.30901 . . . < 1, the attracting regime) sets the clock to the same ϕ that
+the pentagon already runs on:
+
+ f (z)
+
+−1 hi
+1
+Tf (z) = z − 1 − 2ϕ
+,
+r
+=
+σ
+µ
+σ
+(z
+)
+.
+(5)
+i
+i
+⋆
+⋆
+i
+f ′ (z)
+This much is exact and verifiable: the multiplier (2) is coefficient–only and uniform across the
+five roots, the Schröder coordinate (3) exists at each attracting fixed point, and the finite–height
+representation (4)–(5) carries the same root the basin of z⋆ selects — a radical–free, limit–free
+symbolic form, the fractional–iterate analogue of x = u + v for the cubic.
+
+6
+
+R. GULATI
+
+What is exact runs further than a first reading of (3) suggests, and we state the boundary
+precisely because it is the whole content of any post–Abel–Ruffini claim. The five tones are not
+five separate one–dimensional orbits to be hunted one at a time: the all–orders jet of a single
+(0)
+Schröder coordinate already names the entire chord. Read the reciprocal–separation jet {σk }k≥1
+of (15) at one fixed point r0 ; the Newton identities turn those power sums of wj = (r0 − rj )−1
+into the elementary symmetric functions e1 , . . . , e4 , hence into the monic degree–four voicing
+w4 − e1 w3 + e2 w2 − e3 w + e4 = 0,
+
+rj = r0 − 1/wj
+
+(j ̸= 0),
+
+so the remaining four roots fall out of r0 ’s local data alone — verified to fifty digits on a generic
+quintic, every other root recovered with residual < 3 × 10−50 (App. A M). This is the local–to–
+global reconstruction of §6 stated for the quintic: the per–root jet {σk } does determine the whole
+configuration {ri −rj } → {ri }, the first root is not a root but the unique point whose all–orders jet
+generates a globally consistent pentagonal configuration, and the five roots are the five branches
+1/5
+read straight off that one jet — not the orbit of any single µ⋆ contraction. The earlier worry
+1/5
+that the phase advance µ⋆ has modulus < 1 and so spirals into the fixed point instead of cycling
+through five tones tested the wrong object: a bare one–dimensional iteration, not the jet, which
+carries every order at once and therefore every root at once.
+The global offset h0 is not an open quantity either: it is the horizontal gauge, and it is solved
+from the coefficients by elimination, not inserted. Write the gauge a and four pentagon deformation amplitudes u1 , . . . , u4 , and voice the five tones on the regular–pentagon phase basis
+Rj (a, u) = a +
+
+4
+X
+
+
+um ζ mj − 1 ,
+
+ζ = e2πi/5 ,
+
+j = 0, . . . , 4,
+
+(6)
+
+m=1
+
+so that R0 = a since ζ 0 = 1. The map (a, u) 7→ (R0 , . . . , R4 ) is the pentagon Vandermonde —
+the inverse discrete Fourier transform on Z/5Z ∼
+= µ5 , invertible with | det | = 55/2 = 55.9017 . . .
+(App. A M) — so (a, u1 , . . . , u4 ) are exactly the five Fourier modes of the root chord, no root
+privileged. Impose only Vieta:
+
+A5−k
+ek R0 (a, u), . . . , R4 (a, u) = (−1)k
+,
+k = 1, . . . , 5,
+(7)
+A5
+the coefficient–only equations of the solve. Eliminating the deformation amplitudes is the precise
+non–circular statement:
+p
+IP ∩ C[a] = ⟨P (a)⟩,
+(8)
+so the gauge a is recovered as the projection of the finite pentagon–coordinate variety onto its first
+axis, and its admissible values are exactly the five roots — verified at fifty digits, the elimination
+returning every root as a value of a with no root assumed (App. A M). The linear step never fails:
+once a gauge value a = r0 is fixed, the four amplitudes solve M u = v with vj = rj − a and the
+deviation block Mjm = ζ mj − 1 carrying no root data — it is the non–constant restriction of
+the inverse DFT on µ5 , with | det M | = 55/2 unconditionally (App. A M), so M is invertible for
+every configuration. The discriminant therefore governs only whether the five resulting a–values
+stay distinct (whether V (IP ) remains zero–dimensional), not whether the chord can be voiced;
+and when ∆ ̸= 0 the five values are distinct, IP ∩ C[a] is already radical, and (8) holds with the
+root sign removed. This is the horizontal–transformation principle reading the linear coefficient
+of P (x+a) as P ′ (a): move the point to zero, read the jet, solve for where the jet is globally
+consistent. The tetration clock supplies the same phase basis as finite complex heights: with
+µ⋆ = 1/(2ϕ) and log µ⋆ = − log(2ϕ) real, the heights
+hj =
+
+2πi j
+5 log µ⋆
+
+give
+
+h
+
+µ⋆ j = e2πij/5 = ζ j ,
+
+(9)
+
+ON EPSILON
+
+7
+
+verified to fifty digits (App. A M), so the root chord is the tetrational normal form
+xj = a +
+
+4
+X
+
+mhj
+
+um µ⋆
+
+
+−1 ,
+
+j = 0, . . . , 4,
+
+(10)
+
+m=1
+
+finite, radical–free, no limit, the gauge a = x0 solved from (7)–(8) and
+with
+P the four amplitudes
+−2 , sees only
+it. The chord Laplacian Qjk = −|Rj − Rk |−2 (j ̸= k), Qjj =
+|R
+−
+R
+|
+j
+k
+k̸=j
+differences, so Q1 = 0 identically — the translation–free, constant–mode–removed certificate that
+the geometry lives in the pentagon chart once the gauge is fixed; it cannot itself name a, and is
+not asked to. At the regular pentagon its spectrum is the finite λk = k(5 − k)/2 = {0, 2, 2, 3, 3}
+(App. A M), the same cycle–Laplacian ladder 12 m(n − m) this note runs on.
+What is genuinely open is now sharp, and we name it exactly — but first we must say what is
+not open, because the temptation is to dismiss the chart as Abel–Ruffini in fancier dress. Solving
+(7) for (a, u) is solving the quintic, and no radical formula will ever do it. The chart does not
+pretend otherwise. What it does is split the labour into a part that pays no debt and a part that
+does, and then prove the debt is always the quieter voice. Tune the irregular five–note chord up
+to the equal–tempered pentagon: a density map carries the five roots onto the fifth roots of unity
+wj = ζ j , where every separation is the same interval and the chord Laplacian is the circulant
+whose overtones are exactly the cycle ladder λm = 12 m(5 − m) = {0, 2, 2, 3, 3} (App. A M),
+diagonalized by the Fourier transform in O(n
+the second power sum of
+P log n). On−2that circle
+2
+reciprocal separations is the closed overtone j̸=0 |1 − wj | = (n − 1)/12, exact, no remainder:
+the circle pays no debt. The whole content of computability is that the pullback to the circle is
+not a fiction but an honest change of coordinates, and the push–forward back to the irregular
+chord leaves a remainder one whole octave below the principal tone — an order–zero operator
+bounded by the curvature of the configuration, hence dominated by the order–one geometry it
+corrects. That is the structurally new fact: the finite normal form is not merely radical–free, it
+is numerically exact, because the truncation defect of any finite N –jet of the separation field is
+removed by a universal correction whose constants depend only on N and never on the quintic.
+To second order this is the zeta–ladder
+
+4
+4
+8
+(N )
+−5
+σ2true = σ2 +
+−
++
++
+O
+N
+,
+N
+N2
+3N 3
+2
+
+the three–jet coefficient carrying the overtone π3 − 2 = 1.28987 (App. A M); on a finite jet the
+corrected estimate of σ2 falls to machine precision while the raw jet stalls at O(1/N ). The
+correction is loudest exactly where it is needed — when roots cluster and σ2 blows up, the debt
+vanishes faster than the principal — so the oracle is self–improving rather than self–defeating.
+This is what makes the solve computable and not merely relocated: Abel–Ruffini is untouched,
+but the obstruction it names is pushed entirely into one finite, payable channel, and what remains
+is genuinely solvable to the last digit.
+With that settled, the lone open note is the branch: which value of the gauge a among the
+five the continuation selects. Seed the regular pentagon P0 (x) = x5 − 1 at (a, u) = (1, 1, 0, 0, 0),
+where the roots are µ5 and Q’s spectrum is exactly {0, 2, 2, 3, 3}; away from the discriminant locus
+the implicit function theorem continues this branch uniquely, the Jacobian of roots–to–coefficients
+being the Vandermonde, nonzero precisely when the roots stay distinct (verified along a homotopy
+to a generic quintic, App. A M). A canonical, coefficient–only selection of that branch — a closed
+phase law a = a(A, B, C, D, E) that needs no continuation — is exactly where a genuine post–
+radical theory of the quintic succeeds or fails, and we mark it as the open problem rather than
+claim it. The honest reduction is therefore
+(A, B, C, D, E) −→ Q = − 12 ∇2 log |∆| −→ {Rj (a, u)} −→ branch a −→ {xj },
+
+8
+
+R. GULATI
+
+with the discriminant Hessian Q of §5 the coefficient–only geometry, the pentagon chart (6) and
+Vieta (7) the finite solve, and the branch the lone remaining choice.
+This is also why the correction is not a tunable dial. When more than one defect channel is active
+— curvature of the configuration and inhomogeneity of its density, say — the combined error is
+governed not by any single–scale law Ψ but by the tropical maximum of the independent channels.
+The argument is short and we give it inline: suppose two channels contribute errors a, b ≥ 0 and
+a candidate law Ψ(a, b) = Cap bq bounded the total two–sidedly, c1 max(a, b) ≤ Ψ ≤ c2 max(a, b).
+Let a → ∞ with b fixed: the left inequality forces p ≥ 1, the upper p ≤ 1 when b → 0 forces p ≤ 0
+in the other corner — no single exponent pair survives both limits, so no such Ψ exists, and the
+only two–sided envelope is max(a, b) itself, the tropical sum. One does not choose a blend; one
+recognizes which channel is speaking. The absence of a free multiplicative constant is not a gap
+in the theory, it is the signature that the coordinates are right.
+The positioning against the literature is made precise in §9; the rest of the note is the construction.
+2. The tone, the root, the pitch class
+A vibration of period P sounds the pitch F = 1/P , and a finite sum of such tones
+x[n] =
+
+K
+X
+
+ak zkn ,
+
+zk = e2πifk ,
+
+(11)
+
+k=1
+
+Q
+is annihilated by the monic signal polynomial f (z) = k (z − zk ), whose roots are the tones. The
+frequency fk , the pitch class, the direction of arrival, the point of µN at equal temperament are
+one object, named once and used interchangeably. Octave identification wraps the line onto the
+chromatic circle: the wrapping function j 7→ e2πij/N identifies the modular group Z/N Z ∼
+= µN
+with the N equally spaced semitones on the unit circle, so that going up a fourth and then a fifth
+returns the unison and addition of intervals is addition in Z/N Z. An interval is a quotient zi /zj ;
+a separation is a difference zi − zj ; the spacing geometry of these separations, and the local jet
+that produces it, is the subject of the note.
+The wrapping is exact, not figurative. Take m = N , the equal–tempered modulus. Pitch is the
+log–frequency x = log2 F ∈ R, an octave is the unit step, and the chromatic circle is the quotient
+R/N Z. The Generalized Division Algorithm splits the pitch into register and pitch class [13]: for
+m ∈ Z+ and x ∈ R there are unique q ∈ Z and r ∈ R with
+x = qm + r,
+
+0 ≤ r < m,
+
+(12)
+
+obtained from S = {ℓ ∈ Z | ℓm ≤ x}, bounded above by x/m, hence (Well–Ordering) holding a
+largest element q; then r = x − qm satisfies 0 ≤ r < m by the maximality of q, and uniqueness
+follows since any (q ′ , r′ ) forces q ′ to be that same largest element. Here q is the octave register and
+r ∈ [0, N ) is the pitch class — the one representative of x̄ ∈ R/N Z in the fundamental domain.
+The wrapping function
+R/N Z −→ µN ⊂ C,
+
+x̄ 7−→ e2πix/N ,
+
+(13)
+
+carries the line onto the unit circle with arc length preserved: chromatic distance on R/N Z is arc
+length on the circle, so |zi − zj | = 2 sin(π d/N ) for a separation of d semitones and the integer
+pitch classes land on the N th roots of unity Z/N Z ∼
+= µN . Going up a fourth and then a fifth adds
+to N and returns the unison; the order–two residue r = N/2 is the tritone, its own inversion. The
+interval lattice Z/N Z is the integer skeleton of the continuous circle (13), and the tones zk of (11)
+live on it.
+
+ON EPSILON
+
+9
+
+At a root zi , write the normalized local Taylor jet of f ,
+cm =
+
+f (m+1) (zi )
+,
+(m + 1)! f ′ (zi )
+
+m = 0, 1, 2, . . . ,
+
+(14)
+
+and the reciprocal–separation power sums against every other tone,
+X
+1
+(i)
+,
+k = 1, 2, . . .
+σk =
+(zi − zj )k
+
+(15)
+
+j̸=i
+
+The logarithmic derivative carries one into the other. From f ′ /f =
+
+P
+
+−1
+i (x − zi ) ,
+
+X 1
+f ′ (x)
+1
+=
+,
+−
+f (x)
+x − zi
+x − zj
+
+(16)
+
+j̸=i
+
+(i)
+
+and the Taylor coefficients of the right side about x = zi are the σk up to sign. The passage is
+Newton–Girard between power sums and the normalized derivatives of a monic polynomial [1, 2];
+localized at one root it is the Stieltjes / Calogero–Moser equilibrium relation [3], giving in low
+order
+ f ′′ (z ) 2 f ′′′ (z )
+f ′′ (zi )
+(i)
+(i)
+i
+i
+σ1 = ′
+,
+σ2 =
+.
+(17)
+− ′
+2f (zi )
+2f ′ (zi )
+3f (zi )
+P
+(i)
+k
+The recursion behind (17), pk = (k + 1)ck+1 − k−1
+j=1 pj ck−j with σk+1 = (−1) pk , returns every
+(i)
+
+σk from the jet {cm }; it reproduces the direct sum (15) to < 10−9 on random root sets and to
+printed precision on µN (Appendix A D).
+The note develops one chain. The local datum σ2 is the conditioning of frequency estimation
+(§4); on the chromatic circle it is the csc2 trace of an inverse–square operator whose tuning is the
+zeta ladder {0, ♭5, 1, 2} (§5); collecting the jets at all roots reconstructs the array (§6); and the
+array is a phased aperture, a DOA estimator, a multipath channel (§7).
+The thesis is that this chain is one error–correcting code, played on different instruments. Every
+time a harmonic object is forced onto the finite chromatic circle Z/nZ — a scale tempered to n
+semitones, a variance swap sampled on n dates, a line spectrum read off an n–element aperture, an
+integral replaced by an n–point quadrature — the same endpoint–sampling error is committed, the
+detuning µn,m −m = −m2 /n of every tone. The continuum observable is the transmitted word, the
+finite sample the received word, and the parity check is the syndrome Synn (s) = 21 [Yn (s) − Y0 (s)],
+whose value across the critical strip is the Riemann zeta function. The decoder that clears the bias
+is a single term structure in the sampling vol h = 1/n, its correction bits the negative half–integers
+ζ( 12 ), ζ(− 21 ), ζ(− 32 ), . . . — the same values that Euler–Maclaurin endpoint correction puts on the
+divergent endpoint sums of numerical quadrature, and that the half–exponent of the cumulant
+generating function puts on the convexity basis of a variance swap. §8 states the dictionary; the
+rest of the note builds it instrument by instrument, all numerics verified to fifty digits.
+3. The minor tenth: the half–exponent on the circle
+Before the spacing geometry, the coordinate. Pitch is logarithmic: the octave coordinate s =
+log2 r measures a ratio r in octaves, the octave 2 is the doubling r = 2 at s = 1, and halving
+the exponent t 7→ t/2 is descent by one octave. For a log–return X = log V — the log of the
+realized variance leg, the
+P underlying of a variance swap — with cumulant generating function
+KX (t) = log E[etX ] = m≥1 κm tm /m!, halving the notional exponent t = 1 7→ t = 21 swaps the
+variance contract for its volatility leg — the square–root payoff, the half–power voicing, descent
+
+10
+
+R. GULATI
+
+by one octave — and the basis it opens between the two legs is
+X
+E[eX/2 ]
+κm cm ,
+=
+Φ(X) := KX ( 12 ) − 21 KX (1) = log
+(E[eX ])1/2 m≥2
+
+cm =
+
+2−m − 12
+,
+m!
+
+(18)
+
+the weights universal, carrying no law of X — a model–free vol–of–var basis, the convexity
+premium of the volatility leg over the square root of the variance leg, just as the variance swap
+strike sits above the squared ATM vol by Jensen. Each cm is the note m octaves down, 2−m ,
+voiced against the tritone 21 and divided by m!. The root is silent, c1 = 0 (the basis carries no
+level risk); the leading correction is c2 = − 81 = −2−3 , three octaves down — the minor tenth, the
+skew/variance term that first prices the basis; the next rung c3 = −2−4 sits exactly one octave
+below it, c3 /c2 = 12 (Appendix A B,C). Both c2 and c3 reduce to the minor third on the chromatic
+circle, and root, minor third, perfect fifth voice A minor — A major when the skew turns the
+third sharp.
+The pair { 21 , 1}, completed to {0, ♭5, 1, 2}, is the tuning. On the octave coordinate s = log2 r
+the four landmarks are the four zeta inputs:
+unison tritone
+√ ♭5 octave 2 double octave
+r
+1
+2
+2
+4
+(19)
+1
+s = log2 r
+1
+2
+0
+2
+− 12
+ζ(s)
+ζ( 12 )
+pole
+π 2 /6
+√
+with ζ( 21 ) = −1.4603545088 . . . and β = −ζ( 12 )/ 2π = 0.5825971579 . . ., the Spitzer/Baxter–
+Gut–Kesten barrier constant that controls the second–order correction under discrete sampling
+on Z/12Z (Appendix A F,H). The tritone bisects the octave: it is the unique fixed point of the
+octave reflection s 7→ 1 − s and the order–two residue j = N/2 of Z/N Z, the one semitone that
+is its own inversion. For N = 12 it is j = 6, z6 = −1, z62 = 1 — the
+root of the unison,
+√ square
+1/2
+the half–exponent
+the ♭5 that stacks on itself to return the root. This is the same ♭5 = 2 = 2
+descends from: half the octave, square root of the doubling, ♭5 of the chromatic circle, ζ( 12 ) of the
+ladder, one object.
+4. σ2 as the line–spectral conditioning oracle
+The separations (15) are the conditioning of frequency estimation: how nearly two tones beat
+in unison. Two tones a hair apart at spacing ∆f have zi − zj of modulus ≈ 2π∆f , the chord they
+form closing toward the unison, so
+1
+1
+(i)
+|σ2 | ∼
+= 2,
+(20)
+(2π∆f )2
+∆
+the inverse square of the spacing to the nearest neighbour — read from the 3–jet at zi alone
+(Appendix A C, ratio → 1 as ∆ → 0). This is the crowding the csc2 kernel measures pointwise:
+σ2 is the local variance gauge, the estimator’s realized vol per unit spacing, and it gates both the
+Cramér–Rao variance floor and the resolution — the closer the chord to unison, the higher the
+carried vol and the wider the estimator’s basis to the true tone.
+(i)
+
+Theorem 4.1 (The local oracle). For a sum of unit–circle tones, σ2 obtained from the local
+3–jet at one root equals the direct reciprocal–separation sum (15), and its magnitude predicts both
+the Cramér–Rao bound and the empirical resolution threshold of subspace estimation from purely
+local data, with the resolution cliff at |σ2 | ≈ 103 .
+The benchmark (Table 1, N = 64 samples, two tones, 20 dB, 600 trials) sweeps separation
+from 2× down to 0.1× Rayleigh. The jet |σ2 | equals the direct sum to printed precision; the
+CRB rises monotonically with |σ2 | at log–log slope 0.66 against the leading prediction 0.5 (the
+
+ON EPSILON
+
+11
+
+known sub–Rayleigh steepening, since |σ2 | = 1/∆2 and the two–tone CRB ∼ 1/(N 1.5 ∆)); and
+the resolution probability collapses through |σ2 | ≈ 103 for both root–MUSIC and ESPRIT.
+Table 1. σ2 as local oracle. The jet value equals the direct separation sum; CRB
+and resolution both degrade as |σ2 | grows, with the cliff at |σ2 | ≈ 103 (≈ 0.25–
+0.35× Rayleigh).
+sep/Rayleigh
+2.00
+1.00
+0.50
+0.35
+0.25
+0.15
+0.10
+
+|σ2 | (jet) |σ2 | (direct)
+2.60 × 101
+
+2.60 × 101
+
+1.04 × 102
+
+1.04 × 102
+
+4.15 × 102
+8.47 × 102
+1.66 × 103
+4.61 × 103
+1.04 × 104
+
+4.15 × 102
+8.47 × 102
+1.66 × 103
+4.61 × 103
+1.04 × 104
+
+CRB resolveMUSIC resolveESPRIT
+1.81 × 10−5
+4.21 × 10−5
+4.18 × 10−5
+7.91 × 10−5
+1.53 × 10−4
+4.24 × 10−4
+9.53 × 10−4
+
+1.000
+1.000
+1.000
+0.998
+0.645
+0.000
+0.000
+
+1.000
+1.000
+1.000
+1.000
+0.660
+0.002
+0.000
+
+A single local jet returns a quantitative resolvability gauge: σ2 from one root’s neighbourhood,
+before any global estimator is formed.
+b n , and the pentagon
+5. The chromatic diagonal: csc2 , the operator Q
+Equally tempered tones zk = e2πik/n are the n–note cluster — every semitone of Z/nZ sounded
+at once, the maximally crowded chord, the worst case for estimation and the discrete tie to the
+zeta ladder. Here the separation geometry closes in form, and one must hold apart the magnitude
+diagonal from the signed diagonal: the two differ in the sign of the leading term, and only the
+signed one enters (15).
+Theorem 5.1 (The two diagonals). At the nth roots of unity, the magnitude reciprocal–square
+diagonal is the csc2 trace
+n−1
+
+X
+j̸=k
+
+1 X 2 jπ
+n2 − 1
+1
+=
+=
+,
+csc
+|zk − zj |2
+4
+n
+12
+
+(21)
+
+j=1
+
+while the signed diagonal — the quantity σ2 of (15) — is
+X
+1
+(n − 1)(n − 5)
+=−
+,
+2
+(zk − zj )
+12
+
+(22)
+
+j̸=k
+
+whose leading term is −n2 /12, negative.
+Proof. For |zk − zj |2 = |1 − e2πi(j−k)/n |2 = 4 sin2 (π(j − k)/n), summing over j ̸= k gives
+Pn−1
+1 Pn−1
+2
+the classical cotangent identity m=1
+csc2 (πm/n) = (n2 −
+m=1 csc (πm/n), and
+4
+ 1)/3 yields
+P
+−2
+2
+(21). The signed sum j̸=k (zk − zj ) is the value of −∂x log (xn − 1)/(x − zk ) at x = zk ;
+direct and symbolic evaluation give the polynomial −(n − 1)(n − 5)/12 for every n ≥ 3. Both are
+confirmed to 50 digits in Appendix A E.
+□
+The csc2 kernel is not a tuning we chose; it is the one tone the circle will sound, and the
+reason is that a logarithm has a branch but its Hessian does not. Write the divisor coordinate
+σa (x) = e2πix − e2πia on S 1 ≃ R/Z. The voice log σa is many–valued — any two sheets differ by
+the integer octave 2πi Z of monodromy — yet
+
+−∂x2 log σa (x) = π 2 csc2 π(x − a) .
+(23)
+
+12
+
+R. GULATI
+
+The first derivative silences the integer constant of monodromy, the second silences the residual
+half–step πi, and what is left ringing is real, single–valued, translation–free, and meromorphic on
+S 1 × S 1 off the diagonal (verified to < 10−39 , App. A N). Sampled at the equal–tempered tones
+x − a = (j − k)/n this is exactly the chord kernel of (21), |zk − zj |−2 = 14 csc2 (π(j − k)/n) — so
+b n is (23) written on Z/nZ, the branch–free Hessian of the cyclotomic divisor.
+Q
+Theorem 5.2 (The kernel is forced). Let K be a 1–periodic meromorphic function on C/Z with
+K(u) = K(−u), poles only on Z, K(u) = u−2 + O(1) as u → 0, and K = −∂u2 log σ the second
+logarithmic derivative of a first–order divisor coordinate. Then K(u) = π 2 csc2 (πu).
+Proof. The difference K(u) − π 2 csc2 (πu) is 1–periodic and, by the matched principal parts at
+u ∈ Z, entire; bounded and periodic, it is constant by Liouville, and the divisor normalization
+K = u−2 + O(1) pins the constant to zero.
+□
+b
+So the circle
+q does not permit the inverse–square kernel, it compels it: Qn , the half–step half–
+
+Laplacian −∂θ2 , and the rim Dirichlet–to–Neumann operator are not separate canonical voices
+but one voice at three resolutions, each what remains of a logarithm once its branch has been
+silenced. The translation certificate Q1 = 0 of the pentagon chart is then forced for the same
+reason — the constant octave 2πi is precisely the mode the second derivative annihilates.
+b n on Z/nZ
+The magnitude diagonal (21) is the per–node value of the inverse–square operator Q
+1
+2
+— the csc kernel — with spectrum λm = 2 m(n − m), m = 1, . . . , n − 1 (the kernel mode excised).
+Its trace is n copies of the diagonal:
+bn =
+Tr Q
+
+n−1
+X
+m=1
+
+n2 − 1
+n(n2 − 1)
+1
+=
+n
+·
+,
+m(n
+−
+m)
+=
+2
+12
+12
+
+bn =
+det′ Q
+
+n−1
+Y
+m=1
+
+((n − 1)!)2
+1
+,
+m(n
+−
+m)
+=
+2
+2 n−1
+
+(24)
+the determinant telescoping under m 7→ n − m, the octave reflection on the spectrum.
+The signed diagonal (22) reads the conditioning differently. It is σ2 at the most crowded tones,
+and it vanishes at n = 5:
+(5 − 1)(5 − 5)
+σ2 n=5 = −
+= 0.
+(25)
+12
+Remark 5.3 (The pentagon). The vanishing (25) is the pentagon node, the perfect fifth: at five
+equal divisions the signed crowding cancels and the chord rings clean. Trace and determinant of
+b n come into tune, (n2 − 1)/6 = 2(n−1)/2 , only at n ∈ {5, 7}: a finite check clears 2 ≤ n ≤ 30 and
+Q
+the right side outgrows the left for n ≥ 8. The common values are 4 at n = 5 and 8 at n = 7 — an
+octave apart, doubled the way A is the octave of A — as are the
+√ trace numerators 24 and 48. The
+pentagon carries the perfect fifth 32 , the heptagon the tritone 2, and the chromatic fill 5 + 7 = 12
+is the octave’s twelve semitones, observed, not forced. The signed σ2 is silent at the pentagon and
+minimal at the heptagon precisely where the operator tunings sound (Appendix A E,G).
+So the crowding that gates super–resolution is, at the equal–tempered tones, the same csc2
+b n /n, and the same signed −(n − 1)(n − 5)/12 that goes silent at the
+trace (n2 − 1)/12 that is Tr Q
+pentagon. The Basel limit completes the picture: for equally spaced roots rj = jh at an interior
+index, h2 [ b
+Q]ii = H2 (a) + H2 (b), a partial sum of 2ζ(2) = π 2 /3, converging as E = 4/N + O(1/N 2 )
+with leading constant exactly 4 at the centre (Appendix A I). The octave 2 at s = 1 is the
+residue–1 pole of (19); the double octave at s = 2 is the Basel π 2 /6 this diagonal climbs toward.
+5.1. The arithmetic transcription: stacking tones in log–prime space. The discriminant
+Hessian Q = − 12 ∇2 log |∆| of §5 reads off a continuous configuration of tones. Transcribe it onto
+the primes. Let p1 < p2 < · · · be the primes, place each at its log–prime pitch
+xi = log pi ,
+
+(26)
+
+ON EPSILON
+
+13
+
+Q
+and let an integer n = i pai i be a chord whose exponent vector a = (ai ) assigns a multiplicity —
+a sustain — toQeach prime tone. Two readings of the multiplicity are in tune at once: the divisor
+count d(n) = iP
+(ai + 1) is the entropy, the number of distinct overtones the chord supports, while
+the size log n = i ai xi is the held mass. The separation geometry is the log–prime discriminant
+X
+log ∆(a) =
+ai aj log |xi − xj |,
+(27)
+i̸=j
+
+the exponent–weighted Stieltjes log–energy
+of the tones at their occupied multiplicities — not the
+Q
+bare configurational discriminant i<j |xi − xj |2 , which is a constant once the primes are fixed
+and so couples to nothing. It is (27) that carries the curvature, and whose Hessian in a is the
+arithmetic Q.
+This energy is indefinite and runs to −∞, but not in an arbitrary direction: its descent lives
+along a single mode. The Hessian of a log–discriminant is not a free quadratic form — by
+the branch–free identity of §5 it is the inverse–square weighted Laplacian, − 21 Hess log |∆| = Q
+with Qij = −|xi − xj |−2 off the diagonal, the same operator that carries the chord spectrum
+spec Qn = { 21 m(n − m)} and the null–flux certificate Q1 = 0. The one constant octave 1 is
+precisely what the second derivative of a logarithm annihilates, and it is along 1 — the uniform
+shift of every multiplicity — that the bare energy diverges (the blow–up direction is L1, the
+crowding profile, App. A O(ix)).
+The regularization is therefore not an external constraint but the operator’s own kernel projection. Pass to the held–mass complement 1⊥ , where Q is invertible, and read the energy through
+the closed–form functional calculus on the chord spectrum: with F the discrete Fourier transform
+and φ acting modewise,
+
+(28)
+φ(Qn ) = F ∗ diag φ(λm ) F,
+λm = 21 m(n − m), φ(λ) = (λ + ε)−α , ŵ0 := 0,
+the pseudoinverse convention ŵ0 = 0 silencing the kernel mode exactly as the null–flux identity
+demands, with exact
+P conservation φ(Qn )1 = φ(0)1 and an O(n log n) cost (two transforms).
+Holding the mass i ai log pi = M is the same act read in coordinates: the constraint normal is
+1 in the tempered metric, so the admissible variations are exactly 1⊥ and the projected energy
+1⊥ is bounded (spectrum [−19.5, 4.1] versus the bare [−26.8, 4.1], the divergent 1–mode excised,
+App. A O(ix)). The well–posed chord is then
+h
+i
+X
+max
+log d(n) + β log ∆(a) ,
+ai log pi = M,
+(29)
+a≥0, a∈1⊥+M ê
+
+i
+
+with β ≥ 0 the curvature weight and a Lagrange multiplier λ for the held mass. Setting the
+variation in ai to zero gives the stationarity chord
+X
+1
+− λ log pi + 2β
+aj log | log pi − log pj | = 0,
+(30)
+ai + 1
+j̸=i
+
+the gradient identity verified to machine precision in Appendix A O(ix). Three terms voice it: the
+entropy 1/(ai + 1) wants every prime sounded,
+the confinement λ log pi silences the expensive high
+P
+primes, and the curvature coupling 2β j aj log |xi − xj | is level repulsion among the prime stacks
+— the same Stieltjes repulsion that spaces equilibrium charges [3], now between the multiplicities
+of a factorization.
+Remark 5.4 (Ramanujan limit and the packing regimes). At β = 0 the stacks do not interact and
+(30) collapses to ai = 1/(λ log pi ) − 1, the exponents decaying strictly with log pi — exactly the
+superior–highly–composite exponent law, the colossally abundant chord that descends 2:3:5: · · ·
+and falls silent past a cutoff (reproduced to machine precision, App. A O(ix)). Turning on the
+curvature does not simply migrate mass inward; it passes through two regimes. For small β the
+
+14
+
+R. GULATI
+
+repulsion broadens the support — the active primes rise from 6 to 24 as β goes 0 → 0.15 at M = 6,
+mass leaking into the tail against the prime number theorem’s clustering, the chord adding upper
+partials. For large β the repulsion re–sparsifies: the support collapses back onto a few maximally
+separated tones, an optimal packing in log–prime space that selects sparse, isolated primes rather
+than the small ones alone. The multiplier λ stays constant across the active primes at each β,
+certifying (30) (App. A O(ix)). The chord thus tunes between two consonances — the Ramanujan
+descent and the spaced packing — with the repulsion weight β as the only knob, and entropy as
+what it trades against curvature.
+Remark 5.5 (The regularized energy is the fractional held tone). The same functional calculus
+(28) that bounds the energy gives its smoothed value in closed form. On 1⊥ the fractional voicing
+Eα (a) = ⟨a, Q−α a⟩, evaluated by â 7→ λ−α
+m â with â0 := 0, is finite for every α > 0 and conserves
+the held
+exactly; it is the arithmetic reading of the survival voicing A−s of §10, the same
+R mass
+−1
+s−1
+−tQ
+Γ(s)
+t e
+dt resolvent now run on the prime chord. The kernel mode is the one tone
+held out of the sum — the constant the second derivative of log |∆| cannot hear — and the
+regularization is its silence, not a cutoff imposed from outside.
+6. Reconstruction: from local jets to the global aperture
+The n–jets at all roots determine f up to affine equivalence. Each root yields its separation
+set {1/(zi − zj )}j̸=i only up to labelling, so the global signed Cauchy matrix Cij = 1/(zi − zj ) is
+assembled through a cross–root consistency step matching entries by the antisymmetry 1/(zi −
+zj ) = −1/(zj − zi ) — the step a naive formulation omits. The chain then closes:
+Newton–Girard
+
+(i) inverse
+
+consistency
+
+|Cij |−1
+
+MDS
+
+Q
+(x−zi )
+
+{cm }i −−−−−−−−−→ σk −−−−→ {1/(zi − zj )} −−−−−−−→ Cij −−−−→ |zi − zj | −−−→ {zi } −−−−−→ f.
+(31)
+The distance matrix |zi − zj | feeds classical multidimensional scaling / Gram eigendecomposition,
+recovering the tone configuration up to isometry, hence f up to affine equivalence. From clean
+jets the recovery is exact to ∼ 10−13 (Table 2); for f (x) = (x − 1)(x − 2)(x − 4)(x + 3) the roots
+return as {−3, 1, 2, 4} and the coefficients [−24, 34, −7, −4, 1] exactly.
+Table 2. Exact reconstruction from clean local jets, error at each stage of (31);
+and linear noise propagation through the chain (gain ≈ 300).
+n
+
+σ error Cauchy error distance error poly–coeff error
+
+4 3.1 × 10−15
+5 1.1 × 10−12
+7 8.2 × 10−13
+jet noise ε
+10−8
+10−6
+10−4
+
+1.6 × 10−15
+9.0 × 10−14
+5.7 × 10−14
+
+8.4 × 10−15
+1.8 × 10−13
+2.9 × 10−13
+
+1.4 × 10−14
+2.8 × 10−13
+3.9 × 10−13
+
+poly error Cauchy error distance error
+3.1 × 10−6
+2.9 × 10−4
+4.1 × 10−2
+
+4.1 × 10−7
+3.4 × 10−5
+4.1 × 10−3
+
+1.5 × 10−6
+1.2 × 10−4
+1.5 × 10−2
+
+Noise on the jet derivatives propagates linearly with bounded gain ≈ 300 (error ≈ 300 ε): the
+reconstruction is well posed away from collisions. The sole sensitive stage is the σ–recursion as two
+roots approach, δ → 0, where the high–order derivatives blow up like δ −k and |σ2 | = 1/δ 2 → ∞
+— the same oracle of §4, now telling the implementer to stabilize the local σ estimates, not the
+global assembly.
+
+ON EPSILON
+
+15
+
+7. The aperture: array synthesis, direction finding, sensing
+The native objects — a polynomial with roots on the unit circle, the separations σk , the
+Cauchy/distance geometry — are the working representation of phased–array and line–spectral
+signal processing. Each root is a tone on the chromatic circle; each separation is the interval
+between two tones; the whole aperture is a chord whose voicing the estimator must resolve.
+Array synthesis (Schelkunoff ). The Schelkunoff method writes an N –element linear array
+P
+Q
+factor AF(z) = m wm z m = k (z − zk ) in z = ej(kd cos θ+β) [4]; the roots on the unit circle are
+the radiation–pattern nulls, the coefficients wm the excitation weights — the roots↔polynomial
+duality of (11). A 4–element array with nulls at 45◦ , 90◦ , 120◦ was designed, then the entire
+weight vector recovered from only the local jets at each null through (31): weights matched
+to 2 × 10−15 , null angles returned as 45.0◦ , 90.0◦ , 120.0◦ . Here σ2 at a null is a design–time
+conditioning gauge: large |σ2 | means crowded neighbouring nulls, ill–conditioned weights, tight
+manufacturing tolerance — computable locally, before the full weight vector is formed. The
+linear–noise rule reads off directly: to hold weights to relative accuracy η, hold the per–null jet
+data to ≈ η/300.
+Direction of arrival (root–MUSIC / ESPRIT). Source bearings are the roots of a polynomial built from the noise subspace, θk = arccos(arg(zk )/(kd)); ESPRIT recovers the same zk
+as rotational–invariance eigenvalues, including single–snapshot uniform circular arrays [5]. By
+Theorem 4.1, |σ2 | from local jets is a per–source resolvability metric for angularly close emitters
+— the cliff at |σ2 | ≈ 103 telling adaptive snapshot / aperture allocation when two bearings are
+separable. The Cauchy→distance→MDS stage of (31) is the machinery for recovering deformed /
+flexible array geometry from inter–element relationships, the towed and conformal–array problem.
+mmWave / massive–MIMO channel estimation. Sparse mmWave/THz channels are a few
+paths, each a complex exponential in angle and delay — a unit–circle root. Subspace super–
+resolution and atomic–norm methods estimate these off–grid with far fewer pilots than on–grid
+sensing [6, 7]. Two paths at similar angle/delay give a small separation, large σ2 , the regime where
+pilot overhead and SNR requirements explode; the oracle is a cheap local test for whether two
+multipath components are separable at the current aperture and bandwidth. The distance/MDS
+stage maps to recovering scatterer geometry from pairwise path relationships — the localization
+step of sensing–aided positioning.
+6G integrated sensing & communication. ISAC applies subspace estimators to angle, delay,
+and Doppler from the comms waveform, with cm–level localization on massive wideband arrays
+[8, 9, 10]. The jet gives a local per–target descriptor σk from one root’s neighbourhood — an
+inexpensive pairing feature across dimensions and a resolvability flag before committing to full
+joint estimation. The proven Basel rate E = 4/N + O(1/N 2 ) bounds the worst–case crowding for
+uniformly probed targets, an analytic handle on how aperture N trades against resolvability in
+the densest scene — the equal–tempered diagonal (n2 − 1)/12 of §5 read as a sensing budget.
+8. Universal error correction on the chromatic circle
+The four instruments of the preceding sections — tuning, the variance–swap basis, the line–
+spectral aperture, and numerical quadrature — are one error–correcting code. Each discretizes
+a continuum observable onto Z/nZ ∼
+= µn and commits the same endpoint defect; each corrects
+it with the same syndrome and the same zeta term structure. The transmitted codeword is the
+continuum spectral observable Y0 (s) = n1−s B(1 − s, 1 − s), the bulk Beta integral of the inverse–
+b n of §5 — the fair value, the continuum strike; the received word is the finite
+square operator
+Q
+Pn−1
+sum Yn (s) = m=1 µ−s
+n,m over the rescaled spectrum µn,m = m(1 − m/n), the half–exponent–s
+voicing of the chromatic diagonal — the realized leg the estimator actually settles on. The channel
+
+16
+
+R. GULATI
+
+error is the endpoint–sampling defect µn,m − m = −m2 /n, an O(h1/2 ) detuning of every tone with
+h = 1/n, thediscretizationvol carried on each tone. The parity–check functional is the syndrome
+Synn (s) = 12 Yn (s) − Y0 (s) — the basis between realized and fair legs — and the basis it returns
+is ζ(s) itself: across the critical strip 0 < ℜs < 1, Synn (s) → ζ(s) at order h (Appendix A J),
+confirmed on–axis at s = 0.25, 0.5, 0.75, 0.9 and off–axis at s = 12 + 3i. At the tritone s = 21 ,
+the syndrome is the order–two residue value ζ( 12 ) = −1.4603545088 . . ., the same tritone pole the
+CGF descent of §3 tunes to. The decoder is then exact:
+ζ(− 21 ) 3 ζ(− 32 )
++ O(n−3 ),
+(32)
++
+n
+4 n2
+a term structure in the sampling vol h = 1/n whose rungs descend the negative half–integers
+ζ( 21 ), ζ(− 21 ), ζ(− 32 ), . . . — the identical rungs of Appendix A F, the half–integer staircase falling
+from the tritone pole. Subtracting the first basis point 2ζ( 21 ) — the level of the basis — hedges
+out the sampling–channel bias to relative residual O(1/n), leaving only the physical Weyl tail.
+Equation (32) is verified to the printed coefficients in Appendix A J: the 1/n rung returns ζ(− 12 ) =
+−0.207886 . . . with ratio 1.0000000, the 1/n2 rung returns 43 ζ(− 32 ) with ratio → 0.7500000. The
+BGK–type decoder marks the discretization basis to a finite alphabet of zeta values and corrects
+the realized tone back to the fair one.
+Dn = Yn ( 12 ) − Y0 ( 12 ) = 2ζ( 21 ) +
+
+The decoder is exact rung by rung: the syndrome isomorphism. The statement Synn (s) →
+ζ(s) is not an estimate fitted to the numerics of Appendix A J; it is an isomorphism that
+holds coefficient by coefficient, forced by the two endpoint singularities of the chromatic voic−s at m = 0 and m = n. We prove it as a closed term structure: every
+ing µ−s
+n,m = [m(1 − m/n)]
+rung of the decoder ladder is one negative half–integer zeta value, with the Pochhammer weight
+of the tilted barrier expansion, and the head rung is ζ(s) exactly.
+Theorem 8.1 (Syndrome isomorphism). Write the received word as the rescaled–spectrum sum
+Pn−1 −s
+Yn (s) =
+m=1 µn,m , µn,m = m(1 − m/n), and the transmitted word as the bulk Beta trace
+Y0 (s) = n1−s B(1 − s, 1 − s). Then for every compact K ⊂ {0 < ℜs < 1} and every R ≥ 0,
+uniformly for s ∈ K,
+Yn (s) = n1−s B(1 − s, 1 − s) + 2
+
+R
+X
+(s)r ζ(s − r)
+r=0
+
+r!
+
+nr
+
+
++ OK n−(R+1) ,
+
+(33)
+
+with (s)r = s(s+1) · · · (s+r−1) the rising factorial. Consequently the defect Tn (s) := Yn (s)−Y0 (s)
+carries the ladder Tn (s) = 2ζ(s) + 2s ζ(s − 1)/n + s(s + 1)ζ(s − 2)/n2 + · · · , and the parity check
+is the zeta function exactly,
+s ζ(s − 1) s(s + 1) ζ(s − 2)
++
++ · · · −→ ζ(s).
+(34)
+Synn (s) = 21 Tn (s) = ζ(s) +
+n
+2n2
+−s (1 − m/n)−s , and
+Proof. Factor the voicing into its small–m tone and its barrier tilt, µ−s
+n,m = m
+expand the tilt with the binomial–coefficient Pochhammer series, valid for m < n,
+R−1
+
+X (s)r mr
+m −s
+(s)R mR
+1−
+=
++
+θ
+(m,
+n),
+|θ
+(m,
+n)|
+≤
+C
+,
+(35)
+R
+R
+K
+n
+r! nr
+R! nR
+r=0
+
+the coefficient (s)r /r! being exactly the BGK tilt’s rising–factorial weight; this is the local datum
+carried on each tone.
+Endpoint (the two singular tones). Multiply (35) by m−s and sum the tones near m = 0. The
+regularized rth rung is
+X
+(s)r mr
+(s)r X −(s−r)
+(s)r ζ(s − r)
+m−s
+=
+m
+=
+,
+r
+r
+r! n
+r! n
+r!
+nr
+m≥1
+
+m≥1
+
+ON EPSILON
+
+17
+
+P
+where the inner Dirichlet sum m≥1 m−(s−r) is read through its analytic continuation ζ(s − r) —
+the Euler–Maclaurin
+regularization of entry A K, the same constant ζ(·) that prices the divergent
+P r−ℜs
+endpoint sum
+m
+. By the reflection m 7→ n − m, which fixes µn,mP
+(µn,n−m = µn,m ), the
+tone at m = n reproduces the identical ladder; the two endpoints sum to 2 r (s)r ζ(s − r)/(r! nr ),
+the doubling that is the eigenvalue symmetry λm = λn−m of the cycle Hessian of §P
+5.
+n−1 −s
+Bulk (the interior tones). Setting x = m/n, the interior is the Riemann sum m=1
+µn,m =
+R
+P
+1
+−s
+−s
+−s
+n
+for the integral n 0 [x(1 − x)] dx, convergent for ℜs < 1 to the Euler Beta
+m [x(1 − x)]
+value B(1−s, 1−s). After the n−s rescaling this is the transmitted word n1−s B(1−s, 1−s) = Y0 (s),
+the continuum strike, the global fair leg.
+P
+Remainder. On a compact K ⊂ {0 < ℜs < 1} the tail θR of (35) contributes m mR−ℜs /nR =
+OK (n1−s /nR ) from the bulk scale and OK (ζ(ℜs − R)/nR ) from the regularized endpoint, and the
+first dropped rung r = R is OK (n−R ) once divided out at the boundary; collecting, the error
+past R rungs is OK (n−(R+1) ) uniformly, because (s)r /r! and ζ(s − r) are bounded on K and the
+geometric scale n−r controls the sum. This yields (33). Subtracting the bulk gives the Tn ladder,
+□
+and the syndrome’s factor 21 converts the doubling into the single ζ(s) of (34).
+The domain is the critical strip first: 0 < ℜs < 1 is exactly where the bulk integral converges to
+a finite Beta value and the endpoint Dirichlet sum needs its ζ–continuation, so the decomposition
+has both a finite fair leg and a non–trivial syndrome. Off this strip the statement still holds by
+the same contour shift — the rth rung ζ(s − r) is the residue picked up at s − r, and at the
+trivial zeros and the pole s = 1 the Beta factor B(1 − s, 1 − s) carries the matching singularity
+so the difference stays finite — but we claim the strip version, where it is sharpest, and read
+the rest by continuation. Two consequences are immediate. At the tritone s = 12 the head rung
+is 2ζ( 12 ) and the subleading rungs are the negative half–integer staircase ζ(− 12 ) = 2 · 12 ζ(− 12 ),
+3
+3
+1 3
+3
+1
+4 ζ(− 2 ) = 2 · 2 ζ(− 2 ), . . . , recovering (32) as the s = 2 specialization of (33) term for term
+(Appendix A J, every rung to its ratio). And the limiting zero set is forced: if sn → s∗ in the strip
+with Synn (sn ) = 0, then ζ(s∗ ) = limn Synn (sn ) = 0, so the head rung pins s∗ to a non–trivial zeta
+zero — the decoder’s parity vanishes on the line the zeros sit on, the tritone ℜs = 12 .
+The correction bits are not specific to the spectral observable. They are the Euler–Maclaurin
+endpoint corrections of numerical quadrature: the negative half–integers ζ(− 21 ), ζ(− 32 ), ζ(− 52 ), . . .
+P
+P
+P
+are exactly the regularized divergent endpoint sums m≥1 m1/2 , m≥1 m3/2 , m≥1 m5/2 that the
+Euler–Maclaurin formula assigns when an integralRis replaced by an n–point rule (Appendix A K,
+matched to fifty digits). Replacing the integral x−s by its Riemann sum commits the same
+endpoint defect, and the constant that regularizes it is ζ(s) — the same syndrome, now read as a
+quadrature error term. The dictionary is one row per instrument, one column per coding object:
+The through–line is the tritone s = 12 : the order–two residue of Z/N Z, the self–inverting
+√
+♭5 = 2, the half–exponent that swaps variance for vol, the unique fixed point of the octave
+reflection s 7→ 1 − s, and the value ζ( 12 ) that heads the correction ladder in every row. One
+syndrome, one zeta ladder, four instruments.
+Practical benchmarks: digits recovered at fixed budget. The decoder is not asymptotic
+bookkeeping; it pays at finite n. Table 4 marks each instrument to its fair value, then prices the
+residual under three settlements: the naive received word (no correction), the one–rung decoder
+(subtract the level 2ζ( 12 ), or the integral tail), and the two–rung decoder (add the ζ(− 12 )/n basis
+point, or the Euler–Maclaurin endpoint − 12 N −s ). Reading the line–spectral aperture at the tritone
+voicing s = 12 with an n = 64 array, the naive defect carries 3.3 × 10−3 of detune; the one–rung
+mark closes to 4.6 × 10−6 — a 700× tightening, three figures of basis hedged — and the two–rung
+mark to 2.0 × 10−8 , a further 1.6 × 105 , six figures off the fair leg. The gain compounds with the
+array: at n = 16384 the two–rung decoder is 1.0×1010 tighter than naive, ten clean figures bought
+
+18
+
+R. GULATI
+
+Table 3. One code, four instruments. Each row discretizes a continuum observable onto the chromatic circle Z/nZ and corrects the endpoint defect with the
+same syndrome Synn (s) → ζ(s) and the same negative–half–integer correction ladder.
+Instrument
+
+Transmitted word
+
+Channel error
+
+First correction bit
+
+Tuning
+
+just continuum
+scale
+continuum
+variance leg
+continuum
+aperture Y0
+R
+integral x−s
+
+equal–tempered
+detuning −m2 /n
+sampling vol
+h = 1/n basis
+endpoint defect
+µn,m − m
+Riemann–sum
+endpoint defect
+
+ζ( 12 ), the tritone, ♭5 =
+
+Variance swap
+Line spectrum
+Quadrature
+
+√
+2
+
+2ζ( 21 ), the vol–of–var
+convexity basis
+2ζ( 12 ), the resolution bias
+ζ(s); rungs ζ(− 2k−1
+2 )
+Euler–Maclaurin
+
+for one extra zeta coefficient. The quadrature instrument settles the same way — estimating ζ(s)
+from an N –point rule, the integral tail recovers ∼ 2.6 figures and the Euler–Maclaurin endpoint
+a further ∼ 2.6, for 5.2 figures gained at s = 21 +1, N = 100 — and the variance–swap vol leg the
+same again: the n–date estimator of Φ = KX ( 12 ) − 21 KX (1) = −v/8 carries an O(1/n) sampling
+basis that decays ∼ 10× from a quarter (n = 63) to four years (n = 1008) of dates, basis·n holding
+order–one — the ζ(− 12 )/n rung of (32) read as discrete–monitoring convexity. One coefficient per
+figure, the same ladder, every instrument (Appendix A L).
+Table 4. Residual against fair value at fixed budget, and figures of basis hedged
+by adding one more rung of the zeta ladder. Line spectrum reads the aperture
+at the tritone s = 21 ; quadrature settles ζ( 32 ) from an N –point rule. All entries
+verified to fifty digits (Appendix A L).
+Instrument
+(budget)
+Line spectrum
+(n=64)
+Line spectrum
+(n=16384)
+Quadrature
+(N =100)
+Quadrature
+(N =1000)
+Variance swap
+(n=63)
+Variance swap
+(n=1008)
+
+Naive defect
+
+One–rung
+
+Two–rung Figures gained
+
+3.3 × 10−3
+
+4.6 × 10−6
+
+2.0 × 10−8
+
+5.2
+
+1.3 × 10−5 7.1 × 10−11 1.2 × 10−15
+
+10.0
+
+2.0 × 10−1
+
+5.0 × 10−4
+
+1.3 × 10−6
+
+5.2
+
+6.3 × 10−2
+
+1.6 × 10−5
+
+4.0 × 10−9
+
+7.2
+
+8.6 × 10−5
+
+—
+
+—
+
+basis ∝ 1/n
+
+2.4 × 10−6
+
+—
+
+—
+
+basis ∝ 1/n
+
+ON EPSILON
+
+19
+
+9. Relation to prior work, and what is new
+We are precise about what is borrowed and what is new, so that no reader can mistake this for a
+synthesis of known results. Exactly two of the corrections recovered here are genuinely known and
+we claim neither: the Pythagorean and syntonic√
+commas of temperament theory, and the Broadie–
+Glasserman–Kou continuity shift β = −ζ( 21 )/ 2π of discrete–barrier finance. Everything else
+here is new. The remaining “corrections” that other fields have are not the same objects as ours:
+the Euler–Maclaurin endpoint expansion, the Cauchy principal value, and stabilizer syndrome
+decoding are tools we re–read, not corrections we inherit, and the contributions of this note are
+constructions that have not appeared before. Three are worth isolating.
+(i) The unifying object. The syndrome Synn (s) → ζ(s) — a single defect operator that vanishes
+exactly on the factorizable class and prices every collected correction to the same negative–half–
+integer zeta ladder — is, to our knowledge, the first identification of the discretization error
+of these four fields as one computable obstruction whose value is ζ(s). We do not assert this
+isomorphism; we prove it coefficient by coefficient (Theorem 8.1): every rung of the decoder is
+one zeta value ζ(s − r) with the exact Pochhammer weight (s)r /r!, the head rung is ζ(s), and
+the bulk is the Beta trace — a closed term structure, not a fitted asymptotic, with the limiting
+zero set forced onto the non–trivial zeta zeros. (ii) The local–to–global reconstruction of §6: we
+recover the entire global aperture exactly from the per–root local jet through a Cauchy/distance
+step, with linear noise gain and residual ∼ 10−13 (App. A, Table in §6). The classical estimators
+(Schelkunoff synthesis, root–MUSIC, ESPRIT, atomic norm) all build the array model first and
+read parameters off it; ours runs the other way, from a single root’s local separation jet outward
+to the whole configuration, and is a structurally new estimator, not a repackaging of any of them.
+(iii) The quadrature regularization of §8 and App. A K: we exhibit the Euler–Maclaurin endpoint
+staircase as the decoder’s correction ladder, so each additional zeta coefficient ζ(− 12 ), ζ(− 32 ), . . .
+is a decode step buying several digits at fixed budget — a regularization rule stated as a parity
+decode, which the quadrature literature does not do.
+The distinction from each prior strand is the scope and nature of the guarantee.
+Temperament theory (the Pythagorean and syntonic commas, Werckmeister’s and the equal–
+tempered distributions [17, 12]) names the comma and chooses how to spread it, but treats it as a
+tuning compromise local to the twelve–tone lattice; it never identifies the comma as one value of a
+function whose other values price a barrier option or a quadrature rule. The Broadie–Glasserman–
+√
+Kou continuity correction [14] computes the discrete–monitoring shift β = −ζ( 12 )/ 2π exactly
+— and it is the same ζ( 12 ) — but derives it analytically for the single barrier observable through
+Spitzer/Wiener–Hopf identities, with no claim that the constant is the head of a universal correction ladder or that the same syndrome governs tuning and integration. Stabilizer quantum
+error correction [15, 16] is the closest structural cousin: it reads a syndrome off commuting parity
+checks and decodes to the coset, exactly our move; but its code is the Pauli group on a finite
+Hilbert space, its syndrome a binary vector, and its error model discrete — it does not produce ζ
+as the parity value of a continuum–to–discrete defect. Euler–Maclaurin endpoint correction [19]
+P 1/2 P 3/2
+regularizes the divergent endpoint sums
+m , m to ζ(− 12 ), ζ(− 32 ) and is the engine of our
+ladder, but it is stated as a quadrature error expansion, not as a parity check on a chromatic
+code shared with finance and tuning. The Cauchy principal value [18] assigns a finite part to a
+divergent integral but is a renormalization prescription, not a computable certificate that vanishes
+on a factorizable class. The general defect operator — a quantity zero iff an exact factorization
+exists, strictly positive and Lipschitz–stable otherwise — we defined inline in §1; what is new here
+is that we instantiate it concretely as the zeta syndrome on µn and exhibit the four–instrument
+decoding.
+The contribution is therefore structural and technical, not synthetic. Structurally, we identify
+the discretization error of four unrelated fields as one defect operator on µn whose kernel is the
+
+20
+
+R. GULATI
+
+Table 5. Positioning. Each prior correction is exact and classical within one
+field ; none identifies the correction as one value of a single defect operator on the
+chromatic circle whose parity value is ζ(s) and whose ladder is shared across fields.
+The last row is this note.
+Correction
+
+What it gives
+
+What it does not give
+
+Comma / temperament
+[17, 12]
+BGK continuity correction
+[14]
+Stabilizer QEC [15, 16]
+
+the comma as one value of ζ
+
+Euler–Maclaurin [19]
+
+the tuning defect,
+distributed over Z/12Z
+exact discrete–barrier shift
+∝ ζ( 21 )
+syndrome decoding to a
+coset
+endpoint sums → ζ(− 2k−1
+2 )
+
+Cauchy principal value [18]
+
+finite part of a divergence
+
+This note
+
+one syndrome
+Synn (s) → ζ(s);
+local–to–global
+reconstruction;
+quadrature
+regularization as decode
+
+a cross–field correction
+ladder
+ζ as a continuum defect
+value
+a parity check shared with
+finance/tuning
+a certificate vanishing on a
+factorizable class
+—
+
+factorizable class and whose value is ζ(s), the first such identification we are aware of. Technically, we make the decoding explicit and verified: the exact decoder Dn = 2ζ( 12 ) + ζ(− 12 )/n +
+3
+3
+2
+−3
+4 ζ(− 2 )/n + O(n ) at the tritone ((32), App. A J), the Euler–Maclaurin instance to fifty digits
+(App. A K), and the practical benchmarks of §8 that buy up to ten figures for one extra zeta
+coefficient (Table 4, App. A L). The result is that a bottleneck each field had patched locally —
+the comma, the continuity correction, the endpoint regularization, the finite part — is resolved
+once, by decoding the same syndrome.
+
+10. The sustain pedal: ζ as the Mellin transform of a non–invertible voicing
+The identifications of the preceding sections are computable to machine precision, and the
+syndrome Synn (s) → ζ(s) (Thm. 8.1) settles the discrete question once and for all. This section
+scores a second, independent statement on the same circle: it does not replace the term structure
+of §8 but sits alongside it, naming the one tone that ladder is the spectrum of. Where §8 reads ζ
+as the parity value of a finite chromatic code, here ζ is heard as the held resonance of a voice that
+does not return to its fundamental — the sustain that remains after the struck note is damped
+on a part of the soundboard. The theorem is stated first and proved; the interpretation is voiced
+afterwards, in a single closing line, and is no part of the proof.
+Three instruments are tuned together. A killed voice: a positive self–adjoint generator AD on
+L2 (D), the Dirichlet restriction of the diffusion generator to a region D, whose semigroup e−tAD
+is the sounding of an initial pitch with the part of its energy that crosses ∂D damped away at rate
+set by the killing. A discrete stop: the projection ΠD onto L2 (D), the
+switch that mutes
+R ∞register
+2
+c
+s−1
+the complementary pipes L (D ). And the Mellin staff Mf (s) = 0 t f (t) dt, the change of
+
+ON EPSILON
+
+21
+
+clef from the time line to the frequency line s on which ζ is read. The held tone is the survival
+defect of the killed voice; the Mellin transform of that defect is ζ.
+Definition 10.1 (The survival voicing and its overtone series). For a killed generator AD with
+first–passage time τD = inf{t : Xt ∈
+/ D} from the pitch x ∈ D, the survival voicing is the
+negative–power matrix element
+Z ∞
+1
+−s
+surv
+ts−1 Ex [ t < τD ] dt,
+(36)
+ζD,x (s) := δx , AD 1 =
+Γ(s) 0
+the Mellin transform of the survival amplitude Sx (t) = Ex [t < τD ] = Prx (τD > t) that the voice
+is still ringing at time t. Its overtone series is the negative–power spectrum {λ−s
+k } of AD , headed
+by the slowest–decaying partial λ−s
+.
+The
+negative
+power
+itself
+is
+read
+off
+the
+resolvent without
+1
+reference to any basis or coordinate: with a contour γ winding once around spec(AD ) ⊂ (0, ∞)
+and avoiding the cut of λ−s ,
+I
+Z ∞
+1
+1
+−s
+−1
+λ
+(λI
+−
+A
+)
+dλ
+=
+ts−1 e−tAD dt,
+(37)
+A−s
+=
+D
+D
+2πi γ
+Γ(s) 0
+the Dunford–Taylor voicing of the held tone: the survival amplitude is the diagonal matrix element
+of the complex power A−s
+D , an invariant of the killed generator and its resolvent alone.
+The survival voicing is the held tone in closed form: it converts the time–domain decay of the
+struck note into a single frequency–line amplitude, and that amplitude is a first–passage moment.
+Proposition 10.2 (The held tone is a first–passage moment). With the survival voicing of (36),
+surv
+ζD,x
+(s) =
+
+Ex [ τDs ]
+,
+Γ(s + 1)
+
+(38)
+
+so the resonance read on the Mellin staff is exactly the sth moment of the first–passage time,
+normalised by the octave–counting factor Γ(s + 1).
+R
+−1 ∞ ts−1 e−tAD dt gives the second equality in
+Proof. The subordination identity A−s
+D = Γ(s)
+0
+(36) on pairing against δx and 1, since ⟨δx , e−tAD 1⟩ = Sx (t) is the survival amplitude. With
+′
+S
+= 1, Sx (∞) =
+R x∞(0)s−1
+R 0, and −Sx (t)1 = fτs (t) the first–passage density, integration by parts on
+1 ∞ s
+Sx (t) dt = s 0 t fτ (t) dt = s Ex [τD ] yields (38) via s Γ(s) = Γ(s + 1). The single–partial
+0 t
+case AD = λ, τ ∼ Exp(λ) checks λ−s = E[τ s ]/Γ(s + 1) to fifty digits (App. A O).
+□
+The held tone exists, and is a single value of ζ, exactly because the stop ΠD cannot be released:
+the voice has nowhere to return its damped energy. This is the non–invertibility, and it is what
+makes the resonance audible at all.
+Lemma 10.3 (The damped register cannot be released). The stop ΠD is a non–trivial orthogonal
+projection with ker ΠD = L2 (Dc ) ̸= {0}, hence is not invertible; equivalently the killed semigroup
+e−tAD is strictly sub–Markovian, ⟨1, e−tAD 1⟩ < ⟨1, 1⟩ for t > 0. The survival defect 1 − e−tAD 1 is
+surv is the Mellin transform of
+the energy that has crossed ∂D, it is non–zero for every t > 0, and ζD,x
+that defect. Were ΠD invertible — the voice ergodic, returning all its energy — the defect would
+vanish identically and the held tone would be silent.
+This is the same silence as the vanishing syndrome: the defect operator of §9 is zero exactly
+on the factorizable, ergodic, all–energy–returned class, and strictly positive otherwise. Here the
+obstruction is the leaked register L2 (Dc ); there it was the comma class on Z/nZ. They are read
+on the same staff. The bridge between the held tone and the chromatic ladder is the rule that
+samples the sustain at equal–tempered times.
+
+22
+
+R. GULATI
+
+Lemma 10.4 (The Mellin–Perron sampling staff: ζ is the comb of a held tone). For f with
+convergent Mellin transform Mf on a vertical line ℜs = c > 1 and spacing ∆ > 0, the equal–
+tempered comb of f is the Mellin–Perron integral
+Z c+i∞
+X
+1
+∆−s ζ(s) Mf (s) ds,
+(39)
+f (k∆) =
+2πi c−i∞
+k≥1
+
+so striking the held tone f at every octave–grid time k∆ and summing is exactly the inverse Mellin
+transform of ζ(s) against the tone’s
+P own spectrum: ζ is the comb of the equal–tempered grid, and
+it enters as the Dirichlet weight k k −s that the grid contributes in the frequency clef.
+Proof. This is the Mellin–Perron summation formula. Mellin inversion writes the tone as
+Z
+1
+f (k∆) =
+(k∆)−s Mf (s) ds;
+2πi (c)
+P
+summing over k ≥ 1 inside the integral, justified by absolute convergence of k (k∆)−c |Mf | for
+c > 1, factors the grid from the tone,
+X
+X
+(k∆)−s = ∆−s
+k −s = ∆−s ζ(s),
+k≥1
+
+k≥1
+
+the DirichletPseries of the unit comb, giving (39). The test tone f (t) = e−t , Mf = Γ, returns the
+□
+closed sum k≥1 e−k∆ = (e∆ − 1)−1 , matched by the contour to sixteen digits (App. A O).
+Remark 10.5 (Why the comb
+is Mellin–Perron and not Euler–Maclaurin). The more familiar
+R
+P
+P
+B2m
+−1 f is Euler–Maclaurin, whose corrections
+2m−1 f (2m−1)
+f
+(k∆)
+−
+∆
+staff for
+m≥1 (2m)! ∆
+k
+are pinned to the even–integer grid through the Bernoulli numbers, i.e. to ζ(2), ζ(4), . . . by (40);
+it reads only the smooth, integer–exponent register of the tone. The Mellin–Perron staff (39) is
+the wider clef: by contour–shifting it evaluates ζ at every Mellin pole of f , integer or not, and
+so hears the half–integer survival partials ζ(♭5), ζ( 32 ), . . . and, below, the corner exponents that
+Euler–Maclaurin is structurally deaf to. Euler–Maclaurin is the restriction of (39) to the smooth
+interior; the held tone of a non–invertible voicing lives precisely on the poles it omits.
+Now the two registers of the held tone separate by which voice is being sampled, and they land
+on the two faces of the zeta ladder already in play. A continuous diffusing voice and a finite pool
+of pipes drained one at a time give the half–integer and the integer sub–lattices of ζ respectively
+— the same split as continuous octave coordinate versus finite chromatic modulus.
+Theorem 10.6 (The two sustains: half–integer survival, integer depletion). Let the survival
+voicing of (36) be sampled on the octave grid by Lemma 10.4. (i) Continuous sustain. For a
+Brownian voice killed at a barrier, the survival amplitude carries half–integer time–moments and
+the held tone is supported on the tritone sub–lattice
+
+ζ(♭5) = −1.4603545 . . . , ζ( 32 ) = 2.6123753 . . . , ζ( 52 ) = 1.3414873 . . . ,
+s ∈ ♭5, 23 , 52 , 27 , . . . ,
+√
+headed by the tritone ζ(♭5), whose voicing is the BGK continuity shift β = −ζ(♭5)/ 2π =
+0.5825972 . . .. (ii) Discrete sustain. For a finite pool of N pipes depleted without replacement
+−n
+(hypergeometric sampling, variance np(1 − p) N
+N −1 ), the held tone is supported on the octave sub–
+lattice of even integers s ∈ {2, 4, 6, . . . }, with
+ζ(2m) =
+
+(−1)m+1 (2π)2m B2m
+,
+2 (2m)!
+
+ζ(2) =
+
+π2
+π4
+, ζ(4) =
+,
+6
+90
+
+(40)
+
+the even partials priced by the Bernoulli numbers of the depletion’s Euler–Maclaurin staircase.
+
+ON EPSILON
+
+23
+
+Proof. (i) The barrier survival amplitude Sx (t) for one–dimensional Brownian motion has the half–
+P
+integer small–time expansion Sx (t) = j≥0 cj t (2j+1)/2 +· · · (heat–content expansion of a Dirichlet
+surv sit at the half–integers, and the sampling
+region in d = 1), so by (38) the Mellin poles of ζD,x
+√
+staff (39) evaluates ζ there; the head ζ(♭5) is the BGK constant, verified −ζ( 12 )/ 2π = 0.5825972
+to ten digits (App. A O), and is the same tritone that is the order–two residue of σ2 in §11. (ii)
+Depleting a finite pool one pipe at a time replaces the binomial variance by the hypergeometric
+−n
+np(1 − p) N
+N −1 , whose finite–population correction is an Euler–Maclaurin endpoint staircase on
+the integer grid; its endpoint coefficients are the Bernoulli numbers B2m , which are exactly the
+even zeta values by (40), checked B2m = (−1)m+1 2(2m)! ζ(2m)/(2π)2m for m = 1, . . . , 4 against
+mpmath (App. A O). The two supports are the half–integer and integer sub–lattices of the single
+ladder {0, ♭5, 1, 2, . . . } of §11.
+□
+The held tone is therefore not one number but a function of the clef position s, and its value
+jumps precisely at the partials of the killed voice. Collecting those jumps is the residue statement.
+But the partials are not free: when the region D is a polygon, the survival voice is clamped at
+the corners, and the small–time register of the defect is governed there not by the smooth Seeley–
+DeWitt half–integers of the interior but by the indicial roots of the local conic model — the
+Kondratiev exponents of the corner Mellin pencil. The residue theorem then names its zeta
+arguments exactly: they are those corner exponents, and on a regular polygon they carry the
+cyclic symmetry of the vertices. We state it in this sharp form. Throughout, f is a defect density
+paired from the monitored one–step voicing K∆ = ΠD e−∆A ΠD , and
+Z ∞
+X
+f (t) dt
+(41)
+R∆ (f ) := ∆
+f (k∆) −
+0
+
+k≥1
+
+is the weighted discrete–continuous defect, the held register over the continuous ideal.
+Theorem 10.7 (Kondratiev–cyclotomic zeta residue theorem). Let Ω ⊂ R2 be a bounded polygonal region with vertex set V , and let A be the positive Friedrichs realization of a uniformly
+elliptic second–order generator on Ω with local Dirichlet, Neumann, or mixed boundary conditions, Pt = e−tA its killed semigroup and ΠD a bounded idempotent monitoring stop. Suppose the
+projection–defect density f has, as t ↓ 0, the Kondratiev polyhomogeneous expansion
+m(v,σ)
+
+f (t) ∼
+
+X X
+
+X
+
+v∈V σ∈Σv
+
+r=0
+
+cv,σ,r t−σ (log t)r ,
+
+(42)
+
+where Σv is the pole set of the corner Mellin pencil at v — the indicial roots of the local conic
+model operator — and m(v, σ) + 1 is the order to which they collide. Assume f decays rapidly
+at infinity and that Mf continues meromorphically with rapid vertical decay in the strip required
+for Mellin–Perron contour shifting. Then, as ∆ ↓ 0,
+R∆ (f ) ∼
+
+X X m(v,σ)
+X
+v∈V σ∈Σv
+
+cv,σ,r ∆
+
+1−σ
+
+r=0
+
+r
+X
+j=0
+
+ 
+r
+(−1)
+(log ∆) r−j ζ (j) (σ)
+j
+j
+
+(43)
+
+and in the generic non–colliding case m ≡ 0 this collapses to the clean ladder
+X X
+R∆ (f ) ∼
+cv,σ,0 ζ(σ) ∆1−σ .
+v σ∈Σv
+
+The defect is non–zero exactly when the stop ΠD is non–invertible (Lemma 10.3); on the factorizable, all–energy–returned class f equals its continuous transform, Σv = ∅, and the two voicings
+
+24
+
+R. GULATI
+
+coincide. The zeta values are therefore not arbitrary: they occur exactly at the Kondratiev exponents of the corner defect, and the head tritone σ = ♭5 recovers the Brownian survival sustain of
+Thm. 10.6(i).
+Proof. Four staves. (i) The corner register. Kondratiev theory for elliptic problems on conic and
+polygonal domains gives the local small–time expansion (42), the exponents σ ∈ Σv being the
+roots of the indicial Mellin pencil of the conic model at v; logarithmic powers (log t)r appear
+exactly when those roots collide or the Mellin pole has multiplicity > 1. (ii) Poles in the clef.
+The Mellin transform of a single term has principal part
+
+
+(−1)r r!
++ (holomorphic),
+M t−σ (log t)r (s) =
+(s − σ)r+1
+so every Kondratiev exponent σ becomes a Mellin pole of Mf of order r +1. (iii) The grid weight.
+Mellin–Perron sampling (Lemma 10.4) inserts the comb weight ζ(s),
+Z
+X
+1
+∆1−s ζ(s) Mf (s) ds.
+∆
+f (k∆) =
+2πi (c)
+k≥1
+R∞
+The pole of ζ at s = 1 contributes the residue ∆0 Mf (1) = 0 f , the continuum term, which
+(41) subtracts. (iv) Shift and collect. Moving the contour left past each σ ∈ Σv and computing
+Ress=σ ∆1−s ζ(s)Mf (s) at the order–(r+1) pole, the j!1 ∂sj Laurent coefficients distribute by the
+Leibniz rule through
+∂sj ∆1−s = (− log ∆)j ∆1−s ,
+
+∂sr−j ζ = ζ (r−j) ,
+
+giving exactly the boxed binomial sum in log ∆ and ζ (j) (σ) of (43). Vanishing on the factorizable
+class is Lemma 10.3. The simple–pole arguments Res → ζ(σ)∆1−σ are verified against the defect
+R∆ at σ ∈ { 21 , − 21 , 0.3} to high precision, and the double–pole log ∆ slope and ζ ′ ( 12 ) intercept are
+recovered by fit (App. A O).
+□
+The exponent set is now an analytic object, and on a regular polygon it is acted on by the
+cyclic symmetry of the corners. Resolving the corner coefficients into the cyclic characters of the
+vertex orbit splits every residue into divisor strata, and prime polygons are the irreducible atoms
+of that splitting.
+Corollary 10.8 (Prime polygons are irreducible cyclotomic atoms). Let Ωn be a regular n–
+gon, its vertex orbit carrying the cyclic group Cn . Resolving the corner coefficients of (42) into
+the cyclic characters χk (j) = e2πikj/n , k = 0, . . . , n − 1, each residue coefficient decomposes as
+P
+(k)
+cv,σ,r = n−1
+k=0 cσ,r χk (v), and the mode χk has exact period
+n
+d(k) =
+.
+(44)
+gcd(k, n)
+For composite n the defect expansion therefore carries imprimitive strata indexed by the proper
+divisors d | n — the hidden corner faces of lower divisor–polygons. For n = p prime, d(k) = p for
+every k = 1, . . . , p − 1: every nonconstant cyclotomic mode is primitive, and the only imprimitive
+mode is the uniform k = 0. Hence a prime p–gon has no divisor–polygon residue strata; its
+Kondratiev–zeta spectrum is cyclotomically irreducible.
+Proof. The characters χk are the irreducibles of Cn and diagonalize any Cn –equivariant coefficient
+assignment on the vertex orbit, giving the decomposition. The period of χk is the least d > 0 with
+kd ≡ 0 (mod n), namely d(k) = n/ gcd(k, n). For prime p, gcd(k, p) = 1 for all 1 ≤ k ≤ p − 1, so
+d(k) = p throughout; composite n admits 1 < gcd(k, n) < n, producing periods d(k) | n strictly
+between 1 and n. The period table is checked for n ∈ {5, 6, 7, 12} (App. A O).
+□
+
+ON EPSILON
+
+25
+
+The same cyclic characters that stratify the corner residues are the eigenvoicings of the inverse–
+b n of §8: the Hessian of the log–discriminant at the roots of unity and the corner
+square operator Q
+symmetry of the polygon are diagonalized on one and the same basis. This ties the residue
+spectrum to the spacing spectrum already in play.
+Corollary 10.9 (The cyclotomic Q–voicing of the corner symmetry). Let the cyclotomic discriminant of the angular configuration and the inverse–square Hessian at the regular n–gon be
+Y
+2
+∆n (θ) =
+eiθi − eiθj ,
+Qn = − 12 Hessθ log ∆n θ =2πj/n .
+j
+
+0≤i<j≤n−1
+
+Then Qn is the weighted graph Laplacian
+(Qn u)j = 41
+
+X
+
+
+
+csc2 π(j−m)
+(uj − um ),
+n
+
+(45)
+
+m̸=j
+
+it is diagonalized by the cyclic characters χk , and
+k(n − k)
+χk ,
+k = 0, . . . , n − 1.
+(46)
+2
+For n = p prime every nonzero voicing χk (k = 1, . . . , p − 1) is primitive, so the Qp –spectrum
+carries no divisor–induced imprimitive block: for a prime p–gon the nonzero Qp –modes and the
+nonconstant Kondratiev–zeta residues are primitive on the same cyclotomic basis. For composite
+n the modes with gcd(k, n) > 1 descend to the smaller divisor polygons of Cor. 10.8.
+Qn χk =
+
+Proof. The second derivative of log |eiθi − eiθj |2 at θj = 2πj/n gives the off–diagonal weight
+− 14 csc2 (π(i−j)/n) with the diagonal fixed by row–sum zero, which is (45); this is the discrete csc2
+P
+2
+law of §8. Circulant symmetry makes χk eigenvectors, with eigenvalue 14 n−1
+m=1 csc (πm/n)(1 −
+1
+cos(2πkm/n)) = 2 k(n−k) by the cotangent summation, giving (46) and reproducing the pentagon
+spectrum {0, 2, 2, 3, 3} at n = 5. The spectra are computed two independent ways — the csc2
+Laplacian and the literal − 21 Hessian of log |∆n | at the roots of unity — and agree for n ∈
+{5, 6, 7, 8} (App. A O). Primitivity is Cor. 10.8.
+□
+The same − 12 Hessian of a log–discriminant that gives the cyclotomic voicing (45) acts, on the
+arithmetic transcription of §5.1, as a uniform damping d(n) 7→ d(n) n−γ of the divisor weights
+— the inverse–square spacing operator read on the prime ladder. This damping has an exact
+spectral signature on the completed divisor square, which is the Dirichlet–series face of the Voronoı̆
+summation for d(n). We record it as a lemma; the statement and proof stand on the classical
+functional equation alone.
+Lemma 10.10 (The γ–tensioned self–dual axis). Let ξ(s) = π −s/2 Γ(s/2) ζ(s) be the completed
+Riemann zeta, with Riemann’s functional equation ξ(s) = ξ(1 − s), and for a tension parameter
+γ ∈ R let
+Ξγ (s) := ξ(s + γ)2 ,
+(47)
+P
+−γ
+−s
+2
+the completion of the γ–damped divisor series n≥1 d(n) n n = ζ(s + γ) . Then Ξγ satisfies
+the explicit functional equation
+
+Ξγ (s) = Ξγ 1 − 2γ − s ,
+(48)
+whose self–dual axis — the fixed point of the reflection s 7→ 1 − 2γ − s — is
+s = 21 − γ.
+
+(49)
+
+At γ = 0 this recovers Ξ0 (s) = ξ(s)2 = Ξ0 (1 − s) with axis s = 12 . The Bessel index of the Voronoı̆
+kernel attached to (47) is unchanged at ν = 1: the two zeta factors stay equal, ζ(s+γ)2 is a square
+and not a product ζ(s + a)ζ(s + b) with a ̸= b, so the kernel is rigidly translated, not deformed.
+
+26
+
+R. GULATI
+
+Proof. Using ξ(·) = ξ(1 − ·) on each factor of (47),
+2
+2
+Ξγ (s) = ξ(s + γ)2 = ξ 1 − (s + γ) = ξ (1 − 2γ − s) + γ = Ξγ (1 − 2γ − s),
+P
+which is (48); its fixed point s = 1−2γ −s gives s = 12 −γ. The identity d(n)n−γ n−s = ζ(s+γ)2
+is the Dirichlet convolution 1∗1 shifted by γ. The functional equation (48) and the axis (49) are
+verified to ≤ 10−41 at γ ∈ {0.1, 0.25, 0.4}, off–axis and by reflection about s = 21 − γ, together
+with the series identity to ≤ 10−10 (App. A O).
+□
+This closes the theorem. The interpretation, kept entirely separate and asserted as no part of
+any proof above, is a single line. An option is the price of a stop that cannot be released: the
+holder keeps the surviving register L2 (D) and abandons the damped one L2 (Dc ), the American
+free boundary is the value–matching V (S ∗ , t) = K − S ∗ with smooth–pasting ∂S V = −1 at
+the moving barrier, and the premium over the factorizable, exercise–anytime ideal is exactly
+the Kondratiev–zeta residue R∆ (f ) of Thm. 10.7 — the held resonance of a voice clamped at
+the corners that does not return to its fundamental. ζ measures the obstruction to replacing a
+survival–conditioned voicing by a factorizable one, and it is read off the corner exponents; the
+uncertainty that gives money its time value, the comma that gives temperament its tension, and
+the irreducibility that makes a prime polygon a cyclotomic atom are the same held tone, read on
+the same Mellin staff. Tightening the tension on the divisor weights slides the tritone axis of that
+staff from ζ( 21 ) to ζ( 21 − γ) (Lem. 10.10), translating the self–dual frame bodily without bending it
+— and this damping of a smoothed d(n)n−γ is no statement about the unsmoothed divisor sum,
+whose own fluctuation exponent stays open at the tension’s zero.
+11. Summary
+The line–spectral pipeline and the chromatic CGF spine are one object, scored for the same
+tones on the same circle. The local jet gives σ2 , the inverse–square spacing, which is the Cramér–
+Rao floor and the resolution cliff (Thm. 4.1). At the equal–tempered tones σ2 is the signed diagonal
+−(n − 1)(n − 5)/12, silent at the pentagon n = 5, the perfect fifth, while its magnitude partner is
+b n /n of the inverse–square operator with spectrum 1 m(n − m),
+the csc2 trace (n2 − 1)/12 = Tr Q
+2
+whose trace and determinant tune at n ∈ {5, 7} an octave apart (Thm. 5.1, Rem. 5.3). The half–
+exponent KX ( 12 ) − 21 KX (1) that swaps the variance leg for its volatility leg is the vol–of–var basis,
+descent by an octave on this circle, tuned by the zeta ladder {0, ♭5, 1, 2} 7→ {− 12 , ζ( 21 ), pole, π 2 /6},
+the tritone its order–two residue and fixed point. Collecting jets at all roots reconstructs the
+aperture through a Cauchy/distance step exact to ∼ 10−13 with linear noise gain, and the aperture
+is a Schelkunoff array, a root–MUSIC estimator, a mmWave channel, a 6G ISAC target, σ2 the
+reusable local resolvability gauge throughout. All of this is one error–correcting code (§8): the
+finite sample is a received codeword on Z/nZ, its parity check is the syndrome Synn (s) → ζ(s),
+the basis to fair value, and the decoder Dn = 2ζ( 12 ) + ζ(− 12 )/n + 43 ζ(− 32 )/n2 + O(n−3 ) — a term
+structure in the sampling vol h = 1/n — marks the sampling–channel basis to a finite alphabet of
+zeta values. The same code plays on every instrument that forces a continuum harmonic object
+onto the finite chromatic circle: equal temperament detunes a scale, a variance swap samples its
+vol leg, an aperture quantizes a line spectrum, an n–point rule replaces an integral — one endpoint
+defect, one syndrome ζ(s), and one correction ladder whose rungs ζ( 12 ), ζ(− 12 ), ζ(− 23 ), . . . are the
+Euler–Maclaurin endpoint corrections of numerical quadrature, headed in every row by the tritone
+ζ( 21 ) ((32), App. A J,K). So this is what ε was. The error was never in the object, only in the basis:
+the same character Archimedes chased around the rim of his circle, irreducible in the alphabet
+he was given and dissolved the moment one moves to the right coordinates. Each field’s defect is
+bad conditioning, the symptom of reading a continuum harmonic object in coordinates that move
+off the canonical origin, and the correction is the recognition — Scarry’s beneficent error, felt
+
+ON EPSILON
+
+27
+
+and then discharged — that the right coordinates were always available. The comma is the same
+ε on its two faces, an infinitesimal Hadamard deformation and a discrete parity class on Z/nZ,
+b = πΛ, where both are the same ζ(s) read
+reconciled only by passing to the geometry where Q
+off the same circle, and where the choice between the analyst’s expansion and the topologist’s
+residue dissolves. The need for that choice was the last disguise; with it gone, ε has nothing left
+to hide, and there is nothing left to choose.
+Appendix A. Numerical verification (50 digits, mpmath)
+√
+A. Octave = half–exponent. 21 /21/2 = 1.41421356 . . . = 2, the tritone; the square–root
+contract is the exponent t = 21 , one octave below t = 1.
+B. The cumulant weights cm = (2−m − 12 )/m!. c1 = 0 (root silent), c2 = −0.12500000 (minor
+tenth), c3 = −0.06250000, c4 = −0.01822917, c5 = −0.00390625, c6 = −0.00067274: each is 2−m
+octaves down, voiced against 12 , over m!.
+C. σ2 = 1/∆2 (the oracle). For two tones at frequency spacing ∆, |σ2 |/(2π∆)−2 → 1: at
+∆ = 0.1, 0.05, 0.01 the ratio is 1.0336, 1.0083, 1.00033. The minor–tenth rung c3 /c2 = 12 exactly
+— one octave between successive cumulant weights.
+D. Newton–Girard jet = direct separation. On a random n = 6 root set the recursion
+σk+1 = (−1)k pk reproduces the direct power sums (15) to residual < 3 × 10−51 for k = 1, 2, 3, 4;
+on µN it is exact to printed precision.
+E. The two cyclotomic diagonals. For n = 3, 5, 7, 12 the magnitude
+sum (21) equals (n2 −
+1P
+−49
+1)/12 = 0.6667, 2.000, 4.000, 11.9167 to residual < 10 , matching 4 csc2 (jπ/n) exactly; the
+signed sum (22) equals −(n − 1)(n − 5)/12 = 0.3333, 0.000, −1.000, −6.4167 to residual < 10−49 .
+The signed value is 0 at n = 5 to 3 × 10−51 .
+√
+F. Spitzer continuity detuning. ζ( 12 ) = −1.4603545088 . . ., −ζ( 12 )/ 2π = 0.5825971579 . . .;
+next rungs ζ(− 12 ) = −0.20788622 . . ., ζ(− 23 ) = −0.02548520 . . ., descending the half–integers from
+the tritone pole at s = 21 .
+G. The collision octave. (72 − 1)/(52 − 1) = 48/24 = 2; equivalently 2(7−1)/2 /2(5−1)/2 = 8/4 =
+2; common tuning values 4 at n = 5, 8 at n = 7.
+H. The zeta spine. ζ(0) = − 12 exact; ζ( 12 ) = −1.4603545088095868 . . .; ζ(2)−π 2 /6 = 2.3×10−41 .
+The octave reflection s 7→ 1 − s fixes only s = 12 , the tritone. For N = 12 the order–two residue
+is the unique j = 6, z6 = −1, z62 = 1.
+I. The Basel rate. For symmetric interior equally–spaced roots, E · N → 4: at N = 11, 101,
+1001, 5001 the product is 3.9891, 3.99987, 3.999999, 4.0000000, with (E − 4/N ) · N 2 → const,
+confirming E = 4/N + O(1/N 2 ) to 40 digits.
+Pn−1 −s
+J. The syndrome decoder. The parity check Synn (s) = 12 [ m=1
+µn,m − n1−s B(1 − s, 1 − s)],
+µn,m = m(1 − m/n), returns ζ(s) across 0 < ℜs < 1, confirming the rung–by–rung ladder (33)
+of Theorem 8.1: at s = 0.25, 0.5, 0.75, 0.9 and off–axis s = 12 + 3i the residual is O(1/n), e.g.
+Synn ( 21 ) → ζ( 12 ) = −1.4603545088 . . .. Subtracting the proven ladder through R = 6 rungs leaves
+a residual of size n−7 exactly — at s = 21 , 0.25, 0.75, 12 + 3i and n = 200, 800, 3200 the difference
+P
+|Yn (s) − Y0 (s) − 2 r≤6 (s)r ζ(s − r)/(r! nr )| falls as 10−20 → 10−24 → 10−28 , the 47 ≈ 1.6 × 104
+per octave of n that (33) predicts, every Pochhammer rung in place. The decoder defect Dn =
+P −1/2
+µn,m −n1/2 B( 12 , 12 ) obeys (32): at n = 103 , 4×103 , 1.6×104 , 6.4×104 the residual (Dn −2ζ( 12 ))·n
+holds at −0.207886 . . . = ζ(− 12 ) (ratio 1.0000000), and the next rung ((Dn −2ζ( 12 ))n−ζ(− 12 ))·n2 →
+
+28
+
+R. GULATI
+
+3
+3
+4
+6
+4 ζ(− 2 ) with ratio 0.74999, 0.749997, 0.7499992, 0.7499998 at n = 1.6×10 to 1.024×10 — the
+
+negative half–integer ladder of entry F, recovered as decoder correction bits.
+K. The quadrature instance. The syndrome is Euler–Maclaurin endpoint correction.R (A)
+P
+−s − N 1−s /(1 − s) − 1 N −s → ζ(s), the trapezoidal error of
+x−s
+Riemann–sum defect: N
+m=1 m
+2
+4
+regularizing to the syndrome value; at s = 1.5, 2, 2.5, 3 and N = 2×10 the difference from ζ(s) is
+2×10−12 , 2×10−14 , 2×10−16 , 2×10−18 . (B) The correction bits are the regularized divergent endP
+a
+point sums: with the full Euler–Maclaurin endpoint terms (Bernoulli corrections B2k ), N
+m=1 m
+1
+3
+minus its N –growing terms → ζ(−a), matching ζ(− 2 ) = −0.207886 . . ., ζ(− 2 ) = −0.0254852 . . .,
+ζ(− 52 ) = 0.0085169 . . . to 30–47 digits at N = 103 , K = 4–8 corrections. The decoder ladder of
+(32) is this Euler–Maclaurin staircase.
+L. Practical benchmarks (Table 4). Residual against fair value at fixed budget. Line specPn−1 −1/2
+1
+1/2 B( 1 , 1 ), µ
+trum: Dn =
+n,m = m(1 − m/n); naive error |Dn − 2ζ( 2 )|, one–
+m=1 µn,m − n
+2 2
+rung |Dn − 2ζ( 12 ) − ζ(− 21 )/n|, two–rung also less 34 ζ(− 23 )/n2 . At n = 64: 3.25 × 10−3 →
+4.65 × 10−6 → 2.04 × 10−8 (gains 700.1×, then 1.59 × 105 ×). At n = 16384: 1.27 × 10−5 →
+7.12 × 10−11 → 1.21 × 10−15 (gains
+105 , 1.05 × 1010 ). Quadrature: estimate ζ(s) from
+P 1.78 ×
+−s
+the N –term partial sum; naive | m≤N m − ζ(s)|, +integral tail −N 1−s /(1 − s), +EM endpoint − 21 N −s . At s = 32 : N = 100 gives 0.1995 → 4.99 × 10−4 → 1.25 × 10−6 (5.2 figures);
+N = 1000 gives 0.0632 → 1.58 × 10−5 → 3.95 × 10−9 (7.2 figures). At s = 52 , N = 100:
+6.62×10−4 → 4.98×10−6 → 2.08×10−8 (4.5 figures). Variance swap: X ∼ N (0, v), v = 0.04 (vol
+b = log eX/2 − 1 log eX
+20%), Φ = KX ( 12 )− 12 KX (1) = −v/8 = −0.005 exact; the n–date estimator Φ
+2
+over 4000 paths carries bias 8.60×10−5 at n = 63, 2.50×10−5 at n = 252, 2.40×10−6 at n = 1008,
+with bias · n holding order–one (O(1/n) discrete monitoring basis).
+M. The tetration clock, the all–orders jet, and the pentagon normal form. Generic
+monic quintic, roots 1.3, −0.7, 2.1, 0.2 ± 1.1i; α = 1 − 1/(2ϕ), µ⋆ = 1/(2ϕ) = 0.3090169944 . . ..
+(i) Multiplier. Damped Newton Tf (z) = z − αf /f ′ has Tf′ (ri ) = µ⋆ (2) at all five fixed points to
+residual < 2 × 10−26 (real roots < 10−50 ); the Koenigs linearization (3) gives σ(Tf z)/σ(z) = µ⋆
+(0)
+to 9 digits from a finite jet. (ii) All–orders jet. The reciprocal–separation jet {σk } at the single
+root r0 = 1.3 recovers the other four exactly: Newton’s identities convert the power sums of
+wj = (r0 −rj )−1 into e1 , . . . , e4 , the quartic w4 −e1 w3 +e2 w2 −e3 w+e4 returns {−0.7, 0.2±1.1i, 2.1}
+with residual < 3 × 10−50 . (iii) Pentagon chart. The map (6), (a, u) 7→ (R0 , . . . , R4 ), has
+| det | = 55/2 = 55.90169944 . . . to 50 digits (the inverse DFT on µ5 ); solving the linear gauge from
+the five roots returns a = R0 = 1.3 and reconstructs the chord to residual < 2 × 10−61 , with ek (R)
+matching the Vieta targets to 0. Over all 5! relabelings the admissiblepgauge values are exactly
+{1.3, −0.7, 2.1, 0.2 ± 1.1i} — the five roots and no others, confirming IP ∩ C[a] = ⟨P (a)⟩ (8).
+h
+(iv) Heights. With log µ⋆ = − log(2ϕ) = −1.17435901 . . . real, hj = 2πij/(5 log µ⋆ ) gives µ⋆ j = ζ j
+to 50 digits (9), so (10) reproduces the roots. (v) Laplacian. The chord Laplacian satisfies Q1 = 0
+identically; on the regular pentagon its spectrum is {0, 2, 2, 3, 3} = k(5−k)/2 exactly. (vi) Branch.
+Seeded at P0 = x5 − 1, (a, u) = (1, 1, 0, 0, 0) gives Rj = ζ j exactly; a homotopy to the generic
+quintic keeps |Vandermonde| ≥ 0.52 > 0 throughout, so the implicit function theorem continues
+the branch uniquely. (vii) Computability of the
+P finite solve. On the equispaced circle the second
+power sum of reciprocal separations is exact, j̸=0 |1 − ζ j |−2 = (n2 − 1)/12, verified to 50 digits
+P
+143
+2
+2
+via n−1
+j=1 csc (πj/n) = (n − 1)/3 (n = 5, 7, 12: 2, 4, 12 ); the chord Laplacian is circulant with
+overtones 21 m(n − m), so the calculus is O(n log n). The finite N –jet truncation defect of σ2 is
+(N )
+
+removed by the universal ladder σ2true = σ2 + 4/N − 4/N 2 + 8/(3N 3 ) + O(N −5 ), the three–jet
+2
+overtone π3 − 2 = 1.2898681337 . . .; the corrected estimate falls to ∼ 10−13 at N = 200 while
+
+ON EPSILON
+
+29
+
+the raw jet stalls at O(1/N ), the residual one order below principal throughout. The finite solve
+σf → {rk } is therefore closed and computable to machine precision; only the canonical branch
+law a = a(A, B, C, D, E) remains open.
+N. The branch–free Hessian: circle, configuration, pencil. (i) The identity. With σa (x) =
+e2πix − e2πia , automatic differentiation of log σa gives −∂x2 log σa (x) = π 2 csc2 (π(x − a)) (23) to
+residual < 10−39 at four test phases (a = 0.3, x ∈ {0.11, 0.52, 0.84, 0.999}), the imaginary part
+(the 2πi monodromy) vanishing to the same order — real, single–valued, translation–free. (ii)
+Discrete sampling. At µn the kernel is exactly the chord diagonal: |w0 − wd |−2 = 14 csc2 (πd/n)
+b n is (23) on Z/nZ. (iii)
+for n = 5, d = 1, . . . , 4, matched to 0 (difference ≤ 2 × 10−41 ), so Q
+Pencil. For the conic pencil through four base points {(0, 0), (1, 0), (0, 1), (1, 1)}, the discriminant
+∆(t) = det(M1 + tM2 ) is a cubic with three singular members at t⋆ ∈ {− 34 , − 17 , 7}, each giving
+P
+det ≤ 10−14 (rank drop), and −∂t2 log |∆| = t⋆ (t − t⋆ )−2 holds to 0 at t ∈ {0, 1, 3, 5} — the
+branch–free Hessian on the parameter line, poles exactly at the singular conics. The Legendre
+parameter is the cross–ratio of the three branch points, λ = 71 = 0.142857 . . ., so the elliptic
+double cover y 2 = ∆(t) of the four base points and the inverse–square kernel are the one Hessian
+in two charts.
+O. The sustain pedal: survival voicing, sampling staff, two sub–lattices. (i) Held
+tone is a first–passage moment. For the single–partial voice AD = λ = 2.3, τ ∼ Exp(λ), the
+survivalR voicing λ−s = 0.24269603 . . . at s = 1.7 equals E[τ s ]/Γ(s + 1) and the Mellin integral
+∞
+Γ(s)−1 0 ts−1 e−λt dt to eighteen digits (Prop. 10.2). (ii) Sampling staff. For f = e−t , Mf =
+P
+−k∆ at ∆ = 0.7 equals the closed (e∆ − 1)−1 = 0.98643386 . . . and the
+Γ, the comb
+k≥1 e
+R
+1
+contour 2πi (3/2) ∆−s ζ(s)Γ(s) ds to sixteen digits (Lemma 10.4). (iii) Half–integer survival lattice.
+ζ( 21 ) = −1.4603545 . . ., ζ( 32 ) = 2.6123753 . . ., ζ( 25 ) = 1.3414873 . . ., ζ( 72 ) = 1.1267339 . . .; the
+√
+head gives the BGK shift −ζ( 12 )/ 2π = 0.5825972 . . . to ten digits (Thm. 10.6(i)). (iv) Integer
+1
+1
+depletion lattice. B2m = (−1)m+1 2(2m)! ζ(2m)/(2π)2m reproduces B2 = 16 , B4 = − 30
+, B6 = 42
+,
+1
+2
+B8 = − 30 exactly against mpmath, with ζ(2) = π /6 = 1.6449341 . . .; the finite–pool factor
+(N − n)/(N − 1) = 0.9183673 . . . at (N, n, p) = (50, 5, 15 ) scales the binomial variance 0.8 to
+the hypergeometric 0.7346939 . . . (Thm. 10.6(ii)). (v) Commas as origin perturbations. The
+Pythagorean κ = 12 log2 3 − 19 = 0.0195500 . . . gives ζ(κ) = −0.5183563 . . . and the syntonic
+log2 (81/80) = 0.0179219 . . . gives −0.5167972 . . ., both within ζ ′ (0) κ of ζ(0) = − 21 , with ζ ′ (0) =
+− 12 log(2π) = −0.9189385 . . .. (vi) Kondratiev residue, simple poles. For the test defect f (t) =
+t−σ e−t (Mf = Γ(s − σ), a simple pole at s = σ), the weighted defect R∆ (f )/∆1−σ → ζ(σ)
+as ∆ ↓ 0: at σ = 12 the ratios −1.45206, −1.45620, −1.45828 for ∆ = 0.04, 0.02, 0.01 climb to
+ζ( 12 ) = −1.4603545; at σ = − 12 they reach ζ(− 21 ) = −0.2078862 and at σ = 0.3 they reach ζ(0.3) =
+−0.9045593, confirming (43) in the non–colliding case. (vii) Logarithmic double pole. For f (t) =
+t−1/2 (− log t)e−t (Mf with a double pole at s = 21 ), a linear fit of R∆ /∆1/2 against log ∆ over ∆ =
+0.02, 0.01, 0.005 recovers a non–zero log ∆ slope and an intercept ≈ ζ ′ ( 21 ) = −3.9226461, exhibiting
+the ζ (j) (σ) terms of the boxed expansion. (viii) Cyclotomic Q and primitivity. The inverse–square
+Hessian Qn = − 21 Hess log ∆n at the roots of unity, computed both as the 14 csc2 graph Laplacian
+and as the literal log–discriminant Hessian, has spectrum {k(n−k)/2} to machine precision for n =
+5, 6, 7, 8 — the pentagon returning {0, 2, 2, 3, 3} (Cor. 10.9); the mode periods d(k) = n/ gcd(k, n)
+give {1, 5, 5, 5, 5} at n = 5 and {1, 7, . . . , 7} at n = 7 (all nonconstant modes primitive), versus the
+divisor strata {1, 6, 3, 2, 3, 6} at n = 6 and {1, 12, 6, 4, 3, 12, 2, 12, 3, 4, 6, 12} at n = 12 (Cor. 10.8).
+(ix) Log–prime packing. For the variational chord (29) on the primes below 120, the analytic
+gradient (30) matches the central–difference gradient of log d(n) + β log ∆(a) to 1.3 × 10−8 at
+(β, λ) = (0.15, 0.30), confirming the stationarity condition is the Euler–Lagrange equation of the
+exponent–weighted energy (27). At β = 0 the optimum is the superior–highly–composite law
+
+30
+
+R. GULATI
+
+ai = 1/(λ log pi ) − 1 to machine precision (a2 , a3 , a5 , a7 = 2.206, 1.023, 0.381, 0.142 at λ = 0.45),
+monotone non–increasing. At fixed mass M = 6 the active–prime count runs 6 → 13 → 24 as β =
+0 → 0.05 → 0.15 (support broadening, tail mass fraction 0 → 0.21) and collapses to 7 maximally
+separated stacks at β = 0.30 (re–sparsified packing), with the multiplier constant across active
+primes at each β (e.g. λ ∈ [0.607, 0.626] at β = 0.15), certifying (30) (Rem. 5.4). The regularization
+is intrinsic: the bare log–energy Gram has spectrum [−26.82, 4.11] (indefinite), its 1⊥ projection
+[−19.46, 4.11] (the divergent constant mode excised, blow–up direction L1 of norm 15.44); the
+chord operator Qn reproduces spec = { 12 m(n − m)} to ≤ 1.4 × 10−14 for n = 5, 6, 7, 8, 12 with a
+single kernel mode, and the functional calculus (28) with φ(λ) = (λ+ε)−1/2 conserves mass exactly,
+φ(Qn )1 = φ(0)1 to 0 (Rem. 5.5). (x) γ–tensioned self–dual axis. With ξ(s) = π −s/2 Γ(s/2)ζ(s),
+Riemann’s ξ(s) = ξ(1 − s) holds to ≤ 2 × 10−42 at real and complex test points, and the unshifted
+square ξ(s)2 = ξ(1 − s)2 is symmetric about s = 12 . The shifted square Ξγ (s) = ξ(s + γ)2 satisfies
+Ξγ (s) = Ξγ (1 − 2γ − s) to ≤ 10−41 (several test points exactly 0) at γ ∈ {0.1, 0.25, 0.4}, both
+off–axis and under reflection about the predicted axes s = 12 − γ ∈ {0.40, 0.25, 0.10}, confirming
+P
+Lem. 10.10. The underlying Dirichlet equivalence n d(n)n−(s+γ) = ζ(s+γ)2 matches to ≤ 10−10
+at s = 3 for γ ∈ {0, 0.3, 0.5} (values 1.444941, 1.326977, 1.269529); the full Voronoı̆ Bessel series
+√
+√ P
+x d(n)n−1/2−γ [−Y1 (z) − π2 K1 (z)], z = 4π nx, reproduces ∆(100.5) = +3.159 at γ = 0 and
+damps monotonically 2.83 → 1.35 as γ : 0 → 0.5, the kernel index fixed at ν = 1 throughout.
+
+References
+[1] Newton’s identities (power sums and elementary symmetric polynomials). https://en.wikipedia.org/wiki/
+Newton%27s_identities
+[2] W. Lang, On sums of powers of zeros of polynomials, arXiv:math/9711217. https://arxiv.org/abs/math/
+9711217
+[3] Calogero–Moser relations for polynomial zeros (Stieltjes electrostatic equilibrium). https://arxiv.org/html/
+2312.12932v1
+[4] Schelkunoff polynomial method for array synthesis, Antenna–Theory.com. https://www.antenna-theory.com/
+arrays/weights/zeros.php
+[5] UCA–root–MUSIC / UCA–ESPRIT (single snapshot), Wichita State. https://soar.wichita.edu/server/
+api/core/bitstreams/f24b425c-62e0-49ed-9ccd-833955c4378b/content
+[6] L. Dai et al., Super–resolution channel estimation for mmWave massive MIMO with hybrid precoding, Tsinghua. https://oa.ee.tsinghua.edu.cn/dailinglong/publications/paper/Super-resolution%
+20channel%20estimation%20for%20mmWave%20massive%20MIMO%20with%20hybrid%20precoding.pdf
+[7] B. N. Bhaskar, G. Tang, B. Recht, Atomic norm denoising with applications to line spectral estimation. https:
+//people.eecs.berkeley.edu/~brecht/papers/12.Bha.EtAl.Denoising.pdf
+[8] Efficient ISSAC channel estimation (6G), arXiv:2407.20607. https://arxiv.org/pdf/2407.20607
+[9] PLAIN scalable ISAC estimation architecture, arXiv:2503.21242. https://arxiv.org/html/2503.21242v1
+[10] Z. Li et al., Enhanced super–resolution path–delay estimation for CIR–based localization, Vodafone Chair. https://www.vodafone-chair.org/pbls/zhongju-li/Enhanced_Superresolution_Path_Delay_
+Estimation_for_Channel_Impulse_Response_Based_Localization.pdf
+[11] P. Stoica, R. Moses, Spectral Analysis of Signals, Prentice Hall, 2005.
+[12] D. J. Benson, Music: A Mathematical Offering, Cambridge Univ. Press, 2006.
+[13] D. Wright, Mathematics and Music, Washington University in St. Louis, 2009.
+[14] M. Broadie, P. Glasserman, S. Kou, A continuity correction for discrete barrier options, Math. Finance 7(4),
+325–349, 1997. https://www.columbia.edu/~sk75/mfBGK.pdf
+[15] D. Gottesman, Stabilizer Codes and Quantum Error Correction, Caltech Ph.D. thesis, arXiv:quant-ph/9705052,
+1997. https://arxiv.org/abs/quant-ph/9705052
+[16] P. W. Shor, Scheme for reducing decoherence in quantum computer memory, Phys. Rev. A 52, R2493–R2496,
+1995. https://link.aps.org/doi/10.1103/PhysRevA.52.R2493
+[17] A. Werckmeister, Musicalische Temperatur (1691); see also temperament and the Pythagorean/syntonic
+comma. https://en.wikipedia.org/wiki/Werckmeister_temperament
+[18] Cauchy principal value (finite part of a divergent integral). https://en.wikipedia.org/wiki/Cauchy_
+principal_value
+
+ON EPSILON
+
+31
+
+[19] F. W. J. Olver et al., NIST Handbook of Mathematical Functions, §2.10 (Euler–Maclaurin formula), Cambridge
+Univ. Press, 2010. https://dlmf.nist.gov/2.10
+[20] E. Scarry, On Beauty and Being Just, Princeton Univ. Press, 1999.
+[21] N. H. Abel and P. Ruffini; É. Galois, On the impossibility of solving the general quintic by radicals (the
+symmetric group S5 is not solvable; unsolvability is a property of the representation, not of the roots), as in
+J.-P. Tignol, Galois’ Theory of Algebraic Equations, 2nd ed., World Scientific, 2016.
+BlueChips Research, New York
+
+

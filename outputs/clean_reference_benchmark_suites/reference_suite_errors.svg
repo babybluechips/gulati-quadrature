@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="35" font-family="serif" font-size="22">Final production Q reference head-to-head</text>
+<line x1="70" y1="70" x2="70" y2="400" stroke="black"/>
+<line x1="70" y1="400" x2="1030" y2="400" stroke="black"/>
+<line x1="65" y1="400.0" x2="1030" y2="400.0" stroke="#dddddd"/>
+<text x="18" y="404.0" font-family="serif" font-size="12">1e-14</text>
+<line x1="65" y1="356.0" x2="1030" y2="356.0" stroke="#dddddd"/>
+<text x="18" y="360.0" font-family="serif" font-size="12">1e-12</text>
+<line x1="65" y1="312.0" x2="1030" y2="312.0" stroke="#dddddd"/>
+<text x="18" y="316.0" font-family="serif" font-size="12">1e-10</text>
+<line x1="65" y1="268.0" x2="1030" y2="268.0" stroke="#dddddd"/>
+<text x="18" y="272.0" font-family="serif" font-size="12">1e-8</text>
+<line x1="65" y1="224.0" x2="1030" y2="224.0" stroke="#dddddd"/>
+<text x="18" y="228.0" font-family="serif" font-size="12">1e-6</text>
+<line x1="65" y1="180.0" x2="1030" y2="180.0" stroke="#dddddd"/>
+<text x="18" y="184.0" font-family="serif" font-size="12">1e-4</text>
+<line x1="65" y1="136.0" x2="1030" y2="136.0" stroke="#dddddd"/>
+<text x="18" y="140.0" font-family="serif" font-size="12">1e-2</text>
+<line x1="65" y1="92.0" x2="1030" y2="92.0" stroke="#dddddd"/>
+<text x="18" y="96.0" font-family="serif" font-size="12">1e0</text>
+<rect x="82.0" y="400.0" width="42.9" height="0.0" fill="#111111"/>
+<text x="78.0" y="418" font-family="serif" font-size="10" transform="rotate(35 78.0,418)">final q repaid bessel modal dtn</text>
+<rect x="139.9" y="368.9" width="42.9" height="31.1" fill="#111111"/>
+<text x="135.9" y="418" font-family="serif" font-size="10" transform="rotate(35 135.9,418)">final q repaid custom fft conformal metric repay</text>
+<rect x="197.7" y="368.9" width="42.9" height="31.1" fill="#111111"/>
+<text x="193.7" y="418" font-family="serif" font-size="10" transform="rotate(35 193.7,418)">final q repaid custom fft circle dtn</text>
+<rect x="255.6" y="191.7" width="42.9" height="208.3" fill="#444444"/>
+<text x="251.6" y="418" font-family="serif" font-size="10" transform="rotate(35 251.6,418)">qbx refined</text>
+<rect x="313.4" y="153.0" width="42.9" height="247.0" fill="#777777"/>
+<text x="309.4" y="418" font-family="serif" font-size="10" transform="rotate(35 309.4,418)">fem radial fan schur</text>
+<rect x="371.3" y="138.4" width="42.9" height="261.6" fill="#222222"/>
+<text x="367.3" y="418" font-family="serif" font-size="10" transform="rotate(35 367.3,418)">raw cycle q generated custom fft metric repay</text>
+<rect x="429.1" y="138.4" width="42.9" height="261.6" fill="#222222"/>
+<text x="425.1" y="418" font-family="serif" font-size="10" transform="rotate(35 425.1,418)">raw cycle q generated custom fft cycle dtn</text>
+<rect x="487.0" y="135.7" width="42.9" height="264.3" fill="#222222"/>
+<text x="483.0" y="418" font-family="serif" font-size="10" transform="rotate(35 483.0,418)">raw cycle q generated order bessel modal dtn</text>
+<rect x="544.9" y="128.9" width="42.9" height="271.1" fill="#bbbbbb"/>
+<text x="540.9" y="418" font-family="serif" font-size="10" transform="rotate(35 540.9,418)">q local bridge</text>
+<rect x="602.7" y="128.3" width="42.9" height="271.7" fill="#777777"/>
+<text x="598.7" y="418" font-family="serif" font-size="10" transform="rotate(35 598.7,418)">fem true helmholtz schur</text>
+<rect x="660.6" y="126.6" width="42.9" height="273.4" fill="#999999"/>
+<text x="656.6" y="418" font-family="serif" font-size="10" transform="rotate(35 656.6,418)">trapezoid coarse</text>
+<rect x="718.4" y="98.4" width="42.9" height="301.6" fill="#222222"/>
+<text x="714.4" y="418" font-family="serif" font-size="10" transform="rotate(35 714.4,418)">raw cycle q metric repay manufactured proxy</text>
+<rect x="776.3" y="98.3" width="42.9" height="301.7" fill="#bbbbbb"/>
+<text x="772.3" y="418" font-family="serif" font-size="10" transform="rotate(35 772.3,418)">q continuum pullback proxy</text>
+<rect x="834.1" y="97.4" width="42.9" height="302.6" fill="#777777"/>
+<text x="830.1" y="418" font-family="serif" font-size="10" transform="rotate(35 830.1,418)">fem cloud schur</text>
+<rect x="892.0" y="95.8" width="42.9" height="304.2" fill="#222222"/>
+<text x="888.0" y="418" font-family="serif" font-size="10" transform="rotate(35 888.0,418)">raw cycle q arclength repay before corner fix</text>
+<rect x="949.9" y="91.8" width="42.9" height="308.2" fill="#222222"/>
+<text x="945.9" y="418" font-family="serif" font-size="10" transform="rotate(35 945.9,418)">q boundary helmholtz resolvent proxy</text>
+<rect x="770" y="40" width="12" height="12" fill="#111111"/><text x="788" y="51" font-family="serif" font-size="12">production final Q</text>
+<rect x="770" y="58" width="12" height="12" fill="#777777"/><text x="788" y="69" font-family="serif" font-size="12">FEM competitor</text>
+<rect x="770" y="76" width="12" height="12" fill="#444444"/><text x="788" y="87" font-family="serif" font-size="12">QBX competitor</text>
+<rect x="770" y="94" width="12" height="12" fill="#bbbbbb"/><text x="788" y="105" font-family="serif" font-size="12">analytic/control row</text>
+<text x="40" y="500" font-family="serif" font-size="13">Lower is better. QBX rows are layer-potential value checks; DtN rows use exact normal-flux references.</text>
+</svg>

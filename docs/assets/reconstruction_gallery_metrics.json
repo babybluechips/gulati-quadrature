@@ -1,0 +1,9 @@
+{
+  "curved_gulati_hausdorff": 1.3327193038905524e-15,
+  "curved_gulati_rms": 3.300022845757448e-16,
+  "flux_relative_error": 2.9456011941203626e-16,
+  "gallery": "docs/assets/reconstruction_gallery.png",
+  "polygon_gulati_hausdorff": 3.973993651728112e-16,
+  "polygon_gulati_rms": 2.043151945549134e-16,
+  "star_fit_hausdorff": 0.02801778990127446
+}

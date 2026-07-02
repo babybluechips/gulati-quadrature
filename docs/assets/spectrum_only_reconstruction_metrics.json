@@ -1,0 +1,40 @@
+{
+  "alignment_rotation_radians": 3.4382986264288293,
+  "eigenvalue_count": 7,
+  "figure": "docs/assets/spectrum_only_reconstruction.png",
+  "grid_size": 44,
+  "initial_coefficients": [
+    0.04,
+    0.02
+  ],
+  "initial_relative_residual": 0.17415225541929075,
+  "optimizer_nfev": 52,
+  "recovered_coefficients": [
+    0.11702828438374827,
+    -0.019523506485148563
+  ],
+  "recovered_eigenvalues": [
+    17.71083892232105,
+    39.49413908600737,
+    50.078200003207336,
+    71.63263644551057,
+    79.09536701223703,
+    101.79231678983862,
+    112.02295050835974
+  ],
+  "shape_hausdorff_after_rotation": 0.0071197780714770415,
+  "spectrum_relative_residual": 0.003636458725014131,
+  "target_eigenvalues": [
+    17.699968393091265,
+    39.50197928723452,
+    50.027795272839384,
+    71.58241339904522,
+    79.170653025604,
+    101.73243425748562,
+    112.37919630414011
+  ],
+  "true_coefficients": [
+    0.12,
+    0.05
+  ]
+}

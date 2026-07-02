@@ -1,0 +1,16 @@
+{
+  "tex": "/Users/rick/Documents/New project 2/outputs/siam_q_research_paper/siam_q_research_paper.tex",
+  "pdf": "/Users/rick/Documents/New project 2/outputs/siam_q_research_paper/siam_q_research_paper.pdf",
+  "figures": {
+    "exterior_split": "figures/exterior_split.png",
+    "bgk_pipeline": "figures/bgk_pipeline.png",
+    "funky_pde": "figures/funky_pde.png",
+    "scaling": "figures/scaling.png",
+    "qbx_failures": "figures/qbx_failures.png",
+    "gww": "figures/gww.png",
+    "spectrum": "figures/spectrum.png",
+    "bgk_bookkeeping": "figures/bgk_bookkeeping.png"
+  },
+  "dense_q_matrix_stored": false,
+  "style": "self-contained SIAM-like article; SIAM class not installed"
+}

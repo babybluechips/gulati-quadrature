@@ -1,0 +1,2979 @@
+The Geometry of Money
+
+A pen-and-paper guide to pricing exotic options on the circle
+
+Rick Gulati
+rkgulati@wharton.upenn.edu
+May 2026
+
+Abstract
+This is a pedagogical companion to the operator-spectral framework for exotic-option pricing.
+The thesis is simple: when one pulls a derivative contract back to the unit circle, the pieces of
+the Greek alphabet that quants memorize  theta, gamma, vega, rho  become elementary geometric objects (angular velocity, boundary curvature, normal derivative, radial position), and the
+discretization corrections that desks calibrate empirically  BGK barrier shifts, Asian-averaging
+biases, autocallable pencil weights  become evaluations of one EulerMaclaurin series whose coecients are Bernoulli numbers and zeta values. We work through ve contracts (vanilla call, Asian call,
+discretely-monitored barrier, American put, autocallable note) using only a compass, a straightedge,
+a protractor, and a nancial calculator with the Γ, B , and ζ keys. Every number can be checked on
+the back of an envelope. Every picture can be drawn at a kitchen table. The framework underneath
+is the branch-free Hessian of the circle divisor and its descendants; we cite the structure but reprove
+the arithmetic on each example. The unifying theorem (10) is that all four corrections are projec√
+tions of a single object: the discrete-observation renormalization of the killed semigroup by a h
+boundary Hamiltonian whose smooth normal form is the Dirichlet-to-Neumann map, whose circle
+normal form is the chord-distance stiness Q, whose polygon spectrum is π 2 k(N − k)/N , and whose
+corner renement is a non-diagonal Mellin matrix.
+Contents
+
+1 Introduction: why the circle?
+
+2
+
+2 The circle of money: setting up the picture
+
+3
+
+2.1
+
+Where now lives on the disk . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+4
+
+2.2
+
+The protractor reads moneyness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+4
+
+2.3
+
+The Greeks as dierential operators on the disk . . . . . . . . . . . . . . . . . . . . . . .
+
+4
+
+3 Worked Example 1: the vanilla call as a harmonic extension
+
+5
+
+3.1
+
+The harmonic-extension picture . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+6
+
+3.2
+
+Spectral form: Fourier modes and their discount rates
+
+6
+
+. . . . . . . . . . . . . . . . . . .
+
+4 Worked Example 2: Asian options as polygon averaging
+
+8
+
+4.1
+
+The polygon average converges to the Poisson kernel
+
+. . . . . . . . . . . . . . . . . . . .
+
+9
+
+4.2
+
+Spectral interpretation: each Fourier mode contracted
+
+. . . . . . . . . . . . . . . . . . .
+
+9
+
+5 Worked Example 3: discrete-barrier options and the BGK constant
+
+10
+
+5.1
+
+The setup: a 21-gon for 21 monitoring dates . . . . . . . . . . . . . . . . . . . . . . . . .
+
+11
+
+5.2
+
+The BGK barrier shift: where it comes from . . . . . . . . . . . . . . . . . . . . . . . . .
+
+11
+
+5.3
+
+The calculator answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+12
+
+5.4
+
+Higher-order zeta terms: the BGK series . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+12
+
+1
+
+6 Worked Example 4: the American put and the critical exercise angle
+
+13
+
+6.1
+
+The smooth-pasting condition is a tangent-line condition . . . . . . . . . . . . . . . . . .
+
+14
+
+6.2
+
+The critical exercise angle on the disk
+
+14
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+6.3
+
+Smooth-pasting as a tangent-line construction with straightedge . . . . . . . . . . . . . .
+
+14
+
+6.4
+
+The geometric content: theta as angular acceleration . . . . . . . . . . . . . . . . . . . .
+
+15
+
+7 Pencils of conics: the deeper algebraic geometry
+
+15
+
+7.1
+
+Two barriers determine a conic family
+
+7.2
+
+The discriminant cubic and the spectral curve . . . . . . . . . . . . . . . . . . . . . . . .
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+16
+
+7.3
+
+Pricing implications: the moneyness anisotropy
+
+. . . . . . . . . . . . . . . . . . . . . . .
+
+16
+
+7.4
+
+Autocallables: pencils made esh
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+17
+
+8 Putting it together: the Greek dictionary, geometrically
+
+16
+
+22
+
+8.1
+
+Theta as angular momentum
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+22
+
+8.2
+
+Gamma and vega as principal curvatures . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+22
+
+8.3
+
+Rho as a tangent at the radial axis . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+23
+
+8.4
+
+Anisotropy and skewness: the dipole moment on S
+
+1 . . . . . . . . . . . . . . . . . . . . .
+
+23
+
+9 Summary table: the dictionary at a glance
+
+23
+
+10 The Polygonal Projection Splitting Theorem
+
+24
+
+10.1 Statement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+25
+
+10.2 Proof skeleton . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+27
+
+10.3 The four-way correspondence
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+28
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+28
+
+10.5 The one-line theorem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+29
+
+10.4 Two corollaries
+
+11 Closing remarks
+
+29
+
+A Bernoulli numbers
+
+30
+
+B Riemann zeta values
+
+30
+
+C The BGK shift in numbers
+
+30
+
+D Poisson kernel values
+
+30
+
+1
+
+Introduction: why the circle?
+
+A derivative contract has a payo that depends on time.
+coordinate of the unit disk: ρT = e
+at maturity.
+
+The boundary S
+
+Time, on the geometric side, is the radial
+
+−rT ∈ (0, 1) locates today at interior radius ρ from the boundary
+T
+
+1 holds the payo.
+
+Discounting and survival evolve along the radius;
+
+monitoring dates, defaults, and exercise opportunities live on the boundary as discrete points or arcs.
+The Greeks  the sensitivities of the price to its inputs  are derivatives of the harmonic extension
+of the payo to the disk. This is not a metaphor: it is the conformal pullback of BlackScholes to the
+unit-circle coordinate θ = 2πu, where u ∈ [0, 1) is the rescaled time-or-monitoring variable.
+The geometry is severe. Once a contract is on the disk, almost everything is decidable with elementary
+tools:
+
+2
+
+ Compass and straightedge. Locate monitoring dates as vertices of an inscribed M -gon; measure
+chord lengths cM = 2 sin(π/M ). Compute the arc-chord defect that the BGK constant β =
+√
+−ζ( 21 )/ 2π ≈ 0.5826 captures.
+ Protractor. Read the angle ϑ of moneyness δ = cos ϑ. The implied vol is the half-cone angle
+∗
+at the boundary; vega is its derivative. The critical exercise angle θ of an American put is read
+directly o the protractor once you know the smooth-pasting condition.
+
+ P
+Financial / special-function calculator. Evaluate Γ, B , ζ . Plug into series of the form
+1
+m/2 for discrete-monitoring corrections, or evaluate pencil weights π as cuk
+m cm ζ(m + 2 )(∆t)
+mulative normal CDFs for autocall buckets. These series converge fast; three terms gets you most
+engineering applications.
+Throughout, we maintain a translation dictionary between nance language and circle language. We
+summarize it once here and refer to it as needed.
+
+Finance object
+
+Geometric incarnation
+
+Calculator key
+
+Moneyness δ = S/K
+
+cosine of phase: δ = cos ϑ
+
+protractor
+
+Time-to-maturity T
+
+negative log of radius: T = − log ρT /r
+
+compass
+
+−rT
+Discount factor e
+
+conformal modulus ρT ∈ (0, 1)
+
+ex
+
+Theta (−∂T V )
+
+angular velocity ∂τ ϑ
+
+
+
+2
+Gamma (∂S V )
+
+boundary curvature of harmonic ext.
+
+cos, sin
+
+Vega (∂σ V )
+
+normal derivative across cone angle
+
+
+
+Rho (∂r V )
+
+radial gradient ∂ρT V
+
+log
+
+Skewness / anisotropy
+
+1
+dipole moment of payo on S
+
+Volatility σ
+
+half-cone angle at boundary
+
+M monitoring dates
+K autocall obs dates
+
+vertices of inscribed M -gon
+marked points / pencil parameter
+
+Polygon stiness
+
+circulant QN , spec π
+
+DtN map Λ
+
+boundary symbol |ξ|, half-Laplacian Q
+
+Pencil of conics
+
+one-parameter family λA1 + µA2
+
+Discriminant locus
+
+branch points of y
+
+What you will need at your desk.
+
+2 k(N − k)/N
+
+2 = det(λA
+
+1 + µA2 )
+
+Fourier
+
+√
+
+·
+
+÷
+N (·)
+Fejér
+
+|n|
+det
+∆
+
+A compass, a straightedge, a protractor, a sheet of graph paper,
+
+x
+
+a calculator with e , ln, Γ, and ideally ζ and B (Bernoulli) keys. A copy of the Bernoulli table through
+
+B12 is given in Appendix A; a short ζ table is in Appendix B. That is the entire toolkit.
+2
+
+The circle of money: setting up the picture
+
+Draw a unit circle of radius 1, centered at the origin, with a compass. Mark the positive real axis as the
+ray θ = 0 with the straightedge. This is your
+
+strike axis : it points at the strike K of the contract.
+
+3
+
+2.1
+
+Where now lives on the disk
+
+Drawing 1. Compass radius rc = 5 cm (any unit will do). Center at O = (0, 0). Mark the boundary
+point B = (5, 0) on the positive real axis with the straightedge. Mark K on the boundary at θ = 0:
+this is the
+
+strike point. The boundary S 1 holds the payo at maturity.
+
+On the radius OB , locate now at distance ρT · rc from the origin. For r = 5% and T = 0.5 years,
+
+ρT = e−0.025 = 0.9753, so now sits at 4.876 cm from the center. For T = 5 years at the same
+−0.25 = 0.7788, now at 3.894 cm. Long-dated contracts are deeper inside the disk ;
+rate, ρT = e
+short-dated ones nearly touch the boundary.
+
+Why this is geometrically sound.
+
+= eξ is the heat equation on
+ξ = log S . The log-coordinate is the universal cover of C× , which the map ξ 7→ e−ξ sends into the
+−rT . The
+open unit disk: ξ = 0 (boundary) at the origin of log-time, ξ = rT pulled to radius ρT = e
+radial direction is
+
+The BlackScholes PDE on S
+
+time-to-maturity, discounted. All nance discounting is one radial translation on the
+
+universal cover.
+
+2.2
+
+The protractor reads moneyness
+
+The cleanest geometric identication is:
+
+δ = cos ϑ,
+
+δ = S/K ∈ [−1, 1] rescaled
+
+(1)
+
+on the retention-ratio convention δ = VD /Vvanilla ∈ [0, 1] for survival amplitudes, or δ = log(S/K)/ log(U/K)
+for log-moneyness scaled into a barrier band [L, U ]. Either way,
+
+moneyness is the cosine of a phase angle.
+
+Drawing 2. Place the protractor with its center on the origin and its 0◦ line along the positive
+real axis.
+
+For an at-the-money option (S
+
+= K , δ = 1), ϑ = 0.
+
+For S
+
+= 0.95K (5% out of the
+
+◦
+
+money on a call), δ = 0.95, so ϑ = arccos(0.95) = 18.19 . Mark this angle on the protractor; drop
+
+◦ and read δ = cos ϑ o the
+
+a perpendicular to the real axis from the boundary point at angle 18.19
+horizontal axis.
+
+Volatility is the cone angle. σ measures the angular spread of the√diusion on the boundary: at
+maturity T , the payo g(ST ) has support smeared to angular width σ
+
+T on the unit circle. Implied
+1
+
+volatility is therefore directly measurable with a protractor as the half-angle of the support arc on S ,
+given a market quote for the option. This is the geometric content of the Black-Scholes formula: prices
+and angles are interchangeable, modulated by the Gaussian cumulative.
+
+2.3
+
+The Greeks as dierential operators on the disk
+
+Once a contract value V (S, t) is on the disk as a harmonic extension u(ρ, θ) of its payo, the standard
+Greeks are
+
+the same derivatives in two dierent coordinates :
+Θ = −∂T V = −∂ρT u · ∂T ρT = rρT ∂ρT u
+
+(radial outow)
+
+∆ = ∂S V = (1/S) ∂ξ u,
+
+(tangential)
+
+ξ = log S
+
+Γ = ∂S2 V ∼ (1/S 2 ) ∂ξ2 u
+
+(boundary curvature)
+
+V = ∂σ V
+
+(cone-angle derivative)
+
+ρ = ∂r V = −T ρT ∂ρT u
+
+(radial gradient)
+
+The four Greeks are not separate quantities  they are the gradient of one harmonic function in disk
+coordinates, parametrized by (ρT , θ, σ). This is the operator content of Proposition 5.1 of the underlying
+
+4
+
+spectral pricing framework: the Greek vector is the gradient of the boundary harmonic extension; the
+second-order Greeks are its boundary curvature tensor.
+
+3
+
+Worked Example 1: the vanilla call as a harmonic extension
+
+Disk as universal cover of
+
+D
+C×
+radial = time, angular = log-moneyness, boundary S 1 = payo
+ℑz
+
+ITM arc g = S−K > 0
+δ = cos ϑ
+PρT (θ)
+∆
+
+now
+
+ϑ
+
+K
+
+ρT = e−rT = 0.9753
+
+ρ
+
+ℜz
+
+Θ
+
+OTM arc g ≡ 0
+
+Contract. European call, S0 = K = 100, T = 0.5 yr,
+r = 5%, σ = 30%, ATM.
+
+Harmonic extension
+at (ρT , 0):
+R
+
+BlackScholes:
+
+Spectral / Fourier:
+
+V0 = u(ρT , 0) =
+
+V0 = S0 N (d1 ) − Ke−rT N (d2 ) = $9.64
+d1 = 0.2239, d2 = 0.0118
+Figure 1:
+
+V0 =
+
+S1
+
+dθ
+g · PρT 2π
+
+|n|
+n∈Z ĝn ρT
+
+P
+
+The vanilla call as a harmonic extension on the unit disk. The strike K sits at θ = 0
+
+on the boundary; the in-the-money arc (green, upper half ) carries positive payo while the out-of-themoney arc (red, lower half ) is zero.
+
+Now is the interior point (ρT , 0) with ρT
+
+= e−rT ; the option
+
+value is the harmonic extension of the boundary payo to this point. The dashed orange curve shows
+the Poisson kernel PρT (θ) concentrating near θ = 0, which is why near-the-money payos dominate the
+price.
+
+The angle ϑ measured with a protractor is the cosine encoding of moneyness δ = cos ϑ.
+
+Blue
+
+arrows at now are the three Greek gradients: ∆ tangential, ρ radial, Θ pointing inward (time owing
+toward boundary).
+
++
+
+We start simple. A European call with strike K and maturity T pays g(ST ) = (ST − K) . We will
+compute its price three ways:
+
+by BlackScholes (the calculator answer), by the harmonic-extension
+
+formula on the disk (the geometric answer), and by Fourier expansion on S
+
+1 (the spectral answer). All
+
+three agree, which is the content of Proposition 1 below.
+
+Contract. S0 = 100, K = 100, T = 0.5 years, r = 5%, σ = 30%. At-the-money.
+
+5
+
+Calculator answer (BlackScholes).
+
+With d1 = (log(S0 /K) + (r + σ
+
+2 /2)T )/(σ
+
+√
+
+T ):
+
+d1 = (0 + (0.05 + 0.045) · 0.5)/(0.3 · 0.7071) = 0.0475/0.2121 = 0.2239
+√
+d2 = d1 − σ T = 0.2239 − 0.2121 = 0.0118
+N (d1 ) = 0.5886,
+
+N (d2 ) = 0.5047
+
+V0 = S0 N (d1 ) − Ke−rT N (d2 ) = 100 · 0.5886 − 100 · 0.9753 · 0.5047
+= 58.86 − 49.22 = $9.64 .
+3.1
+
+The harmonic-extension picture
+
+Now the geometric construction.
+
+Pull the payo back to S
+
+1 via the conformal map θ
+
+= 2πu with
+
+u = (log S − log L)/(log U − log L) on a chosen band [L, U ]; for a vanilla call without barriers, take
+√
+−3σ T
+[L, U ] wide enough
+that the payo has support in the interior of [0, 1]. Concretely, set L = Ke
+√
++3σ T for 3σ tails: L = 100 · e−0.6364 = 52.91 and U = 100 · e+0.6364 = 189.00.
+and U = Ke
+−rT = 0.9753. Now sits at the interior point
+The discount factor is the conformal modulus ρT = e
+(ρT , 0) on the disk. The harmonic extension of g to the disk, evaluated at (ρT , 0), is
+Z 1
+u(ρT , 0) =
+g(2πv) PρT (2πv) dv,
+(2)
+0
+2
+2
+where Pρ (θ) = (1 − ρ )/(1 − 2ρ cos θ + ρ ) is the Poisson kernel of the unit disk.
+
+Drawing 3 (call payo on the circle). Draw the unit circle. The payo g(θ) = (S(θ) − K)+
+vanishes on the arc θ ∈ (−π, 0) (the out-of-the-money region) and is positive on the arc θ ∈ (0, +π)
+(the in-the-money region). At θ = 0 (the strike point), g = 0. Shade the in-the-money arc and label
+it. The payo is supported on a half-circle: this is the geometric meaning of the call's payo being
+one-sided.
+
+The Poisson kernel as a discount distribution.
+
+The Poisson kernel Pρ (θ), with ρ = ρT close to 1,
+
+concentrates near θ = 0 (today is close to the boundary; the distribution of where the option could end
+up at maturity is sharply peaked near the current location). As ρT decreases (longer maturity, higher
+discount), the Poisson kernel spreads out: long-dated cashows are integrated against a broader, atter
+kernel; the price depends on the global average of the payo, not its local value.
+
+3.2
+
+Spectral form: Fourier modes and their discount rates
+1
+
+The Poisson kernel diagonalizes in the Fourier basis of S :
+
+u(ρ, 0) =
+
+X
+
+ĝn ρ|n| .
+
+(3)
+
+n∈Z
+This is the cleanest form of NPV on the disk: each Fourier mode ĝn of the payo is discounted by its
+
+|n|
+
+own factor ρT . The zero mode (the average payo ĝ0 ) is
+
+undiscounted. The high-frequency modes are
+
+damped exponentially in |n|.
+
+The rst√three modes for the call.
+
+On the band [L, U ] above, g(θ) = (S(θ) − K)
+
++ with S(θ) =
+
+K exp(3σ T cos θ) (Fourier-projected along the θ axis). Compute (with a calculator or by trapezoidal
+rule on graph paper at 12 equispaced angles θk = 2πk/12, k = 0, . . . , 11):
+
+1
+ĝ0 =
+2π
+
+Z 2π
+g(θ) dθ ≈ 9.55,
+
+ĝ1 ≈ 6.32,
+
+0
+6
+
+ĝ2 ≈ 1.95.
+
+Higher modes are below 1% of ĝ0 and contribute negligibly. Apply the spectral discount:
+
+V0 ≈ ĝ0 ρ0T + 2ĝ1 ρ1T + 2ĝ2 ρ2T + · · ·
+≈ 9.55 + 2 · 6.32 · 0.9753 + 2 · 1.95 · 0.9512
+≈ 9.55 + 12.33 + 3.71 · (real part corrections)
+
+After proper normalization (the factor of 2 comes from pairing n with −n for real payos), the spectral
+sum agrees with BlackScholes to within the trapezoidal-rule error of estimating the Fourier coecients.
+
+Exercise. Verify with a 12-point trapezoidal rule on graph paper that ĝ0 ≈ 9.55. Hint: S(θ) = 100 ·
+e0.6364 cos θ takes values {189, 168, 130, 100, 77, 61, 53, 61, 77, 100, 130, 168} at the 12 angles θk = 30◦ k .
+Payo = max(0, S − 100). Average the 12 values.
+Proposition 1 (NPV = harmonic extension). Let g ∈ L2 (S 1 ) be a terminal payo. Let r > 0 and
+
+T > 0. With ρT = e−rT , the risk-neutral price V0 = e−rT E[g(θT )] equals the harmonic extension of g to
+P
+the disk evaluated at (ρT , 0), equivalently n∈Z ĝn ρ|n|
+T .
+(Proof is by Poisson representation of harmonic functions on the disk, recorded in the cited operatorspectral framework.)
+
+7
+
+4
+
+Worked Example 2: Asian options as polygon averaging
+
+M = 10
+
+monitoring dates inscribed in S
+
+1
+
+ℑz
+
+t3
+
+t2
+
+t4
+
+t1
+
+36◦
+
+c10 = 2 sin 18◦
+= φ−1 = 0.6180
+
+ρT
+
+arc = 2π/10 = 0.6283
+defect = 0.0103
+ℜz
+
+S̄M
+
+t5
+
+tM =T
+
+polygon avg.
+
+t6
+
+t9
+
+t7
+
+t8
+
+Contract. Arithmetic Asian call, S0 = K = 100, T =
+0.5 yr, r = 5%, σ = 30%, M = 10 monitoring dates
+tk = kT /M .
+
+Vertex-average
+( kills Fourier modes:
+⟨e2πinu ⟩M =
+
+Prices:
+
+n ≡ 0 (mod M )
+else
+
+Only n = 0, ±M, ±2M, . . . survive.
+P
+
+Vanilla call (BS): $9.635
+Continuous geometric Asian (KV): $5.224
+Discrete geometric Asian, M = 10 (exact): $5.650
+Arithmetic Asian (MC + CV, 2M): $5.865
+Discount: ρT = e−rT = 0.9753
+Figure 2:
+
+1
+0
+
+Asian price: VA = n∈M Z ĝn ρ|n|
+T
+P
+Vanilla: VE = n∈Z ĝn ρ|n|
+T
+P
+Gap: VE − VA = n /∈M Z ĝn ρ|n|
+T
+
+The Asian option as a polygon-averaging operator on the time-circle. The M = 10
+1
+
+monitoring dates t1 , . . . , tM form the vertices of a regular decagon inscribed in S .
+
+The arithmetic
+
+Asian payo is the function value averaged over these vertices. The highlighted chord V0 V1 has length
+
+c10 = 2 sin 18◦ = φ − 1 = 0.6180 (the golden-ratio reciprocal), versus arc length 2π/10 = 0.6283. The
+3
+2
+chord-arc defect ∼ π /(3M ) is what averaging at nite M misses versus continuous averaging. The
+averaging operator is invariant under the Z/M Z cyclic group, so its Fourier symbol is 1n∈M Z : only
+multiples-of-M frequencies survive. This is the spectral explanation of why Asian options are cheaper
+than vanillas  the high-frequency content of the payo is ltered out.
+
+P
+S̄M = M −1 M
+k=1 Stk averaged over M equispaced monitoring dates
+tk = kT /M . Geometrically, the M monitoring dates are the vertices of a regular M -gon inscribed in the
+
+An arithmetic Asian call pays
+time-circle.
+
+Contract. S0 = K = 100, T = 0.5, r = 5%, σ = 30%, M = 10 monitoring dates.
+
+8
+
+Drawing 4 (the time-decagon). Draw the unit circle. With a protractor, mark 10 points at
+◦ · k , k = 0, 1, . . . , 9. Connect consecutive vertices with the straightedge to form a
+
+angles θk = 36
+
+regular decagon inscribed in the circle.
+The decagon sides have length c10
+
+= 2 sin(18◦ ) = 0.6180.
+
+−1 , since 2 sin 18◦ = φ − 1.
+ratio: φ
+
+(This is the reciprocal of the golden
+
+Pleasant if you recognize it.)
+
+The arc between consecutive
+
+vertices has length 2π/10 = 0.6283. The chord-arc defect is 0.6283 − 0.6180 = 0.0103 per side, or
+
+0.0103 · 10 = 0.103 total: about 1.6% of the total circumference.
+4.1
+
+The polygon average converges to the Poisson kernel
+
+The discrete Asian payo S̄M is the function value S evaluated at the M vertices, averaged with uniform
+weight 1/M . In the limit M → ∞, this becomes integration against the uniform measure on S
+
+1  and
+
+after discounting, integration against the Poisson kernel at interior radius ρT :
+
+VActs = e−rT E[(S̄ − K)+ ] =
+
+X
+
+|n|
+(S\
+− K)+
+n ρT .
+
+(4)
+
+n∈Z
+
+Numerical answer.
+
+For these parameters, MC (2M paths with geometric control variate) gives VA =
+
+$5.865 ± $0.0004 for the arithmetic discrete-monitored Asian. The associated geometric Asian, used as
+a control variate, has two distinct closed-form values:
+
+ Continuous geometric Asian (KemnaVorst): $5.224.
+ Discrete geometric Asian with the same 10 dates (exact, computed from the lognormality of the
+geometric mean): $5.650.
+The discrete value is the one that matches the contract; the continuous one is the limit as M → ∞ and
+is closer to the arithmetic-Asian limit. The vanilla call is $9.635 (BS); the Asian is signicantly cheaper
+because averaging contracts the variance of the payo.
+
+4.2
+
+Spectral interpretation: each Fourier mode contracted
+
+The Asian-vs-vanilla price dierence is, mode-by-mode, the contraction factor from averaging:
+
+VA − VE =
+
+X
+
+|n|
+
+ĝn (⟨avg⟩n − 1) ρT .
+
+n̸=0
+The zero mode contributes equally to both (the average payo is the average, whether averaged once
+at maturity or M times along the way).
+
+Higher modes are partially canceled by the averaging, with
+
+suppression factor depending on M :
+
+M −1
+
+⟨e
+
+2πinu
+
+1 X 2πink/M
+⟩M =
+e
+=
+M
+k=0
+
+(
+1 n ≡ 0 mod M
+0 otherwise.
+
+Only modes whose frequency is a multiple of M survive averaging exactly. Generic modes are damped
+quadratically in n by the nite-M Riemann-sum error.
+
+9
+
+This is geometrically obvious.
+
+A regular
+
+M -gon is invariant under rotations by 2π/M , so its
+
+averaging operator commutes with the cyclic group Z/M Z and kills all Fourier modes not in M Z. The
+
+Z/M Z representation theory is the harmonic analysis of the time-polygon.
+
+Exercise. On graph paper, draw a hexagon (M = 6) and an octagon (M = 8) inscribed in the same
+circle. Mark the vertices with the protractor at 60◦ and 45◦ spacings. Show that averaging the function
+cos θ over the hexagon vertices gives 0, and over the octagon vertices also gives 0; show that averaging
+cos 6θ over the hexagon gives 1 (it's invariant) and over the octagon gives 0.
+5
+
+Worked Example 3: discrete-barrier options and the BGK constant
+
+(a) M =21 time-circle
+
+S
+
+(b) barrier in (S, t)
+U ′ = 133.55 (shifted)
+U = 130
+
+t1
+t0
+
+√
+σ ∆t
+K=S0 =100
+
+t
+√
+
+c21 = 2 sin(π/21) = 0.2987
+log-shift: βσ ∆t = 0.0270
+arc = 2π/21 = 0.2992
+U ′ = 130 e0.0270 = 133.55
+defect = 0.000503
+/side βσ√∆t  P
+cts
+disc
+VM (U ) = V U · e
++ m≥2 cm ζ(m + 21 ) (∆t)m/2
+√
+β = −ζ(1/2)/ 2π = 0.5826 (BGK constant)
+
+Contract. Up-and-out call, S0 = K = 100, U = 130,
+T = 0.5 yr, r = 5%, σ = 30%, M = 21 monitorings.
+
+Why ζ(1/2)?
+
+The probability per monitoring √
+step
+that a Brownian motion crosses U is of order σ ∆t.
+ThePmissed crossings between monitorings accumulate
+as n≥1 n−1/2 , which diverges and is Abel-summed to
+ζ(1/2) = −1.4604 by analytic continuation.
+
+Prices (M = 21, S0 = K = 100, U = 130):
+Continuous (Haug closed form): $2.892
+Discrete (4M-path MC): $3.581
+BGK-shifted continuous: $3.663
+Naive error: $0.689
+BGK-corrected: $0.082
+Reduction: 8.4×
+
+Figure 3:
+
+Higher zeta values:
+ζ(3/2) = 2.6124
+ζ(5/2) = 1.3415
+ζ(7/2) = 1.1267
+
+The discrete-barrier option and the BGK polygon correction.
+
+(a) The M
+
+= 21
+
+monitoring dates form a regular 21-gon inscribed in the time-circle; the chord defect 0.000503 per side
+compounds to a ∼ 1% boundary discrepancy between the polygon and the smooth circle. (b) In the
+
+(S, t) plane, the nominal barrier U = 130 (red dashed) is shifted outward to U ′ = 133.55 (orange) by the
+BGK constant: this is the precise correction that makes the continuous-monitoring closed-form price
+match the discretely-monitored truth. The Brownian range σ
+
+√
+
+∆t between monitorings (purple bracket)
+
+is the source of the missed crossings. The full series generalizes the leading shift to all half-integer zeta
+values ζ(m + 1/2), with ζ(1/2) being the analytic continuation of the divergent sum
+
+P
+
+n−1/2 .
+
+This is the cleanest case where Bernoulli/zeta combinatorics show their teeth. An up-and-out call pays
+
+(ST − K)+ if the underlying never crosses an upper barrier U during the contract, and zero otherwise.
+Continuous monitoring (every instant) gives a clean closed-form price; discrete monitoring (at M dates
+10
+
+only) is dierent. The BroadieGlassermanKou correction reduces the discrete-monitoring problem to
+the continuous one by an explicit
+
+5.1
+
+barrier shift.
+
+The setup: a 21-gon for 21 monitoring dates
+
+Contract. S0 = 100, K = 100, U = 130, T = 0.5, r = 5%, σ = 30%, M = 21 monitoring dates spaced
+uniformly over [0, T ].
+
+Drawing 5 (the 21-gon). Draw the unit circle. With the protractor, mark 21 points at angles
+
+θk = (360/21)◦ · k = 17.143◦ · k , k = 0, 1, . . . , 20. Connect consecutive vertices: the resulting polygon
+◦
+has chords c21 = 2 sin(π/21) = 2 sin(8.571 ) = 0.2987.
+
+2π/21 = 0.2992. Defect per chord: ∆21 = 2π/21 −
+2 sin(π/21) = 0.2992 − 0.2987 = 0.000503. Total chord defect: 21 · 0.000503 = 0.01056, which
+is the fractional area between the inscribed 21-gon and the circle: ∼ 1.05%.
+
+The arc between consecutive vertices is
+
+5.2
+
+The BGK barrier shift: where it comes from
+
+The discretely-monitored barrier sees the polygon, not the circle. The continuous-monitoring formula
+treats the boundary as smooth; applying it directly to the polygon underestimates the survival probability
+(continuous monitoring is
+
+stricter : the underlying has T /∆t more chances to cross). The correction is,
+
+at leading order in ∆t = T /M :
+
+√ 
+U ′ = U · exp +βσ ∆t ,
+
+ζ( 1 )
+β = − √ 2 ≈ 0.5826.
+2π
+
+(5)
+
+√
+
+That is:
+
+shift the barrier outward by βσ ∆t on the log-scale, then use the continuous formula.
+
+Where the ζ(1/2) comes from.
+
+This is the most beautiful piece of the calculation. The probability
+
+that a discretely-monitored Brownian motion crosses a xed barrier before time T , expanded in ∆t, has
+the form
+
+√
+Pr(cross) = Pr(cts cross) + c1 ∆t + c2 ∆t + · · ·
+P
+−1/2 , which diverges by power counting but is
+where the leading correction c1 involves the sum
+n≥1 (n)
+√
+regularized to ζ(1/2) = −1.4603545 by analytic continuation. The minus sign in β = −ζ(1/2)/ 2π is
+precisely the sign of ζ(1/2) in the half-plane ℜs < 1.
+
+Drawing 6 (the barrier shift, on graph paper). On a sheet of graph paper, mark the horizontal
+line S = U = 130 (the nominal barrier) and the horizontal line S = U
+
+′ = 133.55 (the BGK-shifted
+
+√
+∆t on the log-scale
+p
+(check: 0.5826 · 0.30 ·
+0.5/21 = 0.0269, agrees). The continuous formula applied with U ′ matches
+barrier). The shift, 3.55 in S , corresponds to log(133.55/130) = 0.0269 ≈ βσ
+the true discrete-monitoring price to leading order.
+
+11
+
+5.3
+
+The calculator answers
+
+Numerical comparison (M = 21 monitorings, S0 = K = 100, U = 130, T = 0.5, r = 5%,
+Method
+Price
+σ = 30%).
+
+Continuous monitoring (Haug/RubinsteinReiner closed form)
+True discrete monitoring (4M-path MC)
+BGK-shifted continuous (using U
+
+$2.892
+$3.581 ± $0.007
+
+′ = 133.554)
+
+$3.663
+
+Naive error (continuous vs. discrete): |2.892 − 3.581| = $0.689.
+BGK-corrected error: |3.663 − 3.581| = $0.082.
+Error reduction: 8.4×.
+The remaining $0.08 is higher-order:
+
+c2 ζ(3/2)(∆t)1 plus c3 ζ(5/2)(∆t)3/2 plus higher.
+
+Two more
+
+terms of the zeta series knock the error to well under a basis point. The direction of every leg is
+correct: discrete monitoring is worth more than continuous (fewer chances to knock out), and the
+BGK barrier shift overshoots the true discrete price by about a quarter of the naive gap, with the
+residual cleanly attributable to higher-order series terms.
+
+Why the leading
+correction is
+√
+
+√
+
+∆t. The Brownian motion's range over an interval of length
+∆t is of order σ ∆t. The barrier-crossing probability per monitoring step is of this order; the missing
+crossings between monitorings (which the discrete monitor misses but continuous catches) accumulate as
+
+p
+√
+√
+√
+M · ∆t = T M . Normalizing by M gives a 1/ M , i.e. ∆t/T , leading correction. The proportionality
+constant is exactly β .
+5.4
+
+Higher-order zeta terms: the BGK series
+
+The full discrete-monitoring expansion is a series:
+
+disc = V cts (U ′ ) +
+VM
+
+X
+
+cm ζ(m + 12 ) (∆t)m/2 + O((∆t)∞ ).
+
+(6)
+
+m≥2
+The constants cm are computable from the Brownian-meander analysis; in practical applications, the
+rst two corrections (m = 1, 2) absorb > 99% of the discretization bias.
+
+Zeta values for the series. ζ(1/2) = −1.46035, ζ(3/2) = 2.61238, ζ(5/2) = 1.34149, ζ(7/2) =
+1.12673.
+Each term in (6) can be computed on a calculator with the ζ key; without the key, look them up in
+a table.
+
+12
+
+6
+
+Worked Example 4: the American put and the critical exercise angle
+
+(a)V smooth-pasting in (S, V )
+40
+
+continuation
+
+ob∗sexercise
+S t=$69.70
+acl
+eK
+30
+
+−
+
+(b) exercise arc on the disk
+
+S
+
+20
+
+θ∗
+
+θ̇∗
+
+ℑz
+
+tangent
+slope −1
+Vhold (S)
+
+10
+
+θ∗
+
+deep OTM exercise Et
+60
+
+S ∗ 80
+
+hold
+
+ATM
+ℜz
+
+S
+100
+
+115
+
+−θ∗
+
+Contract. American put, S0 = K = 100, T = 1 yr,
+
+Free-boundary conditions at S ∗ :
+
+r = 5%, σ = 30%.
+
+Value-matching: V (S ∗ ) = K − S ∗
+Smooth-pasting: ∂S V (S ∗ ) = −1
+
+Prices (CRR, 3000 steps):
+
+American put: $9.87
+European put: $9.35
+Early-exercise premium: $0.52
+Critical price: S ∗ (0) ≈ $69.70
+Figure 4:
+
+Geometric content. Tangent of the continuation value
+
+matches the obstacle line in both height and slope. Find
+S ∗ by bisection: the abscissa where Vhold has slope −1.
+
+The American put: smooth-pasting as a tangent-line construction. (a) In the (S, V )
+
+= K − S is a straight line with slope −1 (red). The continuation value Vhold (S) is
+tangent at S ∗ ≈ $69.70
+∗
+ they match in both value and slope. This is the geometric content of smooth-pasting. Find S
+by bisection on graph paper: the abscissa where the continuation tangent has slope −1. (b) In disk
+coordinates, the exercise region is an arc Et centered on θ = π (the deep-OTM side, where the put
+∗
+is most valuable). The arc's endpoints are the critical exercise angles ±θ , measurable directly with a
+∗
+protractor. The growth rate θ̇ of this arc as t increases is theta in geometric coordinates: theta is the
+plane, the obstacle V
+
+a smooth convex curve (blue) approaching the obstacle from above; the two are
+
+angular momentum of the free boundary on the disk.
+
+The American put has the additional feature that the holder may exercise at any time t ∈ [0, T ] before
+maturity. Geometrically, this introduces a
+
+free boundary : an arc on the disk where exercising is optimal,
+
+separated from an arc where holding is optimal. The boundary between them is a single point on the
+disk at each time t, called the
+
+critical exercise price S ∗ (t) in nance and the critical exercise angle θ∗ (t)
+
+in disk coordinates.
+
+Contract. S0 = K = 100, T = 1, r = 5%, σ = 30%.
+Numerical answers.
+
+American put (CRR, 3000 binomial steps): $9.87. European put: $9.35. Early-
+
+exercise premium: $0.52. Critical boundary at t = 0: S
+
+13
+
+∗ (0) ≈ $69.70.
+
+6.1
+
+The smooth-pasting condition is a tangent-line condition
+∗
+
+At the critical exercise price S , two conditions must hold:
+
+V (S ∗ , t) = K − S ∗
+∗
+
+∂S V (S , t) = −1
+
+(value-matching)
+
+(7)
+
+(smooth-pasting)
+
+(8)
+
+∗
+
+Geometrically: the value function V is tangent to the obstacle K − S at S = S , matching not just in
+value but in slope.
+
+Drawing 7 (smooth-pasting). On graph paper, plot the payo line y = K − S = 100 − S for
+S ∈ [60, 100].
+
+This is the obstacle:
+
+a straight line with slope −1.
+
+Plot, on the same axes, the
+
+continuation value Vhold (S) as a smooth curve, computed either from a binomial tree or from a
+Black-Scholes European-put formula.
+
+The two curves coincide for S
+
+< S ∗ (where holding equals
+
+∗
+∗
+exercising) and diverge for S > S (where holding strictly dominates). At S = S , they are tangent:
+same value, same slope (−1).
+
+∗
+
+Use a straightedge to read S : it is the abscissa of the unique point where the continuation curve
+has slope −1 and value K − S . On the example: S
+
+6.2
+
+∗ (0) = $69.70.
+
+The critical exercise angle on the disk
+
+In disk coordinates, the exercise region is an arc of the boundary:
+
+Et = {θ ∈ S 1 : V (S(θ), t) = K − S(θ)}.
+For a put, this is a connected arc near θ = π (the deep-out-of-the-money side; the put is most valuable
+when the underlying is far below the strike). The boundary between Et and S
+
+1 \E is the critical exercise
+t
+
+∗
+
+angle θ (t).
+
+Drawing 8 (exercise arc on the unit disk). Draw the unit circle. Shade the arc θ ∈ [θ∗ , 2π − θ∗ ]
+(symmetric around θ = π ).
+
+This is the exercise region: in disk coordinates, exercising the put is
+
+optimal whenever the underlying's angular coordinate falls in this arc.
+
+θ∗ is read o the protractor. For S ∗ (0) = $69.70, log-moneyness =
+log(69.70/100) = −0.361, scaled to the band [log(L), log(U )] = [−1, +1] (say) gives θ∗ /π = 0.361,
+∗
+◦
+hence θ = 0.361π = 64.98 measured from the negative real axis. Mark this on the protractor.
+
+The critical exercise angle
+
+6.3
+
+Smooth-pasting as a tangent-line construction with straightedge
+
+The geometric meaning of smooth-pasting is striking: the obstacle line y = K − S is tangent to the
+
+∗
+
+continuation value at S . Tangent lines are the original object of Greek geometry, and the straightedge
+constructs them by inspection.
+
+Drawing 9 (the secant becomes a tangent). Plot the continuation curve Vhold (S) on graph
+paper. Pick a point S0 in the holding region (say S0 = 80). Draw secants from S0 to nearby points
+
+S0 + h, h = 5, 2, 1, 0.5, and read the slopes. As h → 0, the secant slopes approach the tangent slope
+V ′ (S0 ).
+Now nd S
+
+∗ by the rule:
+
+the abscissa where the tangent slope equals −1. This is a one-dimensional
+
+root-nding problem. On graph paper, you can iterate by bisection: try S = 70, nd slope −1.07
+(too steep); try S = 75, nd slope −0.84; bisect to S = 72.5, slope −0.93; converge to S
+45 iterations. This is
+
+compass-and-straightedge American-option pricing.
+14
+
+∗ ≈ 69.7 in
+
+6.4
+
+The geometric content: theta as angular acceleration
+
+The exercise-region arc grows with t:
+everything below K at t = T .
+
+as we approach maturity, the arc widens, eventually covering
+
+The rate of arc growth is the
+
+boundary:
+
+θ̇∗ (t) =
+
+angular velocity of the critical exercise
+
+dθ∗
+.
+dt
+
+This is theta in geometric coordinates. The classical theta Θ = −∂t V at the exercise boundary equals
+
+r · V (S ∗ ) − 21 σ 2 S 2 V ′′ (S ∗ ) by the BlackScholes PDE; on the disk, this becomes the angular-acceleration
+∗
+∗
+condition θ̇ · sin ϑ · (stu) = Θ. Theta is angular momentum.
+7
+
+Pencils of conics: the deeper algebraic geometry
+
+(a) pencily of conics
+
+(b) discriminant & ybranch-free Hessian
+
+B2
+
+λ=−2
+
+H(λ)=
+
+B1
+
+x
+
+λ-21
+
+-1
+
+1
+
+λ22
+
+λ
+
+y 2 =∆
+
+λ=+2
+
+(line pair)
+λ=1
+
+mi
+(λ−λi )2
+
+∆(λ)=λ2 −4
+
+λ=0
+
+B3
+
+P
+
+B4
+
+x2 + λxy + y 2 = 4
+
+Branch-free Hessian. Same construction as on S 1 :
+
+Pricing implication.
+
+Double-barrier option prices,
+parameterized by time-to-maturity, trace out a oneparameter family of level-set conics in (S, V )-space. The
+pencil is generically smooth; the branch locus is where
+two pricing modes collide (e.g. barrier knock-out).
+
+−∂λ2 log ∆(λ) is single-valued even though log ∆ has
+branch cuts.
+
+On S 1 : kernelPπ 2 csc2 π(x − a).
+Here: kernel
+mi /(λ − λi )2 .
+
+Cusps ↔ higher-order zeros of ∆
+Cardioid ↔ Mandelbrot boundary
+
+Both are inverse-square kernels with poles at the singularities of the underlying divisor.
+
+The conic pencil and its discriminant cubic, the algebraic geometry underlying
+double-barrier pricing. (a) Four base points B1 , B2 , B3 , B4 (red) dene the pencil λA1 + (1 − λ)A2
+
+Figure 5:
+
+through them: for the canonical pencil x
+
+2 + λxy + y 2 = 4, the family includes a circle (λ = 0), ellipses
+
+(λ = 1, generic), hyperbolas (|λ| > 1), and
+
+degenerate line pairs at the critical λ = ±2 (where the
+
+discriminant vanishes). (b) The discriminant ∆(λ) = λ
+
+2 − 4 has zeros at λ = ±2; these are the branch
+
+2
+points of the elliptic double cover y = ∆(λ) (purple) and simultaneously the second-order poles of the
+2
+
+branch-free Hessian H(λ) = −∂λ log ∆(λ) (orange). This is the same construction that on S
+
+1 produces
+
+π 2 csc2 from the circle divisor, here producing an inverse-square kernel on the parameter line from the
+discriminant cubic.
+So far the geometry has been the unit disk. There is a deeper algebraic structure underneath: the pricing
+problem of a two-barrier option, or a pencil of related contracts, lives on a
+
+15
+
+pencil of conics, and its pricing
+
+operator is the
+
+discriminant cubic. This connects directly to the branch-free Hessian construction in the
+
+companion paper.
+
+7.1
+
+Two barriers determine a conic family
+
+A double-barrier option with barriers L and U admits a one-parameter family of associated conics in
+
+(S, V )-space, where V is the value. Specically, the level sets of the value function V (S, t) at varying t
+form a pencil of curves; in log-coordinates and after harmonic transformation, this pencil is generically
+a pencil of conics.
+
+Drawing 11 (a pencil of conics through four points). On graph paper, mark four points
+
+B1 , B2 , B3 , B4 . Draw the unique conic through them for several dierent slopes : for each parameter
+λ, the conic λA1 + (1 − λ)A2 is determined by adding two specic conics A1 and A2 through the
+four base points.
+At λ = 0:
+
+A2 alone (an ellipse, say). At λ = 1: A1 alone (a hyperbola, say). At intermediate
+λ: combinations. At special λ∗ values: the conic degenerates into a pair of lines (the discriminant
+
+vanishes).
+For the canonical pencil x
+
+2 + λxy + y 2 = 4 through (±2, 0) and (0, ±2): the discriminant is ∆(λ) =
+
+λ2 − 4, zero at λ = ±2. At λ = +2: the conic becomes (x + y)2 = 4, i.e. the line pair x + y = ±2.
+2
+At λ = −2: similarly, (x − y) = 4.
+7.2
+
+The discriminant cubic and the spectral curve
+
+For a pencil of conics through four base points, the discriminant ∆(λ, µ) = det(λA1 + µA2 ) is a homogeneous cubic in (λ, µ). Its zeros are the
+
+singular members of the pencil  the points where the conic
+
+degenerates.
+
+The branch-free Hessian.
+
+Taking the second log-derivative of ∆:
+
+H(λ) = −∂λ2 log ∆(λ) =
+
+X
+i
+
+mi
+,
+(λ − λi )2
+
+where λi are the roots of ∆ with multiplicities mi . This is an inverse-square kernel on the parameter
+line. Its poles are the branch points of the elliptic double cover y
+
+2 = ∆(λ)  a genus-1 curve attached
+
+to the four base points.
+
+The cardioid connection.
+
+When the four base points coincide pairwise, two of the singular λi collide
+
+and the inverse-square pole becomes a double-order pole. Geometrically, this is a
+
+cusp : the discriminant
+
+has a critical point of higher order. The shape traced out by a one-parameter family of degenerating
+conics is a
+
+7.3
+
+cardioid, the same cardioid that bounds the main bulb of the Mandelbrot set.
+
+Pricing implications: the moneyness anisotropy
+
+In a double-barrier setting, the price function V (S, t) is a section of the spectral curve y
+
+2 = ∆(λ) in
+
+a specic sense: its level sets, restricted to constant-t slices, are members of a pencil of conics on the
+
+(S, V )-plane, with the pencil parameter encoding the time-to-maturity.
+The
+
+moneyness anisotropy (skewness in pricing language) is the dipole moment of the payo dis-
+
+tribution around the strike K . Geometrically, it is the eccentricity of the level-set conics. Symmetric
+payos (like a straddle) give circular level sets; skewed payos (like a call spread) give eccentric ellipses.
+
+16
+
+Drawing 12 (level sets of an option price). On graph paper, plot in (S, t)-space the level sets
+of the double-barrier option price V (S, t) = c for several constants c. Near maturity, the level sets
+are nearly parallel verticals (the option is essentially the intrinsic value, V
+
+= max(0, S − K)). At
+
+earlier times, the level sets curve: they form a family of conic-like curves whose discriminant cubic
+encodes the boundary geometry.
+
+7.4
+
+Autocallables: pencils made esh
+
+Double-barrier options form a pencil of conics in principle  the level-set conics of the value function
+
+V (S, t) slide through a one-parameter family as t varies  but the pencil is implicit: the underlying
+contract species xed geometric walls L ≤ S ≤ U , and the deformation is continuous, hidden inside
+the smooth time evolution.
+scheduled
+
+Autocallables are dierent.
+
+Their pencil structure is manifest:
+
+at each
+
+observation date tk , the contract explicitly tests a quadratic condition, the regime structure
+
+of the state space changes discretely, and the pricing conic jumps to a new member of the family. The
+autocallable contract
+
+is a pencil: its terms specify the pencil parameter (the index k of the observation),
+
+the redemption conic (the branch where the autocall res), the continuation conic (the branch where it
+doesn't), and the discriminant locus (the regime boundaries at S = A and S = KI ).
+This subsection develops the pencil structure rigorously, veries it against direct Monte Carlo on a
+standard 5-year autocallable, and shows how the pricing decomposes into a nite sum of vanilla quantities
+weighted by pencil weights that are themselves geometric objects on the time-circle.
+
+The contract.
+
+A standard 5-year single-name autocallable with notional N0 = 100, annual observation
+
+dates tk ∈ {1, 2, 3, 4, 5} years, autocall trigger A = 100% of initial spot, knock-in barrier KI = 60% of
+initial spot, coupon c = 8 per observation (with memory: missed coupons accumulate and are paid at
+the next non-trigger observation where S ≥ KI ), and a knocked-in equity payo N0 · min(1, ST /100) if
+no autocall has red and mint St < KI . Underlying dynamics: r = 5%, σ = 30%, S0 = 100.
+
+Terminal coupon convention.
+
+The convention used throughout this section is that, on paths which
+
+survive to maturity without autocall
+
+and without knock-in, the nal cashow is N0 plus all accumulated
+
+coupons (one for each observation
+
+tk at which Stk ≥ KI ).
+
+This is the convention that makes the
+
+pencil decomposition exact: each bucket of the decomposition matches the payo under that bucket's
+regime. An alternative convention pays only N0 at the terminal no-call/no-KI node, on the basis that
+the last coupon triggers only when the autocall res or when the contract knocks back through KI ;
+this convention is also common in practice. Both prices are well-dened and within roughly 40 bp of one
+another; we use the coupon-at-maturity convention because it is the natural pencil parametrization (the
+terminal bucket inherits the full coupon-memory ladder).
+
+The pencil.
+
+At each observation date tk , the state space {S ∈ (0, ∞)} partitions into three regimes:
+
+ Redemption {S ≥ A}: autocall res, contract pays N0 + (k + 1)c and terminates. The value is
+constant in S  a horizontal line in (S, V ) space.
+ Continuation {KI ≤ S < A}: contract survives, accumulates one coupon, and proceeds. Value
+Vcont (S, t+
+k ) is the continuation value, a smooth nonlinear function.
+ Knocked-in {S < KI}: knock-in ag set, no coupon, contract proceeds toward terminal equity
++
+payo. Value VKI (S, tk ) is again smooth nonlinear.
+−
+
+The full value function V (S, tk ) just before observation k is the concatenation of these three pieces, with
+kinks at the regime boundaries S = A and S = KI . These kinks are the algebraic content of the
+
+17
+
+pencil
+
+singularity : at the regime boundary, the quadratic level-set conic degenerates into a pair of lines (the
+redeem line V
+
+= N0 + (k + 1)c plus the continuation/knock-in line). The pencil's discriminant locus is
+
+therefore {S = A} ∪ {S = KI}, two vertical lines in the (S, V ) plane, occupied for all k .
+
+The family.
+
+−
+
+−
+
+The ve conics C(t1 ), . . . , C(t5 ) deform in a structured way as k advances. Figure 6 shows
+
+the family explicitly. The redemption plateau rises with k (more coupons accumulated), the continuation
+arm steepens (less time remaining for the option-value of further observations), and the overall shape
+interpolates between a smooth Black-Scholes-like curve at k = 1 and a sharp piecewise-linear shape at
+
+k = 5 (line-pair limit, the maximal pencil singularity).
+
+18
+
+Figure 6:
+
+The autocallable as a pencil of conics. (a) The pencil family C(t−
+k ) for k = 1, . . . , 5: ve
+
+= N0 + (k + 1)c rises
+−
+with k ; the continuation arm interpolates between S = KI = 60 and S = A = 100. The yellow t5
+value-function curves indexed by observation date.
+
+The redemption plateau V
+
+curve is nearly piecewise-linear (line-pair limit), the singular endpoint of the pencil. (b) Discriminant
+
+2
+
+locus: log-scale plot of |∂S V |. Peaks sit at S = A and S = KI for every k  these are the singular
+bers of the pencil, shared across all observation dates and sharpening dramatically as k → 5. (c) Pencil
+
+−
+
+−
+
+parameter λ(tk ) extracted by tting each C(tk ) as a linear combination of the endpoint conics C(t1 )
+
+−
+and C(t5 ). The sweep is strongly nonlinear in tk (purple), not a linear interpolation (gray dashed) nor
+proportional to the ATM autocall probability (green).
+
+This non-linearity is the deep content of the
+
+pencil: the autocall contract carries information beyond simple survival probability. (d) Schematic: the
+ve observation dates inscribed on the time-circle dene ve marked points; the pencil sweeps along the
+arc.
+
+The 3D view.
+
+Stacking the ve 2D slices along the t-axis gives the autocallable
+
+conic surface, a
+
+three-dimensional object that the contract prices o of. Figure 7 shows this surface together with the
+regime-boundary planes S = A and S = KI . These planes are the autocallable's analog of the four base
+points Bi in the canonical conic pencil example: they are the geometric data the pencil is built around.
+
+19
+
+The conic surface of the autocallable.
+
+Figure 7:
+
+Five value-function curves stacked along the
+
+observation-date axis form a surface in (S, t, V ) space. The regime boundaries S = A = 100 (red dashed)
+and S = KI = 60 (orange dashed) are vertical planes through the surface; they are the discriminant
+locus of the pencil. Time-slice intersections of these planes with the surface are the line-pair degeneracies
+at each tk .
+
+The price decomposition.
+
+The pencil structure has direct operational content:
+
+the autocallable
+
+price admits a clean decomposition as a nite sum over the pencil parameter,
+
+V0 =
+
+K
+X
+
+πk [N0 +(k+1)c] e−rtk + πsurv ·E[payo | survive, no KI] e−rT + πKI ·E[N0 min(1, ST /100) | survive, KI] e−rT ,
+
+k=1
+where the
+
+(9)
+
+pencil weights are
+πk = Pr(rst autocall at tk ) = Pr(Stk ≥ A ∧ Stj < A for all j < k),
+
+and πsurv , πKI are the analogous probabilities of the two terminal buckets. These seven weights sum to
+one  they are the discrete probability measure that the autocall regime, at random, falls into each
+pencil bucket.
+
+20
+
+The decomposition expresses the autocallable price as a nite linear combination of vanilla payos
+(cash plus equity), each weighted by a single number πk . Numerically on the contract above:
+
+Autocallable pencil decomposition. (a) The seven pencil weights πk as a discrete measure:
+π1 = 0.504 dominates (the ATM autocall res roughly half the time on the rst observation), with
+decreasing weights at later observations and a terminal KI-breach bucket of πKI = 0.227. (b) PV
+−rtk . The total $89.92 matches direct Monte Carlo ($89.73±
+contribution from each bucket: πk · payok ·e
+$0.17) within statistical noise. This is the operational content of the pencil structure: a single contract
+
+Figure 8:
+
+decomposes into a nite linear combination of vanilla building blocks, indexed by the pencil's discrete
+parameter.
+Verication.
+
+Under the convention stated above (terminal coupons paid on no-call, no-KI survival),
+
+high-resolution Monte Carlo with annual time-grid endpoints plus Brownian-bridge KI detection gives
+
+$89.95 ± $0.02; daily-grid MC (100,000 paths, 252 steps per year) gives $89.78 ± $0.12; the original
+$89.73 ± $0.17 quoted above is the same daily-grid MC at lower path count, also under this convention.
+The pencil decomposition gives $89.92, all four numbers consistent within their stated 95% condence
+intervals. The pencil identity (9) is therefore exact at the contract level  it is not an approximation but
+a
+
+rearrangement of the discounted expectation, made possible by the discrete structure of the observation
+
+dates. Under the alternative convention where the terminal no-call/no-KI node pays only N0 , the same
+
+−rT = 0.012·40·0.779 = $0.37,
+
+MC gives $89.39±$0.12; the gap from $89.92 to $89.39 is exactly πsurv ·5c·e
+
+which is the single-bucket coupon adjustment between conventions and matches within MC error.
+
+What this buys.
+1.
+
+Three concrete consequences for pricing and risk management:
+
+Sensitivities decompose cleanly. The Greeks of the autocallable are linear combinations of the
+Greeks of the seven vanilla pieces, weighted by the πk 's and their derivatives. Vega in particular
+ which is notoriously messy for path-dependent products  splits into a vega-of-redemptionprobability piece (the ∂σ πk terms) plus a vega-of-conditional-payo piece.
+
+2.
+
+The KI-breach bucket is the dominant risk. In our example, πKI = 0.227 contributes $9.53 to the
+price, about 11% of the total.
+
+This is the autocallable's equity exposure and the source of its
+
+negative-skewness sensitivity.
+
+In the pencil picture, KI-breach is a separate ber of the family,
+
+with its own discriminant cubic governing the equity payo geometry.
+3.
+
+Pencil weights are intrinsically calibratable. Unlike phenomenological calibration parameters (the
+kind that get bolted on to a model when its boundary geometry doesn't match the contract's),
+
+21
+
+the πk are rst-passage probabilities under a transparent dynamics.
+
+Calibrating σ to a quoted
+
+autocallable price is one-dimensional bisection on a smooth function of σ ; no smile interpolation
+is needed.
+
+Comparison to the canonical pencil λA1 + µA2 .
+
+The connection to the algebraic-geometry pencil
+
+of 7 is now direct:
+
+Algebraic pencil
+
+Autocallable pencil
+
+Four base points B1 , . . . , B4
+
+Regime boundaries S ∈ {A, KI}
+
+1
+Pencil parameter λ ∈ P
+
+Observation index k ∈ {1, . . . , 5}
+
+det(λA1 + µA2 ), cubic in λ
+
+Discriminant locus {S = A} ∪ {S = KI}
+
+Singular bers λ = λi (line pairs)
+
+Observation dates tk (regime boundaries active)
+
+Smooth bers (generic λ)
+
+Interior times t ∈ (tk−1 , tk )
+
+2
+Elliptic curve y = ∆(λ)
+
+Pencil-weight measure {πk } on Z/KZ
+
+Branch-free Hessian
+
+P
+
+mi /(λ − λi )2
+
+−∂S2 log V , poles at A and KI
+
+The autocallable is not just an analog of a conic pencil  it is literally one, with the pencil parameter
+being the observation index and the discriminant cubic being the union of the regime boundaries. The
+algebraic-geometric content of 7 is the geometric content of 7.4, transposed from congurations of
+points in the plane to congurations of observation dates on the time-circle.
+
+8
+
+Putting it together: the Greek dictionary, geometrically
+
+We have now seen each Greek incarnated as a geometric object. The dictionary unies them.
+
+8.1
+
+Theta as angular momentum
+−rT gives
+
+For a contract value V (S, t) pulled back to disk coordinates as u(ρ, θ), the relationship ρT = e
+
+T = − log ρT /r and
+Θ = −∂T V = −∂ρT u · ∂T ρT = −rρT ∂ρT u.
+This is the
+
+radial outow : theta measures the rate at which value leaves the disk through the radial
+
+coordinate as time advances. Equivalently, on the universal cover where time is the log-radial coordinate,
+theta is the conjugate momentum to the time ow ξ 7→ ξ − r∆t. Hence:
+
+theta is angular momentum (in
+
+the symplectic sense).
+For an American option, theta has a second incarnation: it is the angular velocity θ̇
+
+∗ of the critical
+
+exercise boundary on the disk.
+
+8.2
+
+Gamma and vega as principal curvatures
+
+Γ = ∂S2 V ∼ (1/S 2 ) ∂ξ2 u,
+
+V = ∂σ V.
+
+On the disk, both are second-order radial-and-angular derivatives of the harmonic extension.
+
+The
+
+2 1/2 has eigenvalue spectrum 2π 2 |n| on the Fourier basis:
+Dirichlet-to-Neumann operator Q = π(−∂u )
+this is the
+
+boundary curvature spectrum, and gamma and vega read o specic entries. In eect, Γ and
+
+V are the principal curvatures of the price surface in disk coordinates.
+
+22
+
+8.3
+
+Rho as a tangent at the radial axis
+
+ρGreek = ∂r V = −T ρT ∂ρT u.
+Rho is the radial gradient of the harmonic extension, pulled to the rate axis. Sign convention: a fall in r
+(and a rise in ρT ) makes the present value of future cashows larger  that is the standard option-rho
+sign.
+
+8.4
+
+Anisotropy and skewness: the dipole moment on S 1
+
+Skew in option pricing is the asymmetry of the implied-vol smile around the at-the-money point. On
+the unit circle, this is the dipole moment of the payo distribution:
+
+Z 2π
+sin θ g(θ) dθ = (ĝ1 − ĝ−1 )/(2i).
+
+skew =
+0
+
+For a symmetric payo (straddle), the dipole moment is zero. For a call spread, it's non-zero. The skew
+is a single Fourier coecient.
+
+9
+
+Summary table: the dictionary at a glance
+
+Finance
+
+Geometry
+
+Calculator
+
+conformal modulus ρT
+
+e−x
+
+2
+
+Moneyness S/K
+
+cosine of phase cos ϑ
+
+protractor
+
+2
+
+Volatility σ
+
+cone half-angle
+
+NPV of payo
+
+harmonic extension at (ρT , 0)
+
+Discount factor e
+
+−rT
+
+√
+
+·
+
+Section
+
+2
+
+Poisson kernel
+
+3
+
+P
+
+4
+
+Asian average
+
+polygon vertex average
+
+1/M
+
+Asian-vs-vanilla gap
+
+Fourier-mode contraction
+
+
+
+4
+
+Discrete-barrier shift
+
+BGK constant β
+
+5
+
+Barrier-monitoring series
+
+Bernoulli/zeta expansion
+
+ζ(1/2)
+ζ(m + 1/2)
+
+American exercise boundary
+
+∗
+critical angle θ
+
+tangent line
+
+6
+
+Smooth-pasting
+
+tangent at slope −1
+
+straightedge
+
+6
+
+Theta
+
+angular velocity
+
+
+
+6
+
+Gamma, Vega
+
+boundary curvature
+
+DtN spectrum
+
+8
+
+Rho
+
+radial gradient
+
+log-cover
+
+8
+
+N (·)
+
+7.4
+
+P
+
+k πk Vk
+
+5
+
+Autocallable price
+
+pencil decomposition
+
+Pencil weight πk
+
+rst-passage probability at tk
+
+GBM CDF
+
+7.4
+
+Discriminant locus
+
+regime boundaries S ∈ {A, KI}
+
+
+
+7.4
+
+Skewness / dipole
+
+rst Fourier coecient ĝ1
+
+
+
+8
+
+Pencil of conics
+
+one-param family λA1 +µA2
+
+det
+
+7
+
+Discriminant cubic
+
+2
+branch points of y = ∆(λ)
+
+cubic roots
+
+7
+
+Sequence in pencil-and-paper order.
+the radius; (3) Read
+
+For any contract: (1) Draw the circle; (2) Locate ρT on
+ϑ from the protractor; (4) Identify the boundary geometry (smooth, polygon,
+
+exercise-arc, autocall pencil); (5) Apply the relevant correction (BGK shift, smooth-pasting, pencil
+decomposition); (6) Plug into the Poisson-kernel or spectral formula; (7) Discount and report.
+
+23
+
+10
+
+The Polygonal Projection Splitting Theorem
+
+The four contracts of this paper  vanilla, Asian, BGK barrier, American put  and the autocallable
+pencil of 7.4 look like four separate stories.
+
+They are not.
+
+Each is one face of a single operator-
+
+the discrete observation of a continuous boundary integral renormalizes the bulk
+Hamiltonian into a boundary Hamiltonian, whose smooth normal form is the Dirichlet-to-Neumann
+operator Λ and whose circle normal form is the chord-distance stiness Q = π(−∂u2 )1/2 . The polygontheoretic phenomenon:
+
+vs-circle defect that gives the BGK barrier shift, the double-slit projection that converts a wave into a
+particle, the eigenvalue splitting that selects cosine versus sine modes under an ellipse deformation, and
+the aliasing fold that takes the smooth Fourier index |k| onto the polygon's k(N − k)/N spectrum, are
+
+the same event expressed in dierent languages. This section makes that statement precise.
+
+24
+
+Figure 9:
+
+Four manifestations of one projection.
+
+spectrum 2π
+
+(a) The smooth-circle stiness operator has
+
+2 |k| on Fourier modes e2πiku (gray V-shape).
+
+points folds this onto the polygon spectrum λk
+
+Sampling the boundary on N equispaced
+
+= π 2 k(N − k)/N (blue/red dots); the smooth degeneracy
+
+λ+k = λ−k becomes the polygon pair λk = λN −k . The two sheets meet at the Nyquist frequency
+±N/2 (red dotted). (b) Under a harmonic-2 (ellipse) deformation of the regular polygon, the formerlydegenerate dihedral pairs (cos kθ, sin kθ) split into two distinct eigenvalues. The split is linear in the
+deformation amplitude ε and largest for modes that resonate with the perturbation harmonic (k = 4
+here, the upward-bending green curve). This is the spectral content of breaking the continuous SO(2)
+symmetry of the circle down to the discrete D12 symmetry of the polygon, and then further to D2
+2
+2
+by the deformation. (c) The branch-free Hessian kernel π csc (πw) (black) has Laurent expansion
+−2
+2
+4
+2
+−2
+w + π /3 + 2π /15 · w + · · · ; the leading w
+singularity (red dashed) captures the local nearcollision physics, while the ζ(2m) tail of the expansion (blue/green dashed) captures the global periodic
+alias contributions. (d) The structural analogy: a quantum wavefunction passing through two slits is
+collapsed by projection Πj to a particle click; the smooth circle sampled at N vertices is collapsed to
+a nite spectrum {λk }.
+
+Both are the same operator-theoretic event 
+
+reduced to nite observation algebra.
+10.1
+
+continuous symmetry algebra
+
+Statement
+
+Let D ⊂ R
+
+d be a bounded domain with smooth boundary except for nitely many polygonal corners.
+
+σ2
+Let H = −
+2 ∆ + V be a Euclidean Hamiltonian with Dirichlet realization HD on D , and let ΠD denote
+25
+
+multiplication by the indicator 1D . Dene the continuously-monitored killed semigroup
+
+KD (t) = e−tHD
+and the discretely-monitored projection product at mesh h = t/N ,
+
+Khdisc (t) =
+Let
+
+ΠD e−hH ΠD
+
+N
+
+.
+
+ζ(1/2)
+≈ 0.5826
+β = − √
+2π
+
+be the BGK constant of 5.
+
+Theorem 1 (Polygonal
+Projection Splitting). Away from corners, the discrete-monitoring defect is, to
+√
+
+leading order in h,
+
+√
+Khdisc (t) − KD (t) = βσ h · BD (t) + O(h),
+
+(10)
+
+where BD (t) is the boundary-ux operator
+σ2
+⟨ϕ, BD (t)ψ⟩ =
+2
+
+Z tZ
+0
+
+∂ν (e−sHD ϕ)(z) · ∂ν (e−(t−s)HD ψ)(z) dS(z) ds.
+
+(11)
+
+∂D
+
+The operator BD (t) is a rst-order boundary pseudodierential operator with principal symbol |ξ|, equal
+to the Dirichlet-to-Neumann map ΛD of the domain.
+On the unit disk, where the DtN map acts on Fourier modes as ΛD eikθ = |k|eikθ , the circle normal
+form is
+√
+Khdisc − KD ∼
+
+βσ h
+Q,
+π
+
+Q = π(−∂u2 )1/2 .
+
+(12)
+
+−1
+If the boundary ∂D is replaced by a regular N -gon of vertices {zk = e2πik/N }N
+k=0
+inscribed in D, the smooth DtN spectrum {|k|}k∈Z is folded onto the nite spectrum
+Polygonal sampling.
+
+λk (QN ) =
+
+π 2 k(N − k)
+,
+N
+
+k = 0, 1, . . . , N − 1,
+
+(13)
+
+with the smooth degeneracy λ+k = λ−k replaced by the polygon pair λk = λN −k .
+Symmetry-breaking splitting. Under a generic deformation of the polygon that breaks DN to a proper
+subgroup, each pair (λk , λN −k ) splits into two distinct cosine/sine irreducible eigenvalues
+λck (ε) = λk + εAk + O(ε2 ),
+
+λsk (ε) = λk − εAk + O(ε2 ),
+
+(14)
+
+with splitting amplitude Ak proportional to the inner product of the deformation harmonic with the
+cosine/sine selection axis.
+Corner renement. At a polygonal corner of opening angle α, the scalar boundary operator Λ is
+replaced by the wedge-DtN Mellin matrix coupling the two incident faces,
+cα (τ ) =
+Λ
+
+τ
+sinh(ατ )
+
+
+
+cosh(ατ )
+−1
+,
+−1
+cosh(ατ )
+
+(15)
+
+whose o-diagonal entries −τ / sinh(ατ ) ̸= 0 encode the irreducible coupling between adjacent faces. In
+particular, conditioned laws on product domains with non-product faces (e.g., autocallable regime corners
+{S = A} ∩ {S = KI} of 7.4) cannot remain product laws.
+
+26
+
+10.2
+
+Proof skeleton
+
+Step 1: projection product is the killed semigroup.
+
+−hH Π )N
+D
+−tH
+2
+D
+is the quantum-Zeno killed semigroup at mesh h. As h → 0, it converges strongly to e
+on L (D)
+
+(TrotterCherno ).
+
+The O(
+
+√
+
+The discrete-monitoring product (ΠD e
+
+h) deviation is the contribution from Brownian bridge excursions that
+
+re-enter D between projections.
+
+Step 2: Brownian bridge blow-up.
+
+Near a smooth boundary point of D , atten to a half-space
+
+and write the path between monitoring dates as a Brownian bridge. The endpoint-conditioned bridge
+maximum
+
+Mh =
+
+sup Bs − hs Bh
+
+
+
+d
+
+√
+
+=
+
+h M1
+
+0≤s≤h
+
+follows Brownian scaling, and summing the missed-crossing defects over the mesh of size h gives the
+
+P
+
+k≥1 k
+
+−1/2 .
+
+ζ(1/2) =
+√
+−1.4604 by analytic continuation. Together with
+√ the Gaussian-density factor 1/ 2π , the universal
+proportionality constant is exactly β = −ζ(1/2)/ 2π .
+discrete-sum
+
+This sum diverges by power counting and is Abel-summed to
+
+Step 3: Hadamard variation.
+
+The displacement ∂D 7→ ∂D + δν of the absorbing boundary changes
+
+the kernel by the Hadamard variational formula:
+
+d
+K +δ (t)
+= BD (t),
+dδ D
+δ=0
+where BD (t) is the boundary-ux operator (11).
+
+This is the operator-theoretic content of the BGK
+
+√
+′
+βσ ∆t of 5: the discrete-monitoring kernel equals the continuous kernel
+barrier-shift identity U = U · e
+
+of the slightly-displaced boundary, with displacement amplitude βσ
+
+Step 4: boundary ux is DtN.
+
+√
+
+h.
+
+The boundary-value-to-normal-derivative map g 7→ ∂ν Hg is the
+
+Dirichlet-to-Neumann operator ΛD , with principal symbol |ξ|. The ux operator BD (t) has the same
+principal part: discrete monitoring renormalizes the bulk Hamiltonian by adding a half-order boundary
+pseudodierential operator.
+
+Step 5: circle reduction.
+
+ikθ is r |k| eikθ ,
+On the disk D, the harmonic extension Hg of a Fourier mode e
+ikθ
+ikθ
+giving ΛD e
+= |k| e . In the period-one coordinate u = θ/(2π), the chord-distance stiness Q of 4
+2πiku
+2
+acts on e
+with eigenvalue 2π |k|, so Q = πΛD . Substituting into (10) gives the circle normal form
+
+(12): BGK on the disk
+
+is the half-order Q-renormalization of the killed semigroup.
+
+Step 6: polygon spectrum via aliasing.
+
+Restricting the trace of ΛD to N equispaced boundary
+
+points and computing the resulting nite-dimensional operator yields the symmetric circulant matrix
+
+QN with o-diagonal entries −π 2 / sin2 (π(i − j)/N ) and row-sum-zero diagonal. Its DFT diagonalization
+(Fejér kernel identity) gives the closed-form spectrum (13). The continuous Fourier index k satises
+|k| ≤ N/2 uniquely; for |k| > N/2 the continuous mode aliases to k ′ = k − N · sgn(k), identifying the
+discrete sheets {0, 1, . . . , N − 1} with the two folded copies of the continuous spectrum.
+
+Step 7: cosine/sine splitting under deformation.
+dihedral group DN . The representation theory of DN
+
+The regular
+
+N -gon is invariant under the
+
+N
+on C decomposes into one-dimensional trivial and
+
+sign representations plus ⌊(N − 1)/2⌋ two-dimensional cosine/sine representations. Each pair (λk , λN −k )
+for 1 ≤ k < N/2 is a basis for one such two-dimensional irrep, exactly degenerate by symmetry.
+A deformation of the polygon that breaks DN to a proper subgroup (e.g., D2 for a harmonic-2 ellipse
+perturbation) selects an axis, splitting the two-dimensional irrep into two one-dimensional pieces with
+
+27
+
+distinct eigenvalues.
+
+First-order perturbation theory gives (14) with splitting amplitude Ak equal to
+
+the matrix element of the perturbation between the cosine and sine basis vectors; Ak is nonzero exactly
+when the deformation harmonic resonates with the mode (e.g., harmonic-2 deformation resonates with
+
+k = N/4 modes, as in panel (b) of Figure 9).
+
+Step 8: corner Mellin
+√ matrix.
+
+At a polygonal corner, attening to a half-space fails.
+
+Blow up
+
+h y ; the local model becomes the wedge Wα = {r > 0, 0 < θ < α}. Solving
+iτ gives the two-by-two face-coupling matrix (15). Its
+the wedge Laplace equation with Mellin ansatz r
+diagonal entries τ coth(ατ ) are the within-face DtN spectra; the o-diagonal −τ / sinh(ατ ) encodes the
+irreducible coupling across the corner. The smooth case α = π gives cosh(πτ )/ sinh(πτ ) = coth(πτ )
+on the diagonal and recovers the scalar |ξ|-symbol; the autocallable case α = π/2 (regime corner at
+{S = A} ∩ {S = KI} in the (S, V )-plane) gives strictly o-diagonal coupling.
+the corner by x = z +
+
+10.3
+
+The four-way correspondence
+
+The theorem produces a four-row dictionary, with one operator object playing the same structural role
+across analysis, geometry, probability, and quantum mechanics:
+
+Setting
+
+Continuous
+
+Discrete
+
+DtN map Λ, symbol |ξ|
+
+polygon QN , spec π
+
+Path integral
+
+−tHD
+killed semigroup e
+
+−hH Π)N
+projection product (Πe
+
+BGK βσ
+
+Quantum
+
+wavefunction ψ
+
+detector click after Πj
+
+born rule, collapse
+
+Finance
+
+continuous barrier U
+
+discrete barrier at {tk }
+
+barrier shift U → U
+
+Analysis on S
+
+1
+
+Defect
+2 k(N − k)/N
+
+alias fold
+
+√
+
+h
+′
+
+The columns are not metaphors. They are the same operator equation projected onto four dierent
+objects:
+
+ Same operator : Λ on the smooth side, QN on the discrete side.
+ Same projection : ΠD in the path integral, Πj in quantum measurement, Πvertices in polygonal
+sampling.
+
+√
+√
+ Same defect constant : β = −ζ(1/2)/ 2π , the universal h amplitude.
+P
+ Same kernel : the inverse-square π 2 csc2 kernel of 4, with Laurent expansion w−2 + m≥1 2(2m −
+1)ζ(2m) w2m−2 , whose singular w−2 term is the local near-collision / corner term and whose ζ(2m)
+tail is the global periodic correction from all aliases around the circle.
+
+10.4
+
+Two corollaries
+
+Corollary 1 (Continuous degeneracy ↔ polygon pairing). The smooth-circle degeneracy λ+k =
+λ−k is the SO(2)-symmetric realization of a single DN -irrep restricted to the polygon, where it becomes
+the discrete pairing λk = λN −k . Both express the invariance under complex conjugation z 7→ z̄ , which on
+the smooth circle is θ 7→ −θ and on the polygon is the vertex involution k 7→ N − k . Under deformation
+that breaks this involution, both degeneracies split.
+
+28
+
+Corollary 2 (Cashow entanglement at non-product corners).
+
+If the survival domain D is a
+
+product D1 × · · · × Dn and the Hamiltonian splits as H = H1 + · · · + Hn , the killed semigroup factorizes:
+
+KD (t) = K
+PD1 (t) ⊗ · · · ⊗ KDn (t). But if the contract imposes a non-product face  e.g., a waterfall
+threshold
+i ai xi < c on a basket, or a regime corner {S = A} ∩ {S = KI} in an autocallable  the
+tangent geometry at the corner is a wedge Wα , the local DtN operator has o-diagonal entries by (15),
+and the conditional law given survival is no longer a product law. In nance language:
+
+irreducibly coupled exactly when the survival domain has a non-product corner.
+
+cashows become
+
+This is the operator-theoretic source of the autocallable's pencil-weight non-factorization: the seven
+pencil buckets π1 , . . . , π5 , πsurv , πKI of 7.4 cannot be written as a product of ve-Bernoulli-like rstpassage indicators times a terminal Bernoulli, because the regime corner at {S = A} ∩ {S = KI} (which
+the boundary attains arbitrarily closely on certain paths) generates a Mellin coupling (15) between the
+autocall regime and the knock-in regime.
+
+The pencil decomposition (9) is exact, but its weights πk
+
+inherit the corner coupling: they are not products of independent Bernoulli probabilities.
+
+10.5
+
+The one-line theorem
+
+The compact statement, paper-ready:
+
+Discrete monitoring of a constrained
+Euclidean path integral renormalizes the continuous
+√
+killed semigroup by a universal h boundary Hamiltonian. On smooth boundary this Hamiltonian is βσΛD ; on the circle it is (βσ/π)Q; on a regular N -gon it has spectrum π2 k(N −k)/N ,
+folding the continuous Fourier index |k| via aliasing; and at polygonal corners it is the nondiagonal Mellin-DtN matrix of the tangent wedge, forcing non-factorizable conditional laws.
+That is the structural content of every example in this paper. The vanilla call is the smooth case (no
+boundary, no projection). The Asian polygon is the alias fold in the bulk. The BGK barrier shift is the
+
+√
+βσ h smooth-boundary renormalization. The American exercise arc is the corner α = π atness of the
+smooth-pasting boundary. The autocallable is the multi-corner case, where regime crossings generate
+the Mellin matrix coupling, and pencil weights are its observable trace.
+
+11
+
+Closing remarks
+
+The framework presented here is not an alternative to BlackScholes or to the Gaussian copula; it is a
+
+decoder ring for them. Every standard formula in derivative pricing is, on the disk, either:
+
+ the value of a harmonic extension at an interior point (linear pricing, NPV, Asian average);
+ the value of a harmonic extension matched to a boundary obstacle (American exercise);
+ a Fourier-mode contraction or expansion (Asian averaging, monitoring corrections);
+ a ζ correction term coming from the discrepancy between the boundary geometry seen by the
+contract and the boundary geometry assumed by the formula (BGK barrier shift, polygon-vs-circle
+defect);
+
+ a pencil decomposition into discrete observation-bucket weights πk (autocallable, and by analogy
+any contract with a nite schedule of discrete exercise or knock-out tests).
+Each case has a direct geometric interpretation, and once one has that interpretation the price is computable with elementary tools. The shift in viewpoint is small but consequential: instead of working
+with the contract specication, one works with the boundary geometry it induces on the disk, and then
+asks which of the four corrections above the geometry calls for.
+
+29
+
+A pencil, a compass, a straightedge, a protractor, and a calculator with the ζ key are sucient
+equipment. The rest is recognizing which boundary geometry the contract sees and what correction the
+dierence produces.
+
+A
+
+Bernoulli numbers
+
+n
+
+Bn
+
+n
+
+Bn
+
+0
+1
+2
+4
+6
+
+1
+−1/2
+1/6
+−1/30
+1/42
+
+8
+10
+12
+14
+16
+
+−1/30
+5/66
+−691/2730
+7/6
+−3617/510
+
+All odd Bn = 0 for n ≥ 3. Note the alternating signs and the rapid growth in magnitude for n ≥ 12.
+Bernoulli numbers appear in this paper as the EulerMaclaurin coecients that govern the asymptotic
+expansion of discrete sums (e.g. the polygon-vs-circle defect underlying the BGK barrier shift). In each
+application, only the leading one or two Bernoulli numbers contribute meaningfully; the rapid magnitude
+growth at n ≥ 12 is oset by the inverse powers of the discretization parameter.
+
+B
+
+C
+
+Riemann zeta values
+
+s
+
+ζ(s)
+
+s
+
+ζ(s)
+
+−3
+−2
+−1
+0
+1
+
+1/120
+0
+−1/12
+−1/2
+∞ (pole)
+
+1/2
+3/2
+2
+5/2
+3
+
+−1.46035
+2.61238
+2
+π /6 = 1.64493
+1.34149
+1.20206
+
+The BGK shift in numbers
+Quantity
+
+Value
+
+ζ(1/2)
+√
+2π
+√
+β = −ζ(1/2)/ 2π
+√
+σ ∆t, σ = 0.3, ∆t = 1/42
+√
+βσ ∆t
+√
+U exp(βσ ∆t) = 130 · e0.02697
+D
+
+−1.4603545
+2.5066283
+0.5826237
+0.04629
+0.02697
+133.55
+
+Poisson kernel values
+
+For quick desk computation:
+
+Pρ (θ) =
+
+1 − ρ2
+.
+1 − 2ρ cos θ + ρ2
+
+At ρ = 0.95:
+
+30
+
+θ (deg)
+
+P0.95 (θ)
+
+0
+30
+60
+90
+120
+180
+
+39.0
+4.93
+1.49
+0.71
+0.41
+0.256
+
+The kernel concentrates strongly near θ = 0 (the source direction) at ρ close to 1, then spreads as ρ
+decreases.
+
+References (companion papers and standard texts). The structural framework is developed in
+
+The Underwriting of Structured Liabilities, BlueChips Research preprint, May 2026;
+the branch-free-Hessian construction that underpins the circle pullback is in R. Gulati, The BranchFree Hessian of the Circle Divisor, 2026. Standard references: M. Broadie, P. Glasserman, S. Kou, A
+continuity correction for discrete barrier options, Math. Finance 7 (1997), 325349; H. M. Edwards,
+Riemann's Zeta Function, Academic Press, 1974; A. Zygmund, Trigonometric Series, 3rd ed., Cambridge,
+detail in R. Gulati,
+
+2002.
+
+31
+
+

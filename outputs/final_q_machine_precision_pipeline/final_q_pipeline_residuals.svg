@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="540" viewBox="0 0 980 540">
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="34" font-family="serif" font-size="22">Final matrix-free Q pipeline residuals</text>
+<line x1="60" y1="60" x2="60" y2="400" stroke="black"/>
+<line x1="60" y1="400" x2="470" y2="400" stroke="black"/>
+<line x1="56" y1="400.0" x2="470" y2="400.0" stroke="#dddddd"/>
+<text x="15" y="404.0" font-family="serif" font-size="12">1e-16</text>
+<line x1="56" y1="351.4" x2="470" y2="351.4" stroke="#dddddd"/>
+<text x="15" y="355.4" font-family="serif" font-size="12">1e-15</text>
+<line x1="56" y1="302.9" x2="470" y2="302.9" stroke="#dddddd"/>
+<text x="15" y="306.9" font-family="serif" font-size="12">1e-14</text>
+<line x1="56" y1="254.3" x2="470" y2="254.3" stroke="#dddddd"/>
+<text x="15" y="258.3" font-family="serif" font-size="12">1e-13</text>
+<line x1="56" y1="205.7" x2="470" y2="205.7" stroke="#dddddd"/>
+<text x="15" y="209.7" font-family="serif" font-size="12">1e-12</text>
+<line x1="56" y1="157.1" x2="470" y2="157.1" stroke="#dddddd"/>
+<text x="15" y="161.1" font-family="serif" font-size="12">1e-11</text>
+<line x1="56" y1="108.6" x2="470" y2="108.6" stroke="#dddddd"/>
+<text x="15" y="112.6" font-family="serif" font-size="12">1e-10</text>
+<line x1="56" y1="60.0" x2="470" y2="60.0" stroke="#dddddd"/>
+<text x="15" y="64.0" font-family="serif" font-size="12">1e-9</text>
+<rect x="70.0" y="333.2" width="32.8" height="66.8" fill="#222"/>
+<rect x="109.4" y="400.0" width="32.8" height="0.0" fill="#222"/>
+<rect x="148.7" y="368.3" width="32.8" height="31.7" fill="#222"/>
+<rect x="188.1" y="331.2" width="32.8" height="68.8" fill="#222"/>
+<rect x="227.4" y="329.7" width="32.8" height="70.3" fill="#222"/>
+<rect x="266.8" y="251.2" width="32.8" height="148.8" fill="#222"/>
+<rect x="306.2" y="321.0" width="32.8" height="79.0" fill="#222"/>
+<rect x="345.5" y="235.7" width="32.8" height="164.3" fill="#222"/>
+<rect x="384.9" y="292.3" width="32.8" height="107.7" fill="#222"/>
+<rect x="424.2" y="296.9" width="32.8" height="103.1" fill="#222"/>
+<text x="60" y="434" font-family="serif" font-size="14">BGK-8 quadrature, ten analytic finite-Laurent shapes</text>
+<line x1="540" y1="60" x2="540" y2="400" stroke="black"/>
+<line x1="540" y1="400" x2="950" y2="400" stroke="black"/>
+<line x1="536" y1="400.0" x2="950" y2="400.0" stroke="#dddddd"/>
+<line x1="536" y1="351.4" x2="950" y2="351.4" stroke="#dddddd"/>
+<line x1="536" y1="302.9" x2="950" y2="302.9" stroke="#dddddd"/>
+<line x1="536" y1="254.3" x2="950" y2="254.3" stroke="#dddddd"/>
+<line x1="536" y1="205.7" x2="950" y2="205.7" stroke="#dddddd"/>
+<line x1="536" y1="157.1" x2="950" y2="157.1" stroke="#dddddd"/>
+<line x1="536" y1="108.6" x2="950" y2="108.6" stroke="#dddddd"/>
+<line x1="536" y1="60.0" x2="950" y2="60.0" stroke="#dddddd"/>
+<rect x="575.0" y="334.4" width="48.2" height="65.6" fill="#555"/>
+<text x="571.0" y="418" font-family="serif" font-size="10" transform="rotate(35 571.0,418)">heat</text>
+<rect x="652.2" y="323.6" width="48.2" height="76.4" fill="#555"/>
+<text x="648.2" y="418" font-family="serif" font-size="10" transform="rotate(35 648.2,418)">helmholtz</text>
+<rect x="729.4" y="252.4" width="48.2" height="147.6" fill="#555"/>
+<text x="725.4" y="418" font-family="serif" font-size="10" transform="rotate(35 725.4,418)">laplace_dtn</text>
+<rect x="806.5" y="331.2" width="48.2" height="68.8" fill="#555"/>
+<text x="802.5" y="418" font-family="serif" font-size="10" transform="rotate(35 802.5,418)">poisson</text>
+<rect x="883.7" y="324.9" width="48.2" height="75.1" fill="#555"/>
+<text x="879.7" y="418" font-family="serif" font-size="10" transform="rotate(35 879.7,418)">wave</text>
+<text x="540" y="458" font-family="serif" font-size="14">Final repaid production-Q PDE residuals</text>
+<text x="40" y="505" font-family="serif" font-size="13">No NumPy/SciPy. Custom FFT. Dense Q matrix stored: false. Tolerance: 1e-12.</text>
+</svg>

@@ -1,0 +1,449 @@
+{
+  "claim": "At the discretized chord-operator level, this standard isospectral pair is separated robustly under refinement.",
+  "coordinates": {
+    "normalized_left_area": 1.0000000000000002,
+    "normalized_left_ccw": [
+      [
+        -0.2004459314343183,
+        -0.6681531047810609
+      ],
+      [
+        -0.2004459314343183,
+        -0.1336306209562122
+      ],
+      [
+        0.33407655239053047,
+        -0.1336306209562122
+      ],
+      [
+        0.8685990362153793,
+        0.4008918628686366
+      ],
+      [
+        0.33407655239053047,
+        0.4008918628686366
+      ],
+      [
+        0.33407655239053047,
+        0.9354143466934854
+      ],
+      [
+        -0.7349684152591671,
+        -0.1336306209562122
+      ],
+      [
+        -0.7349684152591671,
+        -0.6681531047810609
+      ]
+    ],
+    "normalized_left_perimeter": 5.474921741004456,
+    "normalized_right_area": 1.0000000000000002,
+    "normalized_right_ccw": [
+      [
+        -0.7349684152591671,
+        -0.2672612419124244
+      ],
+      [
+        -0.2004459314343183,
+        -0.8017837257372732
+      ],
+      [
+        -0.2004459314343183,
+        -0.2672612419124244
+      ],
+      [
+        0.33407655239053047,
+        -0.2672612419124244
+      ],
+      [
+        0.8685990362153793,
+        0.2672612419124244
+      ],
+      [
+        0.33407655239053047,
+        0.8017837257372732
+      ],
+      [
+        0.33407655239053047,
+        0.2672612419124244
+      ],
+      [
+        -0.7349684152591671,
+        0.2672612419124244
+      ]
+    ],
+    "normalized_right_perimeter": 5.474921741004456,
+    "raw_left_clockwise": [
+      [
+        -3.0,
+        -3.0
+      ],
+      [
+        -3.0,
+        -1.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        3.0,
+        1.0
+      ],
+      [
+        1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        -3.0
+      ]
+    ],
+    "raw_left_signed_area": -14.0,
+    "raw_right_clockwise": [
+      [
+        -3.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        3.0,
+        1.0
+      ],
+      [
+        1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        -3.0
+      ],
+      [
+        -3.0,
+        -1.0
+      ]
+    ],
+    "raw_right_signed_area": -14.0
+  },
+  "dirichlet_exact_statement": "lambda_k(left)=lambda_k(right) for all k by Gordon-Webb-Wolpert isospectrality",
+  "dirichlet_fd_spectrum": {
+    "eigen_count": 8,
+    "elapsed_ms": 22.900749929249287,
+    "grid_size": 96,
+    "left_eigenvalues": [
+      34.063772127389775,
+      48.15229149497506,
+      69.53819225530899,
+      89.12644136416469,
+      97.1058221876341,
+      124.2169587490062,
+      141.67280697396234,
+      150.97416829133948
+    ],
+    "per_mode_relative_differences": [
+      0.02641888825796361,
+      0.011071160993859703,
+      0.001177308015898469,
+      0.0053161860569695,
+      0.010180518540631765,
+      0.007222964386632819,
+      0.02233951531015497,
+      0.021583412511424867
+    ],
+    "relative_l2_difference": 0.016813887203571746,
+    "right_eigenvalues": [
+      33.16384513791153,
+      48.68539326633919,
+      69.62006012646225,
+      88.65262861927721,
+      96.1172345644496,
+      125.1141734182661,
+      138.50790513353488,
+      154.23270604414074
+    ],
+    "warning": "This raster finite-difference check is not the mathematical truth for the GWW pair; the exact Dirichlet spectra are equal.  Grid misalignment creates small artificial differences."
+  },
+  "generated_note": "deterministic float64 CPU run; no dense Q matrix stored",
+  "q_convergence": [
+    {
+      "left_delta_prev_first6": null,
+      "left_elapsed_ms": 3.698832937516272,
+      "left_ritz_descending": [
+        12.347247265443652,
+        9.541285218189355,
+        8.60051813331123,
+        7.882560292657551,
+        7.0918628610352465,
+        6.568458499396039
+      ],
+      "n": 256,
+      "probe_modes": 6,
+      "relative_split_first6": 0.07418103542776132,
+      "right_delta_prev_first6": null,
+      "right_elapsed_ms": 0.8390420116484165,
+      "right_ritz_descending": [
+        11.416318447131097,
+        10.828101560832154,
+        8.349505267854914,
+        7.971254184291083,
+        7.088096820829068,
+        6.47043864292006
+      ],
+      "ritz_values_reported": 6,
+      "split_delta_prev": null
+    },
+    {
+      "left_delta_prev_first6": 0.0063586253889711866,
+      "left_elapsed_ms": 1.9107089610770345,
+      "left_ritz_descending": [
+        12.42072396358845,
+        9.607645164432942,
+        8.656229585481524,
+        7.927568092644856,
+        7.147072425161328,
+        6.60574063578971
+      ],
+      "n": 512,
+      "probe_modes": 6,
+      "relative_split_first6": 0.073772483573657,
+      "right_delta_prev_first6": 0.006087585447778981,
+      "right_elapsed_ms": 1.6995000187307596,
+      "right_ritz_descending": [
+        11.474881472585016,
+        10.885889415509103,
+        8.416306592219739,
+        8.031631748905678,
+        7.128455611148784,
+        6.50554595848583
+      ],
+      "ritz_values_reported": 6,
+      "split_delta_prev": 0.00040855185410432204
+    },
+    {
+      "left_delta_prev_first6": 0.0031628629831037215,
+      "left_elapsed_ms": 4.4784999918192625,
+      "left_ritz_descending": [
+        12.456167329079173,
+        9.640812840685376,
+        8.68520167850394,
+        7.949907864155421,
+        7.174860039245402,
+        6.624604631005807
+      ],
+      "n": 1024,
+      "probe_modes": 6,
+      "relative_split_first6": 0.07351270987896283,
+      "right_delta_prev_first6": 0.003071389088015938,
+      "right_elapsed_ms": 3.45708301756531,
+      "right_ritz_descending": [
+        11.505483195129248,
+        10.914668828611719,
+        8.450066611275902,
+        8.061835070791075,
+        7.148996207689738,
+        6.522985897586111
+      ],
+      "ritz_values_reported": 6,
+      "split_delta_prev": 0.0002597736946941681
+    },
+    {
+      "left_delta_prev_first6": 0.0015528485792627488,
+      "left_elapsed_ms": 12.110791052691638,
+      "left_ritz_descending": [
+        12.472749725211905,
+        9.657152546340022,
+        8.700025064250104,
+        7.960903316306362,
+        7.188767149862794,
+        6.6340960791533305
+      ],
+      "n": 2048,
+      "probe_modes": 6,
+      "relative_split_first6": 0.07336365005093635,
+      "right_delta_prev_first6": 0.001558846338773906,
+      "right_elapsed_ms": 9.98641608748585,
+      "right_ritz_descending": [
+        11.521617120330522,
+        10.929577975877729,
+        8.467022259915337,
+        8.07668406785357,
+        7.159376243051852,
+        6.531674094687872
+      ],
+      "ritz_values_reported": 6,
+      "split_delta_prev": 0.00014905982802647377
+    },
+    {
+      "left_delta_prev_first6": 0.0007851648374821689,
+      "left_elapsed_ms": 34.337832941673696,
+      "left_ritz_descending": [
+        12.481230151458126,
+        9.66541667632009,
+        8.707538571309149,
+        7.966427449619414,
+        7.1957451775234365,
+        6.638861840320418
+      ],
+      "n": 4096,
+      "probe_modes": 6,
+      "relative_split_first6": 0.07328739847399048,
+      "right_delta_prev_first6": 0.0007797353753023485,
+      "right_elapsed_ms": 28.1391249736771,
+      "right_ritz_descending": [
+        11.529682005161758,
+        10.936921193362968,
+        8.4755427484673,
+        8.084202988137209,
+        7.164597075079061,
+        6.536008014903839
+      ],
+      "ritz_values_reported": 6,
+      "split_delta_prev": 7.625157694587936e-05
+    }
+  ],
+  "q_normalization": {
+    "blockwise_temporary_distance_rows": true,
+    "dense_q_matrix_stored": false,
+    "operator": "(Lambda_Q,n f)_i = (L/(pi*n)) sum_{j!=i} (f_i-f_j)/|x_i-x_j|^2",
+    "projection_basis": "cos(m theta), sin(m theta), m=1..6"
+  },
+  "q_symmetry_controls": [
+    {
+      "control": "base_midpoint_nodes",
+      "elapsed_ms": 3.7518750177696347,
+      "n": 1024,
+      "phase": 0.5,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 0.0,
+      "ritz_descending_after_rescale": [
+        12.456167329079173,
+        9.640812840685376,
+        8.68520167850394,
+        7.949907864155421,
+        7.174860039245402,
+        6.624604631005807
+      ]
+    },
+    {
+      "control": "rotate_37_translate",
+      "elapsed_ms": 3.698333981446922,
+      "n": 1024,
+      "phase": 0.5,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 1.0039738315003461e-15,
+      "ritz_descending_after_rescale": [
+        12.45616732907916,
+        9.640812840685365,
+        8.685201678503942,
+        7.949907864155408,
+        7.174860039245399,
+        6.624604631005807
+      ]
+    },
+    {
+      "control": "reverse_orientation",
+      "elapsed_ms": 4.047541995532811,
+      "n": 1024,
+      "phase": 0.5,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 9.667159199776696e-06,
+      "ritz_descending_after_rescale": [
+        12.456368267310118,
+        9.640874589053283,
+        8.685195758564143,
+        7.949936268315812,
+        7.174864463810755,
+        6.624606691390969
+      ]
+    },
+    {
+      "control": "node_phase_0p125",
+      "elapsed_ms": 3.8328340742737055,
+      "n": 1024,
+      "phase": 0.125,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 5.5742581566911784e-05,
+      "ritz_descending_after_rescale": [
+        12.455970805901307,
+        9.640471041531248,
+        8.684083869031863,
+        7.9498377386032795,
+        7.174648966091305,
+        6.62439615429225
+      ]
+    },
+    {
+      "control": "corner_node_phase_0",
+      "elapsed_ms": 3.3725419780239463,
+      "n": 1024,
+      "phase": 0.0,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 9.067305284852217e-05,
+      "ritz_descending_after_rescale": [
+        12.457014368993999,
+        9.640697324333559,
+        8.683449759596469,
+        7.94994631402139,
+        7.174590223097714,
+        6.624306045070274
+      ]
+    },
+    {
+      "control": "node_phase_golden",
+      "elapsed_ms": 3.49199993070215,
+      "n": 1024,
+      "phase": 0.61803398875,
+      "post_multiplier_for_scale_control": 1.0,
+      "relative_deviation_from_base_first6": 5.090594920794697e-05,
+      "ritz_descending_after_rescale": [
+        12.45722240778204,
+        9.641135171549063,
+        8.68506877888202,
+        7.950028483791805,
+        7.174863388954709,
+        6.624595070845471
+      ]
+    },
+    {
+      "control": "scale_area_2p25_rescaled",
+      "elapsed_ms": 3.673708066344261,
+      "n": 1024,
+      "phase": 0.5,
+      "post_multiplier_for_scale_control": 1.5,
+      "relative_deviation_from_base_first6": 1.380093553228797e-15,
+      "ritz_descending_after_rescale": [
+        12.456167329079182,
+        9.640812840685367,
+        8.685201678503917,
+        7.949907864155417,
+        7.1748600392454165,
+        6.624604631005811
+      ]
+    }
+  ],
+  "sampling_protocol": {
+    "corner_control_phase": 0.0,
+    "default_corner_treatment": "midpoint nodes avoid corners; corners are exact polygon vertices, not smoothed",
+    "default_phase": 0.5,
+    "rule": "equal arclength samples s_k=((k+phase) mod n) L/n on the exact piecewise-linear polygon"
+  }
+}

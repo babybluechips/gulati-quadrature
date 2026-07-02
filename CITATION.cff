@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: "Inverse Shape Reconstruction"
+message: "If you use this software, please cite the repository and accompanying manuscript."
+authors:
+  - family-names: Gulati
+    given-names: Rick
+date-released: 2026-05-12
+version: "0.1.0"
+license: MIT
+keywords:
+  - inverse spectral geometry
+  - shape reconstruction
+  - Hadamard variation
+  - chord Laplacian

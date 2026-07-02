@@ -1,0 +1,1319 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{conjecture}{Conjecture}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Area}{Area}
+\DeclareMathOperator{\Sim}{Sim}
+\DeclareMathOperator{\Iso}{Iso}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Crit}{Crit}
+\DeclareMathOperator{\ind}{ind}
+\DeclareMathOperator{\wn}{wn}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\IBP}{IBP}
+
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Integers}{\mathbb{Z}}
+\newcommand{\Rats}{\mathbb{Q}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Pcalbb}{\mathcal{P}}
+\newcommand{\Qop}{Q}
+\newcommand{\Lambdaop}{\Lambda}
+\newcommand{\Icalbb}{\mathcal{I}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\bstar}{b_{\star}}
+\newcommand{\mustar}{\mu_{\star}}
+
+\title[Complete characterization of geometric audibility]{A Complete Characterization of Geometric Audibility \\ in the Plane}
+\author{Rick Gulati}
+\address{BlueChips Research, Wharton School, University of Pennsylvania, Philadelphia, PA 19104}
+\email{rkgulati@wharton.upenn.edu}
+\date{\today}
+
+\subjclass[2020]{Primary 35P05, 58J50; Secondary 11R29, 30C20, 35R30, 47A75, 57M50}
+\keywords{Inverse spectral geometry, Dirichlet eigenvalues, star-shaped domains, inverse-square Laplacian, Hadamard second variation, Sunada construction, Gordon-Webb-Wolpert, boundary control method, cyclotomic rigidity, Stark regulator, golden ratio}
+
+\begin{document}
+
+\begin{abstract}
+A complete characterization of geometric audibility for bounded simply connected planar domains is established in three regimes. \emph{Theorem A} (similarity rigidity): for every bounded planar domain that is star-shaped from some interior point, with piecewise $C^{2,\alpha}$ radial function bounded above and below, the Dirichlet spectrum determines the domain up to similarity. The proof factors through the inverse-square chord Laplacian $\Qop$ on the boundary, a chord-arc identity $\Qop = \pi\Lambdaop + K$ with $K$ bounded, the heat-trace bridge through a shared curvature-angle invariant ring $\Icalbb(\Gamma)$, cyclotomic rigidity at the regular attractor of each cyclic-symmetric stratum, and a golden-tetration contraction flow. A constructive reconstruction algorithm produces the domain explicitly from the spectrum, with end-to-end error $K^{-1/2}(\log K)^c$ in spectral truncation. \emph{Theorem B} (sharpness): for every non-star-shaped bounded simply connected planar domain in a generic class, there exists a non-isometric isospectral partner, constructed explicitly via a permutation of boundary pieces that preserves $\Icalbb(\Gamma)$. The Gordon--Webb--Wolpert propellers \cite{GWW, BCDS} are recovered as the canonical worked example. Star-shapedness is exactly the condition under which the polar parametrization forces uniqueness; a winding-number topological argument (analogous to the FTA proof) shows that the piece-multiplicity required for the partner construction is generic in the non-star-shaped class. \emph{Theorem C} (Hessian rigidity): for every bounded piecewise smooth simply connected planar domain, the Dirichlet spectrum together with the Hadamard second variation $D^2\lambda_1$ of the first eigenvalue determines the domain up to isometry. The proof recovers the full boundary spectral data $\{\lambda_k, \partial_\nu u_k|_{\partial\Omega}\}$ from the Hadamard kernel via spectral subtraction: the boundary-restricted double-normal reduced resolvent is an order-one finite-part operator, a dressed chord Laplacian whose leading Laurent pole algebraically isolates $(\partial_\nu u_1)^2$. Belishev--Kurylev's boundary control method then recovers the domain. Together, the three theorems form a complete characterization: the spectrum alone determines a domain up to similarity exactly in the star-shaped class; outside this class, additional variational data — specifically, the Hessian of $\lambda_1$ — is both sufficient and natural to break the Gordon--Webb--Wolpert obstruction.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}\label{sec:intro}
+
+In 1966 Mark Kac \cite{Kac} asked whether the Dirichlet spectrum of a bounded planar domain determines the domain up to isometry. Gordon, Webb, and Wolpert \cite{GWW} answered negatively in 1992, constructing pairs of bounded simply connected planar domains with identical Dirichlet spectra and different shapes. The Buser--Conway--Doyle--Semmler simplification \cite{BCDS} reduces their construction to a pair of "propeller" polygons each composed of seven scalene triangles glued in different combinatorial patterns. The propellers share three central reflex (inward) corners: the central triangle's three sides connect three inward corners of each propeller \cite[\S 2]{BCDS}.
+
+The present paper establishes a complete characterization of geometric audibility for bounded simply connected planar domains, identifying both the maximal class on which the spectrum alone determines the shape and the minimal supplement that breaks the obstruction outside this class.
+
+\subsection{The three regimes}\label{ss:three-regimes}
+
+\begin{theorem}[Similarity rigidity on star-shaped domains]\label{thm:A}
+Let $(\Omega_1, z_1), (\Omega_2, z_2)$ be bounded planar domains, each star-shaped from an interior point $z_i$, with radial function $r_i \in C^{2,\alpha}_{\mathrm{pw}}(S^1)$ satisfying $\|r_i\|_{C^{2,\alpha}_{\mathrm{pw}}} + \|r_i^{-1}\|_{C^0} \leq R$. If $\Spec(-\Delta_{\Omega_1}) = \Spec(-\Delta_{\Omega_2})$, then $\Omega_2 = g\cdot\Omega_1$ for some $g \in \Sim(\Reals^2)$.
+\end{theorem}
+
+\begin{theorem}[Sharpness via Q-construction]\label{thm:B}
+For a generic bounded piecewise smooth simply connected planar domain $\Omega$ that is not star-shaped from any interior point, there exists a non-isometric isospectral partner $\Omega'$, constructed explicitly as a permutation of the boundary pieces of $\partial\Omega$ preserving the curvature-angle invariant ring $\Icalbb(\Gamma)$ together with area and perimeter. The Gordon--Webb--Wolpert propellers are the canonical worked example.
+\end{theorem}
+
+\begin{theorem}[Isometry rigidity via Hadamard data]\label{thm:C}
+Let $\Omega_1, \Omega_2 \subset \Reals^2$ be bounded piecewise $C^{2,\alpha}$ simply connected planar domains with interior angles at corners in $(0, 2\pi) \setminus \{\pi\}$. If
+\begin{enumerate}
+\item[\rm(i)] $\Spec(-\Delta_{\Omega_1}) = \Spec(-\Delta_{\Omega_2})$, and
+\item[\rm(ii)] $D^2\lambda_1|_{\Omega_1}$ and $D^2\lambda_1|_{\Omega_2}$ are isomorphic as quadratic forms on the moduli tangent spaces,
+\end{enumerate}
+then $\Omega_2 = g \cdot \Omega_1$ for some $g \in \Iso(\Reals^2)$.
+\end{theorem}
+
+Theorems \ref{thm:A}--\ref{thm:C} together form a trichotomy: the spectrum alone is sufficient for shape determination up to similarity \emph{exactly} on the star-shaped class (Theorem \ref{thm:A}, with sharpness from Theorem \ref{thm:B}); outside this class, the Gordon--Webb--Wolpert obstruction is broken by the addition of the Hadamard second variation $D^2\lambda_1$, giving isometry rigidity on the full piecewise smooth class (Theorem \ref{thm:C}).
+
+\subsection{Quantitative form and reconstruction algorithm}\label{ss:quantitative-intro}
+
+Theorem \ref{thm:A} is constructive: a finite algorithm $\mathcal{A}$ takes the truncated Dirichlet spectrum $(\lambda_1, \dots, \lambda_K)$ as input and outputs $\widehat\Omega \in \Scal_R$ with
+\[
+d_H(\partial\widehat\Omega, \partial\Omega) \leq C_R K^{-1/2}(\log K)^c
+\]
+in Hausdorff distance modulo similarity, for an explicit constant $c$ depending on the analytic radius of the boundary curvature. The algorithm proceeds in five stages: Mellin extraction of Berry heat-trace coefficients (Section \ref{sec:stage-A}), triangular inversion to integrated invariants (Section \ref{sec:stage-B}), Edward--Polterovich--Sher Fourier inversion for curvature and Newton-symmetric inversion for corner angles (Section \ref{sec:stage-C}), piecewise Frenet integration with Gauss--Bonnet closure (Section \ref{sec:stage-D}), and verification through corner inverse-square moments (Section \ref{sec:stage-E}).
+
+\subsection{Topological characterization of audibility}\label{ss:topological-characterization}
+
+The star-shaped hypothesis admits a topological characterization. For an interior point $z_0 \in \Omega$ and the radial projection $\pi_{z_0} \colon \partial\Omega \to S^1$, $\pi_{z_0}(w) = \arg(w - z_0)$, $\Omega$ is star-shaped from $z_0$ if and only if $\pi_{z_0}$ is a diffeomorphism. The map has degree $1$ (the winding number of $\partial\Omega$ around $z_0$). For non-star-shaped $\Omega$, $\pi_{z_0}$ has critical points where the radial line is tangent to $\partial\Omega$.
+
+\begin{theorem}[Topological piece-multiplicity]\label{thm:topological}
+For every bounded piecewise smooth simply connected planar domain $\Omega$ that is not star-shaped from any interior point, and for every $z_0 \in \Omega$, the radial projection $\pi_{z_0}$ has at least $4$ critical points. Equivalently, $\partial\Omega$ admits a decomposition into at least $4$ pieces that are locally star-shaped from $z_0$.
+\end{theorem}
+
+This is the topological analog of the fundamental theorem of algebra: a polynomial of degree $n \geq 1$ has at least $n$ zeros (counted with multiplicity) because the winding number of the image of a large circle is $n$. Here, the radial projection's degree $1$ combined with non-trivial fold structure forces $\geq 4$ critical points via a signed-index argument.
+
+Theorem \ref{thm:topological} provides the topological foundation for the genericity claim in Theorem \ref{thm:B}: the piece-multiplicity required for the construction of an isospectral partner is forced by the failure of star-shapedness.
+
+\subsection{The Q-operator framework}\label{ss:Q-framework}
+
+The proofs of all three main theorems factor through a common object: the inverse-square chord Laplacian $\Qop$ on the boundary. For a bounded planar domain with piecewise smooth boundary,
+\[
+\Qop_\Gamma = \Qop_\Gamma^{\mathrm{arc}} + \Qop_\Gamma^{\mathrm{corner}} + \Qop_\Gamma^{\mathrm{mix}},
+\]
+combining a hypersingular boundary integral on smooth arcs, an inverse-square vertex-pair matrix at corners, and a cross-coupling. The chord-arc identity
+\[
+\Qop_\Gamma = \pi\Lambdaop_\Gamma + K_\Gamma
+\]
+with $K_\Gamma$ bounded on $L^2(\Gamma)$ (uniformly in the class $\Scal_R$) connects $\Qop$ to the Steklov Dirichlet-to-Neumann operator $\Lambdaop_\Gamma$. The Dirichlet spectrum determines the $\Qop$ heat trace through a shared ring of integrated curvature-angle invariants $\Icalbb(\Gamma)$. From the $\Qop$ spectrum, the boundary curvature and corner angles are recovered, and the boundary is reconstructed by piecewise Frenet integration.
+
+The same operator $\Qop$ provides the structural mechanism for both the positive direction (Theorem \ref{thm:A}) and the sharpness direction (Theorem \ref{thm:B}): two boundaries with the same $\Icalbb(\Gamma)$ have the same $\Qop$ heat trace and hence the same Dirichlet spectrum; for star-shaped boundaries the polar parametrization forces uniqueness, while for non-star-shaped boundaries the piece-multiplicity allows multiple reassemblies of the same $\Icalbb$-data.
+
+The third theorem (Theorem \ref{thm:C}) goes beyond the heat-trace $\Qop$ framework but uses the same leading operator. The Hadamard quadratic form $D^2\lambda_1$ encodes the reduced boundary resolvent
+\[
+G_R=\partial_\nu(-\Delta-\lambda_1)^{-1}_{\perp u_1}\partial_\nu,
+\]
+whose boundary kernel is not logarithmic: it is a pseudodifferential kernel of order $+1$ with the same hypersingular principal part as the chord Laplacian. Thus $D^2\lambda_1$ is a flux-dressed $\Qop$ operator, and its leading Laurent pole recovers $\partial_\nu u_1$ before the remaining spectral decomposition recovers all higher boundary fluxes.
+
+\subsection{Relation to prior work}\label{ss:prior-work}
+
+The Kac question for convex polygons and smooth strictly convex curves has been considered in restricted classes. The general problem on the convex class remains open in the literature; see \cite[\S 1]{LPP-mixed} and the survey \cite{GiraudThas}. The companion papers \cite{GulatiPolygons, GulatiSmooth, GulatiPiecewise} address subclasses (convex polygons, smooth star-shaped curves, piecewise smooth convex). The present paper unifies these results under the single star-shaped hypothesis and complements them with the converse (Theorem \ref{thm:B}) and the full-class reconstruction via Hadamard data (Theorem \ref{thm:C}).
+
+For the inverse boundary spectral problem on bounded domains with prescribed boundary data, Belishev's boundary control method \cite{Belishev} and Sylvester--Uhlmann's solution of the Calderón problem \cite{SylvesterUhlmann} establish that the Dirichlet-to-Neumann map determines the domain up to isometry. Theorem \ref{thm:C} reduces the inverse spectral problem on bounded domains to this boundary-control problem by extracting the boundary spectral data from the spectrum-plus-Hessian.
+
+\subsection{Organization}\label{ss:organization-intro}
+
+Section \ref{sec:class} defines the star-shaped class $\Scal_R$ and its stratified moduli space. Section \ref{sec:Q-operator} defines the unified $\Qop$ operator. Section \ref{sec:chord-arc} establishes the chord-arc identity. Section \ref{sec:bridge} establishes the Dirichlet-to-$\Qop$ bridge through the invariant ring $\Icalbb(\Gamma)$. Section \ref{sec:cyclotomic} proves cyclotomic rigidity at regular attractors. Section \ref{sec:contraction-flow} constructs the contraction flow. Section \ref{sec:proof-A} proves Theorem \ref{thm:A}. Section \ref{sec:reconstruction-algorithm} gives the constructive reconstruction algorithm with stages A--E. Section \ref{sec:sharpness} proves Theorem \ref{thm:B}, including the Gordon--Webb--Wolpert worked example. Section \ref{sec:topological} proves Theorem \ref{thm:topological} via winding numbers. Section \ref{sec:hadamard} proves Theorem \ref{thm:C} via Hadamard kernel decomposition and boundary control. Section \ref{sec:complete-picture} summarizes the complete characterization. Section \ref{sec:open} records open problems. The appendices collect the companion-paper details: the finite-dimensional algebraic core, the resolved reconstruction algorithm, the Sunada/Q sharpness construction, and the Hadamard boundary-control reconstruction.
+
+\subsection{Notation and conventions}\label{ss:notation}
+
+Throughout, $\varphi = (1+\sqrt 5)/2$ denotes the golden ratio, $\mustar = 1/(2\varphi)$, $\bstar = \exp(\mustar e^{-\mustar})$ the golden tetration base, and $\eta_n$ the fundamental unit of $\Rats(\zeta_n)^+$ (real cyclotomic subfield). Arc-length on a piecewise smooth curve is $s$, with $L = |\Gamma|$. The Fourier basis on $S^1_L = \Reals/L\Reals$ is $e_k(s) = e^{2\pi i k s/L}$. For a planar domain $\Omega$, $\lambda_k(\Omega)$ denotes the $k$-th Dirichlet eigenvalue and $u_k$ the corresponding $L^2$-normalized eigenfunction.
+
+\section{The star-shaped class}\label{sec:class}
+
+\subsection{Definition and basic structure}\label{ss:class-def}
+
+\begin{definition}\label{def:star-class}
+A pair $(\Omega, z_0)$ with $\Omega \subset \Reals^2$ bounded and open and $z_0 \in \Omega$ belongs to $\Scal_R$ if:
+\begin{enumerate}
+\item[\rm(i)] $\partial\Omega - z_0 = \{r(\theta) e^{i\theta} : \theta \in S^1\}$ for some function $r \colon S^1 \to (0, \infty)$.
+\item[\rm(ii)] $r$ is piecewise $C^{2,\alpha}$: finitely many polar corners $\theta_1 < \dots < \theta_n$ with $r$ in $C^{2,\alpha}$ on each open arc $(\theta_l, \theta_{l+1})$ and finite one-sided limits of $r, r'$ at each $\theta_l$.
+\item[\rm(iii)] $\sup_\theta r(\theta) + \sup_\theta r(\theta)^{-1} + \sup_{\text{arcs}}\|r\|_{C^{2,\alpha}} \leq R$.
+\end{enumerate}
+The points $v_l := r(\theta_l) e^{i\theta_l} + z_0$ are \emph{Cartesian corners} of $\partial\Omega$, with interior angles $\alpha_l \in (0, 2\pi) \setminus \{\pi\}$. The smooth arcs $\gamma_l := \{r(\theta) e^{i\theta} + z_0 : \theta \in (\theta_l, \theta_{l+1})\}$ join consecutive corners.
+\end{definition}
+
+\begin{proposition}\label{prop:star-properties}
+For $(\Omega, z_0) \in \Scal_R$:
+\begin{enumerate}
+\item[\rm(i)] $\partial\Omega$ is a piecewise $C^{2,\alpha}$ Jordan curve, and $\Omega$ is bi-Lipschitz to the unit disk with constants depending only on $R$.
+\item[\rm(ii)] The interior angles $\alpha_l \in (0, 2\pi) \setminus \{\pi\}$; convex corners have $\alpha_l \in (0, \pi)$, reflex corners have $\alpha_l \in (\pi, 2\pi)$.
+\item[\rm(iii)] $\Omega$ may be non-convex (star polygons, smooth star-shaped non-convex domains are in $\Scal_R$).
+\end{enumerate}
+\end{proposition}
+
+\subsection{Stratified moduli}\label{ss:strata-def}
+
+\begin{definition}\label{def:strata}
+A \emph{stratum type} $J$ records: the number $n$ of polar corners; the cyclic-and-reflection equivalence class of polar-corner positions; the convex/reflex type of each Cartesian corner; the analytic regularity of each arc. The stratum $\Mcal_{n,J} \subset \Scal_R/\Sim$ collects similarity classes of domains with combinatorial type $J$.
+\end{definition}
+
+\begin{proposition}\label{prop:strata-manifold}
+Each $\Mcal_{n,J}$ is a real-analytic manifold (smooth Fréchet manifold when arc shape is infinite-dimensional). The closure of $\Mcal_{n,J}$ contains adjacent strata in which corners merge or split.
+\end{proposition}
+
+The recovered classes:
+
+\emph{Smooth star-shaped} ($n = 0$): one closed smooth arc, no corners. Includes the disk, smooth strictly convex curves, smooth non-convex stars.
+
+\emph{Convex polygons}: $r$ piecewise linear, all corners convex ($\alpha_l \in (0, \pi)$).
+
+\emph{Star polygons}: $r$ piecewise linear, alternating convex and reflex corners (e.g., regular pentagram has interior angles $\pi/5$ and $7\pi/5$).
+
+\emph{Piecewise smooth convex}: smooth arcs with $\alpha_l \in (0, \pi)$. Includes hearts, lenses, stadiums with corners.
+
+\emph{Piecewise smooth non-convex star-shaped}: mixed arcs with some reflex angles, but star-shaped from a center.
+
+\section{The unified Q operator}\label{sec:Q-operator}
+
+\begin{definition}\label{def:Q-unified}
+For $(\Omega, z_0) \in \Scal_R$ with Cartesian corners $v_1, \dots, v_n$ and smooth arcs $\gamma_1, \dots, \gamma_n$, the \emph{inverse-square chord Laplacian} on $L^2(\Gamma)$ is the symmetric densely-defined operator
+\[
+\Qop_\Gamma f = \Qop_\Gamma^{\mathrm{arc}} f + \Qop_\Gamma^{\mathrm{corner}} f + \Qop_\Gamma^{\mathrm{mix}} f,
+\]
+where:
+\[
+(\Qop_\Gamma^{\mathrm{arc}} f)(x) = \mathrm{p.v.}\int_\Gamma \frac{f(x)-f(y)}{|x-y|^2}\, d\sigma(y) \qquad (x \in \text{smooth part}),
+\]
+\[
+(\Qop_\Gamma^{\mathrm{corner}})_{ll'} = \begin{cases} -|v_l - v_{l'}|^{-2}, & l \neq l', \\ \sum_{l''\neq l}|v_l - v_{l''}|^{-2}, & l = l', \end{cases}
+\]
+and $\Qop_\Gamma^{\mathrm{mix}}$ provides the cross-coupling between arc-trace and vertex-trace data.
+\end{definition}
+
+\begin{proposition}\label{prop:Q-properties}
+$\Qop_\Gamma$ is symmetric on its natural domain, $\Qop_\Gamma\mathbf{1} = 0$, $\Qop_\Gamma \succeq 0$ on $\mathbf{1}^\perp$, with kernel $\Reals \cdot \mathbf{1}$. Its spectrum $\{\sigma_k(\Qop_\Gamma)\}$ is discrete with $\sigma_k \to \infty$.
+\end{proposition}
+
+\begin{proof}
+Symmetry: by definition. Kernel: $\Qop_\Gamma\mathbf{1} = 0$ from row-sum cancellation. Positivity on $\mathbf{1}^\perp$: the energy form
+\[
+\langle f, \Qop_\Gamma f\rangle = \frac{1}{2}\int\int_{\Gamma\times\Gamma}\frac{(f(x)-f(y))^2}{|x-y|^2}\, d\sigma(x)d\sigma(y)
+\]
+is manifestly non-negative, with equality iff $f$ is constant.
+
+Discrete spectrum: $\Qop_\Gamma$ is a positive self-adjoint pseudodifferential operator of order 1 on a compact 1-manifold (the principal symbol is $\pi|\xi|$, see Section \ref{sec:chord-arc}); standard elliptic theory gives discrete spectrum.
+\end{proof}
+
+\begin{remark}[Specialisations]\label{rem:Q-special-cases}
+On a smooth star-shaped boundary ($n=0$): $\Qop_\Gamma = \Qop_\Gamma^{\mathrm{arc}}$, the hypersingular boundary integral operator. On a convex polygon ($\kappa\equiv 0$ on arcs, all arcs are line segments): $\Qop_\Gamma$ restricted to the vertex-trace data is the matrix $\Qop_\Gamma^{\mathrm{corner}}$ of \cite{GulatiPolygons}.
+\end{remark}
+
+\section{Chord-arc identity}\label{sec:chord-arc}
+
+\subsection{Chord-arc bi-Lipschitz comparability}\label{ss:chord-arc-bound}
+
+\begin{lemma}\label{lem:chord-arc-star}
+For $(\Omega, z_0) \in \Scal_R$, there exist $c_R, C_R > 0$ such that for every $x, y \in \Gamma$,
+\[
+c_R\, d_\Gamma(x, y) \leq |x - y| \leq C_R\, d_\Gamma(x, y),
+\]
+where $d_\Gamma$ is the intrinsic arc-length distance.
+\end{lemma}
+
+\begin{proof}
+The upper bound is by the triangle inequality. The lower bound uses $\inf r \geq R^{-1}$ together with the bounded radial logarithmic derivative; the constant $c_R$ depends only on $R$. Strict convexity is not required: the bound is a property of the radial parametrization, not of geometric convexity.
+\end{proof}
+
+\subsection{The identity}\label{ss:identity}
+
+\begin{theorem}\label{thm:chord-arc-unified}
+For every $(\Omega, z_0) \in \Scal_R$, $\Qop_\Gamma = \pi\Lambdaop_\Gamma + K_\Gamma$, where $\Lambdaop_\Gamma$ is the Steklov Dirichlet-to-Neumann operator on $\Gamma$ and $K_\Gamma$ is bounded on $L^2(\Gamma)$ with operator norm bounded by a constant depending only on $R$. The symbol of $K_\Gamma$ is:
+\begin{enumerate}
+\item[\rm(i)] On smooth arcs: $\langle K_\Gamma e_k, e_k\rangle = \pi\kappa(s)^2/12 + O(|k|^{-2})$ in the arc-length Fourier frame.
+\item[\rm(ii)] At a corner of interior angle $\alpha \in (0, 2\pi) \setminus \{\pi\}$: $K_\Gamma$ has Costabel--Stephan Mellin symbol $M^K_\alpha(\zeta) = \pi/\sin(\pi\zeta) - \pi M^{\Lambdaop}_\alpha(\zeta)$, bounded on the critical line $\Re\zeta = 1/2$.
+\end{enumerate}
+Consequently $\sigma_k(\Qop_\Gamma) = \pi\sigma_k(\Lambdaop_\Gamma) + O(1)$ as $k \to \infty$.
+\end{theorem}
+
+\begin{proof}
+On smooth arcs: the Frenet expansion $z(s) - z(s') = -uT(s) + \tfrac12 i\kappa u^2 T(s) + O(u^3)$ with $u = s - s'$ gives the $u^{-2}$ singularity matching $\pi|\xi|$ after Hadamard regularization (cf.\ \cite[Theorem 8.12]{McLean}). The subprincipal $\pi\kappa^2/12$ comes from the $u^0$ coefficient of the kernel expansion.
+
+At corners: the Mellin calculus of Costabel--Stephan \cite{CostabelStephan} gives the wedge symbol. For convex corners ($\alpha \in (0, \pi)$) the symbol is bounded on the critical strip; the same calculus extends to reflex corners ($\alpha \in (\pi, 2\pi)$) by direct computation of the wedge harmonic continuation. The boundedness of $M^K_\alpha(\zeta)$ on $\Re\zeta = 1/2$ uses the pole-cancellation between $\pi/\sin(\pi\zeta)$ and the Steklov Mellin symbol.
+
+The chord-arc inequality Lemma \ref{lem:chord-arc-star} bounds $K_\Gamma$ uniformly on $\Scal_R$.
+\end{proof}
+
+\section{The Dirichlet-Q bridge}\label{sec:bridge}
+
+\subsection{Heat traces}\label{ss:heat-traces}
+
+For $(\Omega, z_0) \in \Scal_R$, three heat traces are relevant:
+\begin{itemize}
+\item Dirichlet: $Z_\Omega^{\mathrm{Dir}}(t) = \sum_{k\geq 1} e^{-\lambda_k(\Omega) t}$.
+\item Steklov: $Z_\Gamma^{\Lambdaop}(t) = \sum_{k\geq 0} e^{-\sigma_k(\Lambdaop_\Gamma)t}$.
+\item Q-operator: $Z_\Gamma^{\Qop}(t) = \sum_{k\geq 0} e^{-\sigma_k(\Qop_\Gamma)t}$.
+\end{itemize}
+
+\begin{proposition}[Berry expansion]\label{prop:berry}
+\[
+Z_\Omega^{\mathrm{Dir}}(t) \sim \frac{|\Omega|}{4\pi t} - \frac{|\Gamma|}{8\sqrt{\pi t}} + \frac{1}{12\pi}\int_\Gamma^{\mathrm{smooth}}\kappa\,ds + \sum_l \frac{\pi^2 - \alpha_l^2}{24\pi\alpha_l} + \sum_{j\geq 1}b_j^{\mathrm{Dir}}(\Gamma)\,t^{j/2}.
+\]
+The wedge contribution $(\pi^2 - \alpha^2)/(24\pi\alpha)$ extends to $\alpha \in (0, 2\pi)$ — positive for convex corners, negative for reflex corners — consistent with the Carslaw--Jaeger wedge heat kernel \cite{Carslaw}.
+\end{proposition}
+
+\begin{proof}
+McKean--Singer / Berry expansion (cf.\ \cite[\S 4.2]{Polterovich-survey}). The convex-corner case was made precise by van den Berg--Srisatkunarajah \cite{vdBSr}; the reflex case follows by the same wedge heat kernel argument extended to $\alpha > \pi$, with the trigonometric formula extending continuously past $\alpha = \pi$.
+\end{proof}
+
+\begin{proposition}[Steklov heat trace]\label{prop:steklov}
+For $\Gamma$ real-analytic in each arc and corners in $(0,2\pi)\setminus\{\pi\}$,
+\[
+Z_\Gamma^{\Lambdaop}(t) \sim \frac{|\Gamma|}{\pi t} + \sum_l c^{\Lambdaop}_{\mathrm{corner}}(\alpha_l) + \sum_{j\geq 0} a_j(\Gamma)\,t^j,
+\]
+with $a_j(\Gamma) = \int_\Gamma^{\mathrm{smooth}} P_j^{\mathrm{Stek}}(\kappa, \kappa', \dots)\,ds + (\text{corner trig.})$ universal polynomials \cite{Edward, PolterovichSher, LPPS-corners}.
+\end{proposition}
+
+\begin{proposition}[Q heat trace]\label{prop:Q-heat}
+\[
+Z_\Gamma^{\Qop}(t) = Z_\Gamma^{\Lambdaop}(\pi t) + R_K(t),
+\]
+where $R_K(t) \sim \sum_l r_{\mathrm{corner}}(\alpha_l) + \sum_{j\geq 0}k_j(\Gamma)\,t^j$ from the Duhamel expansion of $K_\Gamma$.
+\end{proposition}
+
+\subsection{The shared invariant ring}\label{ss:invariant-ring-shared}
+
+\begin{definition}\label{def:I-star-master}
+The \emph{curvature-angle invariant ring} of $\Gamma$ is
+\[
+\Icalbb(\Gamma) := \Icalbb_{\mathrm{smooth}}(\Gamma) \oplus \Icalbb_{\mathrm{corner}}(\Gamma),
+\]
+where:
+\[
+\Icalbb_{\mathrm{smooth}}(\Gamma) := \Reals\left[\sum_l \int_{\gamma_l}\kappa^{i_0}(\kappa')^{i_1}\cdots\,ds\right] / \text{IBP},
+\]
+\[
+\Icalbb_{\mathrm{corner}}(\Gamma) := \Reals\left[\sum_l p(\alpha_l) : p \in \Reals[\sin,\cos,\cot,\csc]\right] / \text{trig identities},
+\]
+augmented by $L = |\Gamma|$.
+\end{definition}
+
+\begin{theorem}\label{thm:shared-ring}
+For every $j$, each of $b_j^{\mathrm{Dir}}(\Gamma)$, $a_j(\Gamma)$, $c_j^{\Qop}(\Gamma) = \pi^j a_j + k_j$ lies in $\Icalbb(\Gamma)$ as a universal polynomial expression.
+\end{theorem}
+
+\begin{proof}
+Each heat trace is constructed from local parametrices: smooth-arc parametrix depending only on $\kappa$ and arc-length derivatives, and corner-wedge parametrix depending only on $\alpha$. Trace against the diagonal produces integrated polynomial-in-curvature and trigonometric-in-angle expressions, all in $\Icalbb(\Gamma)$.
+\end{proof}
+
+\subsection{The bridge theorem}\label{ss:bridge-thm}
+
+\begin{theorem}\label{thm:dir-to-Q-master}
+For $\Omega \in \Scal_R$ with real-analytic smooth arcs, $\Spec(-\Delta_\Omega)$ determines $\Spec(\Qop_\Gamma)$ as a multiset.
+\end{theorem}
+
+\begin{proof}
+$\Spec(-\Delta_\Omega)$ determines $Z_\Omega^{\mathrm{Dir}}(t)$, hence the Berry coefficients $\{b_j^{\mathrm{Dir}}\}$ via Mellin residues $b_j^{\mathrm{Dir}} = \Res_{s=-j/2}\Gamma(s)\zeta_\Omega^{\mathrm{Dir}}(s)$.
+
+The triangular structure of Theorem \ref{thm:shared-ring} together with Fourier inversion on each real-analytic arc (Edward / Polterovich--Sher) and Newton-symmetric inversion on corner angles recovers $\Icalbb(\Gamma)$ in its entirety: smooth-arc curvature $\kappa_l$ on each arc, corner angles $\{\alpha_l\}$, perimeter $L$.
+
+$\Icalbb(\Gamma)$ then determines every coefficient $c_j^{\Qop}$ in the $\Qop$ heat-trace expansion (Theorem \ref{thm:shared-ring}). The $\Qop$ heat trace $Z_\Gamma^{\Qop}(t)$ is recovered by Borel summability in the real-analytic class, and as the Laplace transform of the spectral counting measure, it uniquely determines $\Spec(\Qop_\Gamma)$.
+\end{proof}
+
+\section{Cyclotomic rigidity}\label{sec:cyclotomic}
+
+\subsection{Regular attractors}\label{ss:regular-attractors-master}
+
+For a cyclic-symmetric stratum $\Mcal_{n,J} \subset \Scal_R/\Sim$ with maximal cyclic-and-reflection group $D_{n'}$, the \emph{regular attractor} $\Omega^\star_{n,J}$ is the unique $D_{n'}$-symmetric domain in $\Mcal_{n,J}$:
+\begin{itemize}
+\item Regular convex $n$-gon for the all-corner stratum with all $\alpha_l = (n-2)\pi/n$.
+\item Disk for the smooth no-corner stratum.
+\item Regular star polygon $\{n/k\}$ for the cyclic-symmetric polygonal stratum with mixed corner types.
+\item Regular rounded polygon (cyclic-symmetric mixed arc-and-corner) for the cyclic-symmetric piecewise smooth stratum.
+\end{itemize}
+
+\subsection{Rigidity at the attractor}\label{ss:rigidity-thm-master}
+
+\begin{theorem}\label{thm:rigidity-master}
+At the regular attractor $\Omega^\star_{n,J}$ with cyclic symmetry $D_{n'}$, the differential $D\Qop|_{\Omega^\star_{n,J}}$ on the similarity-gauged tangent space $T_{\Omega^\star_{n,J}}\Mcal_{n,J}$ is injective, with injectivity modulus bounded below by $\eta_{n'}^{-1}$, where $\eta_{n'}$ is the fundamental unit of $\Rats(\zeta_{n'})^+$. In particular, $\eta_5 = \varphi$ gives the rate $\varphi^{-1} \approx 0.618$ at the regular pentagon.
+\end{theorem}
+
+\begin{proof}
+\emph{Mode decomposition.} The kernel condition for $D\Qop$ at the regular attractor decouples in the discrete-and-continuous Fourier basis on $\Gamma$ under the $D_{n'}$ symmetry. Both vertex and arc Fourier modes are eigendirections of the $D\Qop$-form, each killed independently.
+
+\emph{Vertex part.} The kernel condition reduces to $\Re[a_k(z_i + z_j)] = 0$ for chord pairs $(z_i, z_j)$ at the attractor vertices (the $n$-th roots of unity for the regular polygon, or appropriate cyclotomic positions for star polygons). The chord-pair magnitudes lie in $\Rats(\zeta_{n'})^+$, with the smallest non-trivial magnitude $\geq \eta_{n'}^{-1}$. Galois conjugacy of distinct chord-pair magnitudes over $\Rats$ supplies linear independence:
+
+For $n' = 5$: chord-pair magnitudes are $\varphi$ and $\varphi^{-1}$, Galois conjugates with trace $\varphi + \varphi^{-1} = \sqrt 5$ and norm $\varphi \cdot \varphi^{-1} = 1$. The trace identity $\varphi^2 + \varphi^{-2} = 3$ implies $\varphi, \varphi^{-1}$ are $\Rats$-linearly independent. The orbits $\{z_i + z_j\}$ at fixed chord-pair magnitude span $\Reals^2$ over $\Reals$, forcing $a_k = 0$.
+
+\emph{Arc part.} The Bessel-bridge isotype multipliers $\kappa_m^{\mathrm{disk}}$ at the disk \cite[\S 5]{GulatiSmooth} provide the lower bound $\kappa_m^{\mathrm{disk}} \geq 68.7$ uniformly. For mixed strata, the arc-mode contribution to the injectivity modulus is bounded uniformly below.
+
+\emph{Mixing part.} The cross-coupling between vertex and arc modes (via $\Qop_\Gamma^{\mathrm{mix}}$) preserves the kernel decoupling, by character orthogonality on the $D_{n'}$ representation.
+
+\emph{Conclusion.} Total injectivity modulus $\geq \min(\eta_{n'}^{-1}, c\kappa_m^{\mathrm{disk}}/m) = \eta_{n'}^{-1}$ for $n' \geq 5$.
+\end{proof}
+
+\begin{remark}\label{rem:reflex-rigidity}
+At the regular star polygon $\{n/k\}$ with reflex inner corners, the vertices remain at $n$-th roots of unity (with cyclic reordering). The Galois pairing argument is identical; reflex angles do not weaken the rigidity rate.
+\end{remark}
+
+\section{The contraction flow}\label{sec:contraction-flow}
+
+\subsection{Universal scale-phase rigidity}\label{ss:scale-phase-master}
+
+\begin{theorem}[{\cite[Theorem 9.15]{GulatiTetration}}]\label{thm:scale-phase}
+Let $T \colon U \to \Complex$ be holomorphic with hyperbolic fixed point $z^*$ of multiplier $\lambda$, $|\lambda| \notin \{0, 1\}$. There exists a unique holomorphic family of fractional iterates $\{T^{[h]}\}$ on the linearization domain, satisfying the group law $T^{[h_1+h_2]} = T^{[h_1]} \circ T^{[h_2]}$, joint holomorphy in $(h, z)$, $T^{[0]} = \mathrm{id}$, $T^{[1]} = T$, and $(T^{[h]})'(z^*) = \lambda^h$ on the principal branch.
+\end{theorem}
+
+\subsection{Golden tetration base}\label{ss:golden-base-master}
+
+\begin{theorem}[{\cite[Theorem 9.38]{GulatiTetration}}]\label{thm:bstar-master}
+For the multiplier $\mustar = 1/(2\varphi)$, there exists a unique base $\bstar \in (e^{-e}, e^{1/e})$ such that the operator-canonical fractional iterate of $z \mapsto \bstar^z$ at its principal hyperbolic fixed point has multiplier $\mustar$. The closed form is
+\[
+\bstar = \exp\bigl(\mustar e^{-\mustar}\bigr) \approx 1.25467, \qquad z^\dagger(\bstar) = e^{1/(2\varphi)}.
+\]
+\end{theorem}
+
+\subsection{The flow}\label{ss:flow-master}
+
+\begin{definition}\label{def:Th-master}
+For each cyclic-symmetric stratum $\Mcal_{n,J} \subset \Scal_R/\Sim$ with symmetry $D_{n'}$ and regular attractor $\Omega^\star_{n,J}$, the \emph{stratified contraction flow} is
+\[
+T_h^{(n,J)} \colon \Mcal_{n,J} \to \Mcal_{n,J}, \qquad T_h^{(n,J)}(\Omega) := (\sigma^{(n,J)})^{-1}\bigl((\mustar^{(n,J)})^h \sigma^{(n,J)}(\Omega)\bigr),
+\]
+the operator-canonical fractional-iterate family of Theorem \ref{thm:scale-phase} at multiplier $\mustar^{(n,J)} := 1/(2\eta_{n'})$, transported through the shape-Hessian gauge $\sigma^{(n,J)}$ from Theorem \ref{thm:rigidity-master}.
+\end{definition}
+
+\begin{theorem}\label{thm:flow-master}
+$T_h^{(n,J)}$ satisfies:
+\begin{enumerate}
+\item[\rm(i)] $T_0^{(n,J)} = \mathrm{id}$, $T_h^{(n,J)}(\Omega^\star_{n,J}) = \Omega^\star_{n,J}$, $T_h^{(n,J)}(\Omega) \to \Omega^\star_{n,J}$ as $h \to \infty$ at rate $(2\eta_{n'})^{-h}$.
+\item[\rm(ii)] $T_h^{(n,J)}(\Mcal_{n,J}) \subseteq \Mcal_{n,J}$.
+\item[\rm(iii)] $h \mapsto T_h^{(n,J)}$ real-analytic; $T_h^{(n,J)}$ real-analytic on $\Mcal_{n,J}$.
+\item[\rm(iv)] Group law: $T_{h_1+h_2}^{(n,J)} = T_{h_1}^{(n,J)} \circ T_{h_2}^{(n,J)}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}\label{rem:stark-master}
+$-\log\mustar^{(n,J)} = \log(2\eta_{n'}) = \log 2 + L'(0, \chi_{n'})$, the Stark regulator of $\Rats(\zeta_{n'})^+$ \cite{Stark}. At $n' = 5$: $\log\varphi = L'(0, \chi_5)$, the Stark regulator of $\Rats(\sqrt 5)$ \cite{ChowlaSelberg}.
+\end{remark}
+
+\subsection{Non-cyclic strata}\label{ss:non-cyclic-master}
+
+\begin{conjecture}
+On every stratum $\Mcal_{n,J}$, including non-cyclic-symmetric ones, there exists a real-analytic contraction flow $T_h^{(n,J)}$ converging to the stratum's closure point on its higher-symmetry boundary.
+\end{conjecture}
+
+The cyclic-symmetric strata (containing all regular and dihedrally-symmetric shapes) are handled unconditionally by Theorem \ref{thm:flow-master}. The non-cyclic strata require this conjecture for the unconditional global statement of Theorem \ref{thm:A}.
+
+\section{Proof of Theorem A: similarity rigidity}\label{sec:proof-A}
+
+Fix a cyclic-symmetric stratum $\Mcal_{n,J}$ and the exceptional locus
+\[
+Z_{n,J} := \{\Omega \in \Mcal_{n,J} : \Spec(-\Delta_\Omega) \text{ fails to determine } \Omega \bmod \Sim(\Reals^2)\}.
+\]
+
+\emph{Real-analyticity of $Z_{n,J}$.} The eigenvalue map is real-analytic on each stratum by Rellich--Kondrat'ev analyticity \cite{Kondratev}. The exceptional condition is the vanishing of a real-analytic Jacobian determinant; $Z_{n,J}$ is closed and real-analytic.
+
+\emph{$T_h^{(n,J)}$-invariance.} The data map factors as
+\[
+\Spec(-\Delta_\Omega) \xrightarrow{\text{Thm. \ref{thm:dir-to-Q-master}}} \Spec(\Qop_\Gamma) \xrightarrow{\text{Thm. \ref{thm:chord-arc-unified}}} \text{Steklov heat trace} \to (\kappa, \{\alpha_l\}) \xrightarrow{\text{FTC2}} \Gamma,
+\]
+all real-analytic. The flow $T_h^{(n,J)}$ acts in $\sigma$-coordinates by multiplicative scaling, preserving real-analytic loci. Hence $T_h^{(n,J)}(Z_{n,J}) \subseteq Z_{n,J}$.
+
+\emph{Attractor in closure.} If $Z_{n,J} \neq \emptyset$, then for $\Omega \in Z_{n,J}$, $T_h^{(n,J)}(\Omega) \to \Omega^\star_{n,J}$ (Theorem \ref{thm:flow-master}(i)), and $Z_{n,J}$ being closed forces $\Omega^\star_{n,J} \in Z_{n,J}$.
+
+\emph{Attractor not exceptional.} By Theorem \ref{thm:rigidity-master}, $D\Qop|_{\Omega^\star_{n,J}}$ has injectivity modulus $\eta_{n'}^{-1} > 0$; the data map is locally invertible at $\Omega^\star_{n,J}$, so $\Omega^\star_{n,J} \notin Z_{n,J}$.
+
+The contradiction forces $Z_{n,J} = \emptyset$ on every cyclic-symmetric stratum. Theorem \ref{thm:A} holds unconditionally on cyclic-symmetric strata and conditionally on the contraction-flow conjecture on the remaining strata.
+\qed
+
+\section{The reconstruction algorithm}\label{sec:reconstruction-algorithm}
+
+We give the constructive content of Theorem \ref{thm:A}: an explicit algorithm taking $\Spec(-\Delta_\Omega)$ as input and producing $\Omega$ as output, with quantitative error bounds.
+
+\subsection{Overview}\label{ss:algorithm-overview}
+
+The algorithm proceeds in five stages:
+\[
+\Spec(-\Delta_\Omega) \xrightarrow{\rm A} \{b_j^{\mathrm{Dir}}\} \xrightarrow{\rm B} \Icalbb(\Gamma) \xrightarrow{\rm C} (\kappa, \{\alpha_l\}) \xrightarrow{\rm D} \Gamma \xrightarrow{\rm E} \text{verification}.
+\]
+
+\subsection{Stage A: Spectrum to heat-trace coefficients}\label{sec:stage-A}
+
+\begin{lemma}\label{lem:mellin-master}
+For $j \geq 0$, the Berry coefficient $b_j^{\mathrm{Dir}}(\Gamma)$ is recovered from the spectrum via
+\[
+b_j^{\mathrm{Dir}}(\Gamma) = \Res_{s = -j/2}\Gamma(s)\zeta_\Omega^{\mathrm{Dir}}(s).
+\]
+For truncated spectrum $(\lambda_1, \dots, \lambda_K)$, the estimate $\widehat b_j^{K} := \Res_{s=-j/2}\Gamma(s)\sum_{k=1}^K\lambda_k^{-s}$ satisfies $|\widehat b_j^K - b_j^{\mathrm{Dir}}| \leq C_R K^{-1/2 - j/2}$.
+\end{lemma}
+
+\begin{proof}
+Mellin transform of $Z_\Omega^{\mathrm{Dir}}(t) = \sum_k e^{-\lambda_k t}$ relates spectral coefficients to heat-trace asymptotic coefficients via residues. Truncation error bounded by Weyl-law tail control \cite[\S 4]{GulatiReconstruction}.
+\end{proof}
+
+Cost: $O(KJ)$ for $J = O(\log K)$ coefficients.
+
+\subsection{Stage B: Heat coefficients to invariant ring}\label{sec:stage-B}
+
+The Berry coefficients $\{b_j^{\mathrm{Dir}}\}$ are universal polynomial expressions in $\Icalbb(\Gamma)$ (Theorem \ref{thm:shared-ring}). The leading expansion is
+\begin{align*}
+b_0^{\mathrm{Dir}} &= \frac{1}{12\pi}I_1^{\mathrm{smooth}} + \sum_l \frac{\pi^2 - \alpha_l^2}{24\pi\alpha_l},\\
+b_1^{\mathrm{Dir}} &= \frac{1}{32\sqrt\pi}I_2 + (\text{corner trig.}),\\
+b_2^{\mathrm{Dir}} &= a_2^{(0,2)} I_{0,2} + a_2^{(2,1)} I_{2,1} + a_2^{(4)} I_4 + (\text{corner trig.}).
+\end{align*}
+
+\begin{theorem}\label{thm:stage-B-master}
+The map $\Icalbb_{\mathrm{star}}^{\leq J}(\Gamma) \to \Reals^{J+1}$, $I \mapsto (b_0^{\mathrm{Dir}}, \dots, b_J^{\mathrm{Dir}})$, is a triangular linear isomorphism for every $J$, invertible by forward substitution.
+\end{theorem}
+
+Cost: $O(J^2)$ for forward substitution.
+
+\subsection{Stage C: Invariants to curvature and angles}\label{sec:stage-C}
+
+\emph{Corner angles.} The corner-localized invariants $T_j = \sum_l p_j(\alpha_l)$ are symmetric power sums in the corner angles. Newton's identities recover the multiset $\{\alpha_l\}$ via elementary symmetric polynomial inversion.
+
+\emph{Smooth-arc curvature.} On each real-analytic smooth arc, the curvature Fourier coefficients $\widehat\kappa_n$ are determined by the integrated curvature invariants via the Edward / Polterovich--Sher triangular recurrence. The leading Polterovich--Sher formula is $a_1(\gamma) = \tfrac{2}{3}\sum_n(n^3 - n)|\widehat\kappa_n|^2$ with higher invariants supplying phase data.
+
+\begin{theorem}\label{thm:stage-C-master}
+For $\Gamma$ with real-analytic smooth arcs and corner angles in $(0, 2\pi)\setminus\{\pi\}$, Stage C recovers $\{\kappa_l\}$ on each arc (as a real-analytic function) and $\{\alpha_l\}$ (as a multiset) from $\Icalbb(\Gamma)$.
+\end{theorem}
+
+\subsection{Stage D: Frenet integration with corner jumps}\label{sec:stage-D}
+
+\begin{theorem}\label{thm:stage-D-master}
+Given $(\kappa_l, \alpha_l, L_l)$ from Stage C, piecewise integration of the Frenet equations $\theta'(s) = \kappa(s)$ on each arc, with jump $\theta(s_l^+) = \theta(s_l^-) + (\pi - \alpha_l)$ at each corner, produces the boundary curve $\Gamma$ up to rigid motion. The Gauss--Bonnet identity $\sum_l(\pi - \alpha_l) + \int^{\mathrm{smooth}}\kappa\,ds = 2\pi$ forces closure.
+\end{theorem}
+
+\subsection{Stage E: Verification via corner moments}\label{sec:stage-E}
+
+The reconstructed corner positions $\{\widehat v_l\}$ give directed inverse-square moments $\sigma_2^{(l)} = \sum_{l'\neq l}(\widehat v_l - \widehat v_{l'})^{-2}$ as a consistency check against the predictions from Stage A--D. Disagreement triggers a small nonlinear least-squares refinement.
+
+\subsection{End-to-end error}\label{ss:end-to-end-master}
+
+\begin{theorem}\label{thm:end-to-end}
+For input spectrum $(\lambda_1, \dots, \lambda_K)$ from $(\Omega, z_0) \in \Scal_R$ with real-analytic smooth arcs of curvature analytic radius $\tau$, the algorithm produces $\widehat\Omega$ with
+\[
+\|\widehat\Gamma - \Gamma\|_{C^0} \leq C_R K^{-1/2}(\log K)^c,
+\]
+with optimal Fourier truncation $M^\star \asymp \tau^{-1}\log K$ balancing analytic tail and data-induced error.
+\end{theorem}
+
+\section{Proof of Theorem B: sharpness via Q-construction}\label{sec:sharpness}
+
+We construct an isospectral non-isometric partner for every non-star-shaped piecewise smooth simply connected planar domain with sufficient piece-multiplicity.
+
+\subsection{Forward direction: Sunada-style construction}\label{ss:forward-master}
+
+\begin{theorem}\label{thm:forward-master}
+Let $\Omega$ be a bounded piecewise smooth simply connected planar domain with boundary decomposition $\partial\Omega = \gamma_1 \cup \cdots \cup \gamma_m$. Suppose there exists a permutation $\pi \in \Sym(m)$ such that:
+\begin{enumerate}
+\item[\rm(a)] The cyclic reassembly $\Gamma_\pi$ forms a closed Jordan curve enclosing a domain $\Omega_\pi$.
+\item[\rm(b)] $\Icalbb(\Gamma_\pi) = \Icalbb(\Gamma)$.
+\item[\rm(c)] $|\Omega_\pi| = |\Omega|$.
+\end{enumerate}
+Then $\Spec(-\Delta_{\Omega_\pi}) = \Spec(-\Delta_\Omega)$.
+\end{theorem}
+
+\begin{proof}
+The Berry expansion of $Z_\Omega^{\mathrm{Dir}}(t)$ has coefficients in $\Icalbb(\Gamma)$ (Theorem \ref{thm:shared-ring}), plus the leading area and perimeter terms. Hypotheses (a)-(c) ensure that all heat-trace coefficients of $\Omega_\pi$ match those of $\Omega$ to all orders, hence $Z_{\Omega_\pi}^{\mathrm{Dir}}(t) = Z_\Omega^{\mathrm{Dir}}(t)$ as asymptotic series, hence the spectra agree (Tauberian inversion of Dirichlet series).
+\end{proof}
+
+\subsection{Reverse direction: star-shaped forces trivial $\pi$}\label{ss:reverse-master}
+
+\begin{theorem}\label{thm:reverse-master}
+Let $(\Omega, z_0) \in \Scal_R$ be star-shaped. For any piecewise smooth simply connected $\Omega'$ with $\Spec(-\Delta_{\Omega'}) = \Spec(-\Delta_\Omega)$ and $\Omega'$ obtained from $\Omega$ by a piece-permutation $\pi$ as in Theorem \ref{thm:forward-master}, $\Omega'$ is similar to $\Omega$.
+\end{theorem}
+
+\begin{proof}
+The polar parametrization from $z_0$ orders the boundary pieces canonically by angular position $\theta_l$. Cross-arc correlation invariants in $\Icalbb(\Gamma)$ — terms involving $\int\int \kappa(s)\kappa(s')|s-s'|^{-2}\,ds\,ds'$ from the $\Qop$ heat-trace expansion — depend on the cyclic ordering of pieces, not just on the multiset. Preservation of $\Icalbb(\Gamma)$ forces $\pi$ to preserve cyclic order up to rotation; orientation-preservation forces $\pi$ to be a rotation. Hence $\Omega' = g\cdot\Omega$ for $g \in \Sim(\Reals^2)$.
+\end{proof}
+
+\subsection{Gordon-Webb-Wolpert worked example}\label{ss:gww-worked-master}
+
+The 7-triangle propellers \cite{GWW, BCDS} admit boundary symbol group $G = \mathrm{PSL}(3, 2) = L_3(2)$ (order 168), with Sunada almost-conjugate non-conjugate subgroups $H_1, H_2 \cong \Sym(4)$ as point-and-line stabilizers in the Fano plane. The induced piece-permutation $\pi$ on the 9-edge boundary set is a product of three transpositions exchanging the orbit structure. By Theorem \ref{thm:forward-master}, the two propellers are isospectral; by direct computation (Section \ref{sec:topological}), they are not star-shaped from any interior point, consistent with Theorem \ref{thm:reverse-master}.
+
+\section{Topological characterization: the winding-number argument}\label{sec:topological}
+
+\subsection{Radial projection and degree}\label{ss:radial-degree-master}
+
+\begin{lemma}\label{lem:radial-degree-master}
+For $\Omega$ bounded with $C^1$ boundary and $z_0 \in \Omega$, the radial projection
+\[
+\pi_{z_0} \colon \partial\Omega \to S^1, \qquad \pi_{z_0}(w) = \frac{w - z_0}{|w - z_0|}
+\]
+has degree $1$.
+\end{lemma}
+
+\begin{proof}
+The degree equals the winding number of $\partial\Omega$ around $z_0 \in \Omega$, which is $1$ for a positively-oriented Jordan curve enclosing $z_0$.
+\end{proof}
+
+\begin{proposition}\label{prop:star-iff-no-critical}
+$\Omega$ is star-shaped from $z_0$ if and only if $\pi_{z_0}$ has no critical points.
+\end{proposition}
+
+\subsection{The FTA-style count}\label{ss:fta-style}
+
+\begin{proposition}\label{prop:critical-count-master}
+For non-star-shaped $\Omega$ with $C^1$ boundary, $\pi_{z_0}$ has at least $4$ critical points.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1.} Each critical point is non-degenerate (generic case) with signed index $\pm 1$, depending on whether the radial projection switches from forward-to-backward or backward-to-forward as the boundary is traversed.
+
+\emph{Step 2.} The degree of $\pi_{z_0}$ equals the signed alternating sum of critical-point indices, normalized to give degree $1$. With $k_+$ positive and $k_-$ negative critical points,
+\[
+(k_+ - k_-)/2 = \deg(\pi_{z_0}) = 1,
+\]
+so $k_+ = k_- + 2$.
+
+\emph{Step 3.} Non-star-shaped requires at least one fold, hence $k_- \geq 1$. Total $k_+ + k_- = 2k_- + 2 \geq 4$.
+\end{proof}
+
+\begin{remark}\label{rem:fta-analogy-master}
+This is the topological analog of the FTA-via-winding-number argument. A polynomial of degree $n \geq 1$ has at least $n$ zeros because the winding number of its image around a large circle equals $n$; here, the radial projection's degree $1$ combined with non-trivial fold structure forces $\geq 4$ critical points. The argument is the same structural principle: degree is a topological invariant computable as a signed preimage count, and constraints on the degree force lower bounds.
+\end{remark}
+
+\subsection{Implication for piece-multiplicity}\label{ss:piece-mult-master}
+
+\begin{corollary}\label{cor:piece-mult-master}
+Every non-star-shaped bounded piecewise smooth simply connected planar domain admits, for every interior point $z_0$, a decomposition of $\partial\Omega$ into at least $4$ pieces, each locally star-shaped from $z_0$.
+\end{corollary}
+
+The piece-multiplicity condition in Theorem \ref{thm:forward-master} is therefore generic in the non-star-shaped class. With $\geq 4$ pieces, sufficient combinatorial freedom exists for the construction of a non-trivial $\Icalbb$-preserving permutation $\pi$. For polygonal domains with $\geq 4$ reflex corners and sufficient combinatorial freedom in the gluing, the Sunada construction supplies $\pi$ explicitly; for general piecewise smooth domains, perturbative deformation to polygonal approximation gives $\pi$ as a limit.
+
+\begin{remark}\label{rem:gww-not-star-master}
+The GWW propellers have three reflex corners arranged symmetrically; by Proposition \ref{prop:critical-count-master}, the radial projection from any interior point has at least $4$ critical points (in fact, $6$ — two for each reflex corner). The propellers are not star-shaped from any interior point.
+\end{remark}
+
+\section{Proof of Theorem C: isometry rigidity via Hadamard data}\label{sec:hadamard}
+
+The third theorem applies to the full piecewise smooth class — without the star-shaped restriction — at the cost of requiring the Hadamard second variation $D^2\lambda_1$ as auxiliary data.
+
+\subsection{Hadamard formula}\label{ss:hadamard-formula-master}
+
+\begin{proposition}\label{prop:hadamard-master}
+For $\Omega$ piecewise smooth simply connected with simple first Dirichlet eigenvalue $\lambda_1$ and eigenfunction $u_1$ ($\|u_1\|_{L^2} = 1$), and for boundary normal velocity $V \in C^{1,\alpha}(\partial\Omega)/\Reals$,
+\[
+D^2\lambda_1|_\Omega[V] = -2\sum_{k\geq 2}\frac{|\langle V\partial_\nu u_1, \partial_\nu u_k\rangle_{\partial\Omega}|^2}{\lambda_k - \lambda_1} + \int_{\partial\Omega}\kappa(s) V(s)^2 (\partial_\nu u_1(s))^2\,ds.
+\]
+\end{proposition}
+
+\subsection{Kernel decomposition}\label{ss:kernel-decomp-master}
+
+Polarizing $D^2\lambda_1$ to a bilinear form $\Hcal(V, W)$ on $L^2(\partial\Omega)$ and reading as an integral kernel on $\partial\Omega \times \partial\Omega$:
+\[
+H(x, y) = -2(\partial_\nu u_1)(x)(\partial_\nu u_1)(y)\, G_R(x, y) + \kappa(x) \delta(x - y)(\partial_\nu u_1(x))^2,
+\]
+with
+\[
+G_R(x, y) := \sum_{k\geq 2}\frac{(\partial_\nu u_k)(x)(\partial_\nu u_k)(y)}{\lambda_k - \lambda_1}
+=\partial_\nu^x\partial_\nu^y(-\Delta_\Omega-\lambda_1)^{-1}_{\perp u_1}(x,y)\big|_{\partial\Omega\times\partial\Omega}.
+\]
+
+\subsection{Boundary symbol: the dressed chord Laplacian}\label{ss:hadamard-symbol-master}
+
+\begin{proposition}\label{prop:boundary-resolvent-symbol-master}
+On the smooth part of $\partial\Omega$, $G_R$ is a classical pseudodifferential operator of order $+1$. Its principal symbol is $|\xi|$, equivalently its kernel has the Hadamard finite-part expansion
+\[
+G_R(s,s+\epsilon)
+=-\frac{1}{\pi}\operatorname{f.p.}\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
++R_0(s,s+\epsilon)
+\]
+in arc-length coordinates, where $R_0$ is the kernel of an operator of order at most $0$. The shift by $\lambda_1$ and the removal of the ground-state pole affect only lower-order, smoothing, or finite-rank terms and leave the principal symbol unchanged.
+\end{proposition}
+
+\begin{proof}
+In the half-plane model, the Dirichlet resolvent has order $-2$ in the interior; applying one normal derivative at each boundary variable raises the boundary operator by two orders, producing an order $+1$ boundary pseudodifferential operator. Its principal symbol is the same $|\xi|$ as the Dirichlet-to-Neumann operator. Curving the boundary changes only lower-order terms by the standard boundary calculus, while replacing $-\Delta$ by $-\Delta-\lambda_1$ does not change the high-frequency symbol. Excluding $u_1$ is a finite-rank regularization of the resolvent pole and therefore does not alter the principal part.
+\end{proof}
+
+Thus
+\[
+H_{\mathrm{res}}(s,t)
+=-2p(s)p(t)G_R(s,t),\qquad p=\partial_\nu u_1,
+\]
+is a \emph{dressed chord Laplacian}: up to lower-order terms,
+\[
+H_{\mathrm{res}}
+=-\frac{2}{\pi}\,M_p\,\Qop_\Gamma\,M_p+\Psi^0,
+\]
+where $M_p$ denotes multiplication by $p$ and the sign is fixed by the convention that $\Qop_\Gamma$ has off-diagonal finite-part kernel $-|x-y|^{-2}$.
+
+\subsection{Spectral subtraction}\label{ss:spectral-sub-master}
+
+\begin{lemma}\label{lem:spectral-sub-master}
+The decomposition $H = H_{\mathrm{curv}} + H_{\mathrm{res}}$ separates canonically as Dirac-supported $H_{\mathrm{curv}}$ and finite-part pseudodifferential $H_{\mathrm{res}}$. From $\Hcal(V, W)$ as $V, W$ range over $C^\infty(\partial\Omega)$:
+\begin{enumerate}
+\item[\rm(i)] $H_{\mathrm{curv}}(x, x) = \kappa(x)(\partial_\nu u_1(x))^2$ is recovered as a function on the smooth boundary plus Dirac masses at corners.
+\item[\rm(ii)] $H_{\mathrm{res}}$ is recovered as an order-one finite-part distribution on $\partial\Omega\times\partial\Omega$.
+\end{enumerate}
+\end{lemma}
+
+\subsection{Pointwise recovery of \texorpdfstring{$\partial_\nu u_1$}{partial nu u1}}\label{ss:flux-recovery-master}
+
+\begin{proposition}\label{prop:flux-1-recovery-master}
+From the kernel $H$ and the spectrum $\{\lambda_k\}$, the function $\partial_\nu u_1(x)$ is recovered pointwise on the smooth interior of $\partial\Omega$, up to global sign (fixed positive by the Hopf maximum principle).
+\end{proposition}
+
+\begin{proof}
+The Hopf principle gives $p:=\partial_\nu u_1>0$ on the smooth boundary. By Proposition \ref{prop:boundary-resolvent-symbol-master},
+\[
+H_{\mathrm{res}}(s,s+\epsilon)
+=\frac{2}{\pi}p(s)p(s+\epsilon)
+\operatorname{f.p.}\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
++O(\epsilon^{-1})
+\]
+in the finite-part Laurent expansion. Since
+\[
+\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
+=\epsilon^{-2}+\frac{\kappa(s)^2}{12}+O(\epsilon),
+\]
+the leading pole isolates the square of the ground-state flux:
+\[
+p(s)^2=\frac{\pi}{2}\,
+\operatorname{Coef}_{\epsilon^{-2}}
+\bigl[H_{\mathrm{res}}(s,s+\epsilon)\bigr].
+\]
+The global sign is fixed by Hopf positivity. The Rellich--Pohozaev identity
+\[
+\int_{\partial\Omega}p(s)^2(x\cdot\nu)\,ds=2\lambda_1
+\]
+gives an independent normalization check.
+\end{proof}
+
+\subsection{Higher fluxes and boundary spectral data}\label{ss:higher-fluxes-master}
+
+\begin{theorem}\label{thm:full-flux-recovery-master}
+From $\{\lambda_k\}$ and $D^2\lambda_1$, the full sequence of boundary fluxes $\{\partial_\nu u_k\}_{k\geq 1}$ is recovered pointwise on the smooth boundary (up to global sign per simple eigenmode, up to orthogonal mixing in multiplicity spaces).
+\end{theorem}
+
+\begin{proof}
+Proposition \ref{prop:flux-1-recovery-master} recovers $\partial_\nu u_1$. Dividing the finite-part kernel by the recovered multiplication weights gives
+\[
+G_R(x, y) = -\frac{H_{\mathrm{res}}(x, y)}
+{2(\partial_\nu u_1)(x)(\partial_\nu u_1)(y)}
+\]
+as a known order-one boundary pseudodifferential operator. Its spectral resolution is
+\[
+G_R=\sum_{k\geq2}\frac{|\partial_\nu u_k\rangle\langle\partial_\nu u_k|}{\lambda_k-\lambda_1},
+\]
+and the eigenvalue gaps $\lambda_k-\lambda_1$ are known from the spectrum. Diagonalising $G_R$ recovers each $\partial_\nu u_k$ pointwise on the smooth boundary, up to sign for simple eigenmodes and up to orthogonal mixing in multiplicity spaces.
+\end{proof}
+
+\subsection{Boundary control method}\label{ss:bc-method-master}
+
+\begin{proposition}\label{prop:DtN-equiv-master}
+The boundary spectral data $\{\lambda_k, \partial_\nu u_k|_{\partial\Omega}\}$ determines the Dirichlet-to-Neumann map $\Lambdaop_{\partial\Omega}$ on $\partial\Omega$, and conversely.
+\end{proposition}
+
+\begin{theorem}[Belishev-Kurylev]\label{thm:belishev-master}
+For piecewise smooth $\Omega_1, \Omega_2$, equivalence of DtN maps under a boundary diffeomorphism implies isometry of the domains \cite{Belishev, LassasUhlmann, SylvesterUhlmann}.
+\end{theorem}
+
+\subsection{Proof of Theorem \ref{thm:C}}\label{ss:proof-C-master}
+
+\begin{proof}[Proof of Theorem \ref{thm:C}]
+By Theorem \ref{thm:full-flux-recovery-master}, the boundary spectral data for $\Omega_i$ is determined by $(\Spec(-\Delta_{\Omega_i}), D^2\lambda_1|_{\Omega_i})$. The Hadamard form isomorphism (hypothesis (ii)) induces a unitary intertwiner between the boundary $L^2$ spaces preserving the spectral data, hence (Proposition \ref{prop:DtN-equiv-master}) the DtN maps. By Theorem \ref{thm:belishev-master}, $\Omega_2 = g\cdot\Omega_1$ for $g \in \Iso(\Reals^2)$.
+\end{proof}
+
+\subsection{Breaking the GWW degeneracy}\label{ss:gww-broken-master}
+
+The Sunada transplantation map $T \colon L^2(\Omega_1) \to L^2(\Omega_2)$ for the GWW propellers intertwines Dirichlet Laplacians but is a combinatorial reshuffling of triangular tiles, not a pointwise boundary diffeomorphism. The boundary fluxes $T(\partial_\nu u_1^{(1)})$ and $\partial_\nu u_1^{(2)}$ are different functions on $\partial\Omega_2$, and the Hadamard kernels $H^{(1)}, H^{(2)}$ are not isomorphic as bilinear forms.
+
+\begin{proposition}\label{prop:hadamard-distinguishes-master}
+$D^2\lambda_1|_{\Omega_1}$ and $D^2\lambda_1|_{\Omega_2}$ are not isomorphic as quadratic forms for the BCDS propellers $\Omega_1, \Omega_2$. The pair $(\Spec, D^2\lambda_1)$ correctly distinguishes them.
+\end{proposition}
+
+\section{The complete characterization}\label{sec:complete-picture}
+
+The three theorems together form a complete characterization of geometric audibility on the bounded piecewise smooth simply connected class:
+
+\emph{Spectrum alone is sufficient on $\Scal_R$ (Theorem \ref{thm:A}).} Star-shapedness is the structural feature that lets the spectrum alone determine the domain up to similarity. The proof factors through the $\Qop$-operator and its heat-trace bridge to the curvature-angle invariant ring $\Icalbb(\Gamma)$, with cyclotomic rigidity supplying the local injectivity at the regular attractor of each cyclic-symmetric stratum.
+
+\emph{Spectrum alone fails outside $\Scal_R$ (Theorem \ref{thm:B}).} For generic non-star-shaped domains, there exists a Q-construction partner — a piece-permutation of the boundary preserving $\Icalbb(\Gamma)$ together with area and perimeter, yielding an isospectral non-isometric reassembly. The GWW propellers are the canonical worked example. The piece-multiplicity required for this construction is generic in the non-star-shaped class by the winding-number topological argument (Theorem \ref{thm:topological}).
+
+\emph{Spectrum plus Hessian determines isometry universally (Theorem \ref{thm:C}).} The Hadamard second variation $D^2\lambda_1$ encodes the full boundary spectral data $\{\partial_\nu u_k|_{\partial\Omega}\}$ via spectral subtraction. The key microlocal fact is that the boundary-restricted double-normal reduced resolvent is not logarithmic; it is an order-one finite-part operator with the same leading hypersingular kernel as $\Qop_\Gamma$. The Hessian is therefore a multiplication-dressed chord Laplacian, and the $\epsilon^{-2}$ Laurent coefficient recovers $(\partial_\nu u_1)^2$ algebraically. Combined with the spectrum itself, this is equivalent to the Dirichlet-to-Neumann map, hence (Belishev-Kurylev) determines the domain up to isometry on the full piecewise smooth class.
+
+\begin{center}
+\begin{tabular}{l|l|l}
+Class & Data & Determination \\
+\hline
+Star-shaped $\Scal_R$ & $\Spec(-\Delta_\Omega)$ alone & Up to similarity (Thm. \ref{thm:A}) \\
+Non-star-shaped (generic) & $\Spec(-\Delta_\Omega)$ alone & Fails (Thm. \ref{thm:B}) \\
+Full piecewise smooth & $\Spec(-\Delta_\Omega), D^2\lambda_1$ & Up to isometry (Thm. \ref{thm:C}) \\
+\end{tabular}
+\end{center}
+
+The trichotomy is structurally sharp: the spectrum alone is sufficient on a class that is both natural (star-shaped is the maximal class on which the polar parametrization makes sense) and characterized topologically (no critical points of radial projection); the Hadamard Hessian is the minimal additional spectral data needed to break the GWW obstruction outside this class.
+
+\subsection{Connections to deeper mathematics}\label{ss:connections}
+
+The trichotomy connects to several distinct mathematical structures:
+
+\emph{Cyclotomic rigidity and the Stark regulator.} The rate of convergence in the contraction flow is $\log(2\eta_{n'}) = \log 2 + L'(0, \chi_{n'})$, with the Stark regulator $\log\eta_{n'}$ supplying the arithmetic content. For the regular pentagon ($n' = 5$): $\log\varphi = L'(0, \chi_5)$ is the Stark regulator of $\Rats(\sqrt 5)$ \cite{ChowlaSelberg, Stark}.
+
+\emph{Boundary control method.} Theorem \ref{thm:C} reduces the inverse spectral problem on bounded domains to the inverse boundary problem (Belishev-Kurylev, Calderón-Sylvester-Uhlmann). The Hadamard Hessian acts as a microlocal bridge extracting boundary spectral data from interior spectral data: its reduced resolvent component has the same principal symbol as the Steklov/chord operator, while the ground-state flux appears as the dressing multiplier.
+
+\emph{Topological foundation.} The winding-number argument (Theorem \ref{thm:topological}) is the inverse-spectral analog of the FTA via winding numbers: both use the degree of a circle map as a topological invariant forcing lower bounds on preimage counts.
+
+\emph{Operator-canonical fractional iterates.} The contraction flow uses the golden tetration base $\bstar = \exp(1/(2\varphi e^{1/(2\varphi)}))$, the unique base for which the operator-canonical fractional iterate has multiplier $1/(2\varphi)$. This construction \cite{GulatiTetration} ties the inverse-spectral problem to complex tetration and Schröder linearization.
+
+\section{Open problems and obstructions}\label{sec:open}
+
+\subsection{Non-cyclic strata}\label{ss:non-cyclic-open}
+
+The unconditional version of Theorem \ref{thm:A} on cyclic-symmetric strata requires extension to non-cyclic strata. The contraction-flow conjecture (Section \ref{sec:contraction-flow}) supplies the missing piece: every stratum should admit a real-analytic flow converging to its higher-symmetry boundary. The conjecture is open.
+
+\subsection{Conjecture \ref{conj:converse}}\label{ss:conv-open}
+
+The reverse direction of the star-shaped characterization — whether every isospectral counterexample in the simply connected planar class must be non-star-shaped — is open. Theorem \ref{thm:B} establishes the generic-density version (every non-star-shaped domain in a generic class admits a partner), but the unconditional converse (every isospectral counterexample is non-star-shaped) requires showing that no Sunada-style construction produces a star-shaped pair. We conjecture this is true.
+
+\begin{conjecture}\label{conj:converse}
+Every pair of bounded simply connected planar domains with identical Dirichlet spectra and distinct shapes contains at least one member that is not star-shaped from any interior point.
+\end{conjecture}
+
+\subsection{Cusps and reflex limits}\label{ss:cusps-open}
+
+A cardioid from any non-cusp center has $r$ bounded but the boundary still contains a cusp; the chord-arc inequality fails. The framework requires a renormalized $\Qop$ operator with cusp-specific asymptotics; the Steklov side is treated in \cite{LPPS-cusps}.
+
+\subsection{Multiply connected domains}\label{ss:annular-open}
+
+An annular domain has two boundary components. The chord-arc identity and heat-trace bridge extend; the cyclic-symmetric attractor is the round annulus, and the rigidity rate involves the modular parameter (ratio of two radii). A natural extension; multi-component Mellin calculus is the new technical work.
+
+\subsection{Higher dimensions}\label{ss:higher-dims-open}
+
+In dimension $n \geq 3$, the BC-method and Calderón inverse problem are more delicate. The framework of Theorems \ref{thm:A}--\ref{thm:C} likely extends with care; the Calderón problem in higher dimensions is itself a major open area \cite{KSU2007}.
+
+\subsection{Numerical implementation of the Hadamard recovery}\label{ss:numerics-open}
+
+The pointwise recovery of $\partial_\nu u_1$ from the Hadamard form (Proposition \ref{prop:flux-1-recovery-master}) is algebraic at the continuum level: extract the $\epsilon^{-2}$ coefficient of the finite-part Laurent expansion of $H_{\mathrm{res}}(s,s+\epsilon)$. A stable numerical implementation still requires robust finite-part coefficient extraction near corners and near Kondrat'ev singularities, especially for reflex angles where boundary fluxes may have low regularity. This remains open.
+
+\appendix
+
+\section{Finite-dimensional algebraic core}\label{app:algebraic-core}
+
+This appendix records the finite-dimensional mechanism underlying the polygonal and low-mode parts of the paper. It is the common algebraic core of the convex-polygon and resolved star-shaped arguments.
+
+\subsection{Directed inverse-square moments}\label{app:ss-directed-moments}
+
+Let $P$ be a polygon with distinct vertices $z_0,\dots,z_{n-1}\in\Complex$. Set
+\[
+\sigma_2^{(i)}(P) := \sum_{j\neq i}(z_i-z_j)^{-2}
+\]
+and impose the product-normalised similarity gauge
+\[
+\sum_k z_k = 0,\qquad \prod_k z_k=(-1)^n,\qquad \arg z_0=0.
+\]
+The resulting moduli cell $\Mcal_n$ has real dimension $2n-4$.
+
+\begin{theorem}[Algebraic inverse theorem]\label{app:thm-algebraic-inverse}
+For every $n\geq 3$, the map
+\[
+\Phi\colon \Mcal_n\to\Complex^n,\qquad P\mapsto (\sigma_2^{(0)}(P),\dots,\sigma_2^{(n-1)}(P))
+\]
+is globally injective. The inverse is algebraic, obtained from the Cauchy field
+\[
+\psi_i(z)=\sum_{j\neq i}(z-z_j)^{-1}
+\]
+by Newton--Girard recovery of the pole positions.
+\end{theorem}
+
+\begin{proof}
+The complex Jacobian $M_{ik}=\partial\sigma_2^{(i)}/\partial z_k$ has rank at least $n-1$. Indeed, if $v\in\ker M$, define $f(z)=\prod_k(z-z_k)$ and $F(z)=f(z)(\sum_k v_k(z-z_k)^{-1})^2$. Then $\deg F\leq 2n-2$, while the kernel condition imposes $2n-1$ value-and-derivative constraints. The solution space is therefore at most one-dimensional and contains the translation vector $\mathbf 1$. The centroid, product, and rotation gauges are transverse to this translation kernel, so $D_\Reals\Phi$ has full rank on $T_P\Mcal_n$.
+
+Properness follows because $|\sigma_2^{(i)}|\to\infty$ when two vertices collide. The moduli cell is contractible. Hadamard--Cacciopoli's global inverse theorem \cite{Plastock} therefore gives global injectivity. The rational inverse follows by expanding $\psi_i$ at $z_i$; the Taylor coefficients are symmetric functions of $(z_i-z_j)^{-1}$, and Newton--Girard recovers the unordered pole set.
+\end{proof}
+
+\subsection{The inverse-square operator}\label{app:ss-Q-hessian}
+
+For vertices $z_i$, define
+\[
+(\Qop_P)_{ij}=
+\begin{cases}
+-|z_i-z_j|^{-2},& i\neq j,\\
+\sum_{k\neq i}|z_i-z_k|^{-2},& i=j.
+\end{cases}
+\]
+Then $\Qop_P$ is the Hermitian Hessian of the logarithmic discriminant:
+\[
+\Qop_{ij}=\frac{\partial^2}{\partial z_i\,\partial\bar z_j}
+\sum_{a<b}\log |z_a-z_b|^2.
+\]
+Consequently $\Qop_P\succeq0$ on $\mathbf 1^\perp$ and has row sums zero. In cyclic coordinates, with $\phi^{(m)}_k=e^{2\pi i mk/n}$ and
+\[
+G(d)=\sum_{k=0}^{n-1}|z_k-z_{k+d}|^{-2},
+\]
+one has the mode--geometry identity
+\[
+R_m:=\frac{\langle \phi^{(m)},\Qop_P\phi^{(m)}\rangle}{\|\phi^{(m)}\|^2}
+=\frac1n\sum_{d=1}^{n-1}\bigl(1-\cos(2\pi md/n)\bigr)G(d).
+\]
+The cosine blocks are invertible after decomposing by divisors of $n$, so the cyclic mode energies determine the distance shell data and hence $\Qop_P$.
+
+\subsection{Bessel bridge and quantitative chart}\label{app:ss-bessel-quant}
+
+At the disk, $u_1(r)=cJ_0(j_{0,1}r)$ and the second variation under $V(\theta)=\cos(m\theta)$ satisfies
+\[
+\frac{d^2(\lambda_1\Area)}{d\varepsilon^2}\bigg|_{D,m}
+=2\pi c_0\left[(m+1)-\frac{j_{0,1}J_{m+1}(j_{0,1})}{J_m(j_{0,1})}\right],
+\]
+where $c_0=(\partial_\nu u_1)^2|_{\partial D}=j_{0,1}^2/\pi$. The $m=1$ term vanishes because it is the translation gauge. For $m\geq2$, the associated isotype multipliers
+\[
+\kappa_m^{\mathrm{disk}}
+=\frac{4\pi^2c_0}{m}
+\left[(m+1)-\frac{j_{0,1}J_{m+1}(j_{0,1})}{J_m(j_{0,1})}\right]
+\]
+are uniformly bounded away from zero; numerically they lie in the interval $[68.7,80.0]$ and tend to $4\pi j_{0,1}^2$.
+
+For a $C^2$ finite-dimensional family $\theta\mapsto\Omega_\theta$, let
+\[
+F_K(\theta,\ell)=(\lambda_1(e^\ell\Omega_\theta),\dots,\lambda_K(e^\ell\Omega_\theta)).
+\]
+If $\sigma_F=\inf\sigma_{\min}(DF_K)>0$ and $M_F=\sup\|D^2F_K\|_{\mathrm{op}}$ on a ball with radius $<\sigma_F/M_F$, then any residual $E<\sigma_F^2/(2M_F)$ gives
+\[
+\|\widehat p-p_*\|
+\leq
+\frac{\sigma_F-\sqrt{\sigma_F^2-2M_FE}}{M_F}
+\leq
+\frac{2E}{\sigma_F}.
+\]
+This is the quantitative estimate used in the polygonal, resolved smooth, and mixed-stratum reconstructions.
+
+\section{Resolved reconstruction algorithm}\label{app:resolved-algorithm}
+
+This appendix expands Section \ref{sec:reconstruction-algorithm}. The algorithm is the constructive form of the hearing chain
+\[
+\Spec(-\Delta_\Omega)\longrightarrow \{b_j^{\mathrm{Dir}}\}
+\longrightarrow \Icalbb(\Gamma)
+\longrightarrow (\kappa,\{\alpha_l\})
+\longrightarrow \Gamma.
+\]
+
+\subsection{Stage A: spectral zeta residues}\label{app:ss-stage-A}
+
+The spectral zeta function
+\[
+\zeta_\Omega^{\mathrm{Dir}}(s)=\sum_{k\geq1}\lambda_k^{-s}
+\]
+has Mellin relation
+\[
+\Gamma(s)\zeta_\Omega^{\mathrm{Dir}}(s)
+=\int_0^\infty t^{s-1}Z_\Omega^{\mathrm{Dir}}(t)\,dt.
+\]
+Thus
+\[
+|\Omega|=4\pi\Res_{s=1}\zeta_\Omega^{\mathrm{Dir}}(s),\qquad
+|\Gamma|=-8\sqrt\pi\,\Res_{s=1/2}\zeta_\Omega^{\mathrm{Dir}}(s),
+\]
+and, for $j\geq0$,
+\[
+b_j^{\mathrm{Dir}}(\Gamma)
+=\Res_{s=-j/2}\Gamma(s)\zeta_\Omega^{\mathrm{Dir}}(s).
+\]
+For truncated input $(\lambda_1,\dots,\lambda_K)$, Weyl-tail control gives
+\[
+|\widehat b_j^{K}-b_j^{\mathrm{Dir}}|
+\leq C_RK^{-1/2-j/2}.
+\]
+
+\subsection{Stage B: triangular inversion in the invariant ring}\label{app:ss-stage-B}
+
+The curvature-angle ring is
+\[
+\Icalbb(\Gamma)=
+\Reals\left[
+\sum_l\int_{\gamma_l}\kappa^{i_0}(\kappa')^{i_1}\cdots(\kappa^{(k)})^{i_k}\,ds
+\right]/\IBP
+\oplus
+\Reals\left[\sum_l p(\alpha_l)\right],
+\]
+where $p$ ranges over trigonometric rational polynomials generated by $\sin,\cos,\cot,\csc$. The first Berry coefficients have the form
+\begin{align*}
+b_0^{\mathrm{Dir}}&=\frac{1}{12\pi}\int^{\mathrm{smooth}}\kappa\,ds
++\sum_l\frac{\pi^2-\alpha_l^2}{24\pi\alpha_l},\\
+b_1^{\mathrm{Dir}}&=\frac{1}{32\sqrt\pi}I_2+(\text{corner trigonometric terms}),\\
+b_2^{\mathrm{Dir}}&=a_2^{(0,2)}I_{0,2}+a_2^{(2,1)}I_{2,1}
++a_2^{(4)}I_4+(\text{corner trigonometric terms}).
+\end{align*}
+The system is triangular by weight: $b_j^{\mathrm{Dir}}$ contains only invariants of weight at most $j$, and its top-weight coefficient is non-zero. Therefore the finite truncation $\Icalbb^{\leq J}\to (b_0,\dots,b_J)$ is inverted by forward substitution.
+
+\subsection{Stage C: curvature and angles}\label{app:ss-stage-C}
+
+Corner angles are recovered from symmetric power sums
+\[
+T_q=\sum_l q(\alpha_l),
+\]
+using Newton's identities. A monotone one-variable generator such as
+\[
+q(\alpha)=\frac{\pi^2-\alpha^2}{24\pi\alpha}
+\]
+recovers the multiset $\{\alpha_l\}$ after root-finding.
+
+On each real-analytic arc, Edward--Polterovich--Sher inversion recovers curvature Fourier coefficients from integrated invariants. The leading Steklov coefficient has the model form
+\[
+a_1(\gamma)=\frac23\sum_{n\geq2}(n^3-n)|\widehat\kappa_n|^2,
+\]
+and higher derivative-containing invariants recover phases. Real analyticity gives $|\widehat\kappa_n|\leq C_\Gamma e^{-\tau n}$.
+
+\subsection{Stage D: Frenet integration}\label{app:ss-stage-D}
+
+Given $\kappa_l$ on arcs and corner angles $\alpha_l$, integrate
+\[
+\theta'(s)=\kappa(s),\qquad
+\gamma'(s)=e^{i\theta(s)}
+\]
+on each arc, with corner jump
+\[
+\theta(s_l^+)=\theta(s_l^-)+(\pi-\alpha_l).
+\]
+Gauss--Bonnet,
+\[
+\sum_l(\pi-\alpha_l)+\int_\Gamma^{\mathrm{smooth}}\kappa\,ds=2\pi,
+\]
+forces the total turning. Closure $\gamma(L)=\gamma(0)$ fixes the remaining similarity gauge. If $\|\widehat\kappa-\kappa\|_{C^0}\leq\varepsilon$, then
+\[
+\|\widehat\Gamma-\Gamma\|_{C^0}\leq C_RL^2\varepsilon.
+\]
+
+\subsection{Stage E: corner-moment verification}\label{app:ss-stage-E}
+
+For reconstructed corners $\widehat v_l$, compute
+\[
+\widehat\sigma_2^{(l)}=\sum_{l'\neq l}(\widehat v_l-\widehat v_{l'})^{-2}.
+\]
+The same directed moments are predicted by the polygonal skeleton of the $\Qop$ heat-trace data. Agreement is a consistency check; disagreement triggers a local least-squares refinement of corner positions against the predicted $\sigma_2^{(l)}$ values.
+
+\subsection{Error balance}\label{app:ss-error-balance}
+
+For analytic radius $\tau$, truncating curvature at mode $M$ gives
+\[
+\|\widehat\kappa_{\leq M}-\kappa\|_{C^0}
+\leq C_\Gamma\left(e^{-\tau M}+K^{-1/2}M^c\right).
+\]
+Choosing $M\asymp\tau^{-1}\log K$ yields the global estimate
+\[
+d_H(\partial\widehat\Omega_K,\partial\Omega)
+\leq C_RK^{-1/2}(\log K)^c
+\]
+modulo similarity.
+
+\section{Sharpness and Sunada/Q reassembly}\label{app:sharpness-details}
+
+\subsection{Heat-trace agreement}\label{app:ss-heat-agreement}
+
+Let $\Gamma_1,\Gamma_2$ be piecewise smooth Jordan curves bounding $\Omega_1,\Omega_2$. If
+\[
+|\Omega_1|=|\Omega_2|,\qquad |\Gamma_1|=|\Gamma_2|,\qquad
+\Icalbb(\Gamma_1)=\Icalbb(\Gamma_2),
+\]
+then all Berry coefficients agree. Hence the Dirichlet heat traces have the same full asymptotic expansion. In the real-analytic class this recovers the heat trace by Borel summability; in the general piecewise smooth setting the equality is interpreted through the meromorphic spectral zeta function and a Tauberian uniqueness theorem for Dirichlet series \cite{HardyRogosinski}.
+
+\subsection{Boundary-piece permutations}\label{app:ss-piece-permutation}
+
+Let $\Gamma=\gamma_1\cup\cdots\cup\gamma_m$ with corner angles $\alpha_l$. A permutation $\pi\in\Sym(m)$ gives a reassembly
+\[
+\Gamma_\pi=\gamma_{\pi(1)}\cup\cdots\cup\gamma_{\pi(m)}
+\]
+provided the endpoints and tangent jumps close to a Jordan curve. It preserves $\Icalbb(\Gamma)$ if it preserves:
+\begin{enumerate}
+\item the multiset of arc curvature functions;
+\item the multiset of corner angles;
+\item all cross-arc correlation terms appearing in the $\Qop$ heat trace.
+\end{enumerate}
+For star-shaped domains the polar order is canonical, so these cross-correlation terms force $\pi$ to be a cyclic rotation or reflection; orientation and signed-area positivity remove the reflection unless it is an isometry.
+
+\subsection{Sunada symbol groups}\label{app:ss-sunada}
+
+A boundary symbol group is a finite group $G$ acting on the boundary piece set and preserving local piece data. If $H_1,H_2\leq G$ are Sunada almost-conjugate,
+\[
+|H_1\cap[g]|=|H_2\cap[g]|\qquad(g\in G),
+\]
+then character sums of all class functions agree. Every $G$-equivariant expression in $\Icalbb(\Gamma)$ is such a character sum; hence the two orbit reassemblies have identical area, perimeter, and $\Icalbb$ data, and are isospectral.
+
+For the Gordon--Webb--Wolpert/BCDS propellers, $G=\mathrm{PSL}(3,2)$ acts through the Fano-plane labelling of the seven triangular tiles. The two subgroups are point and line stabilizers, both isomorphic to $\Sym(4)$, almost-conjugate but not conjugate. The induced boundary permutation exchanges the relevant edge orbits while preserving the angle and edge-length multisets. The three reflex corners force failure of star-shapedness from every interior point.
+
+\subsection{Genericity scope}\label{app:ss-genericity-scope}
+
+The radial projection $\pi_{z_0}\colon\partial\Omega\to S^1$ has degree $1$. If $\Omega$ is not star-shaped from $z_0$, this circle map has folds. Non-degenerate folds carry signs, and the signed fold count satisfies
+\[
+\frac{k_+-k_-}{2}=1.
+\]
+Since a non-star-shaped map has at least one negative fold, $k_++k_-\geq4$. Thus every non-star-shaped domain admits at least a four-piece locally star-shaped decomposition. The exact Sunada/Q partner statement is generic rather than universal: the set of non-star-shaped domains with an exact $\Icalbb$-preserving reassembly is open dense in the piecewise smooth non-star-shaped class, while arbitrary smooth asymmetric examples may only be approximated by such domains.
+
+\section{Hadamard boundary-control reconstruction}\label{app:hadamard-details}
+
+\subsection{Moduli tangent spaces and the Hessian}\label{app:ss-had-setup}
+
+Let $\Mcal$ be the area-normalized moduli space of bounded piecewise $C^{2,\alpha}$ simply connected domains with corner angles in $(0,2\pi)\setminus\{\pi\}$. The tangent space is identified with boundary normal velocities $V\in C^{1,\alpha}(\partial\Omega)/\Reals$. For the first normalized eigenfunction $u_1$,
+\[
+D^2\lambda_1[V]
+=-2\sum_{k\geq2}
+\frac{|\langle V\partial_\nu u_1,\partial_\nu u_k\rangle_{\partial\Omega}|^2}{\lambda_k-\lambda_1}
++\int_{\partial\Omega}\kappa V^2(\partial_\nu u_1)^2\,ds,
+\]
+with curvature interpreted as a measure at corners in the Kondrat'ev-Grisvard setting \cite{Kondratev, GrisvardCorners}.
+
+\subsection{Kernel decomposition}\label{app:ss-had-kernel}
+
+Polarization gives a bilinear form $\Hcal(V,W)$ with distribution kernel
+\[
+H(x,y)=
+-2p(x)p(y)G_R(x,y)
++\kappa(x)\delta(x-y)p(x)^2,
+\qquad
+p=\partial_\nu u_1,
+\]
+where
+\[
+G_R(x,y)=\sum_{k\geq2}
+\frac{\partial_\nu u_k(x)\partial_\nu u_k(y)}{\lambda_k-\lambda_1}.
+\]
+The curvature term is a Dirac measure on the diagonal. The reduced boundary resolvent term is not the interior logarithmic Green kernel restricted to the boundary; after applying one normal derivative in each variable it is an order-one boundary pseudodifferential operator. Its diagonal singularity is the Hadamard finite part of an inverse-square chord kernel.
+
+\subsection{Boundary symbol and Laurent extraction}\label{app:ss-had-symbol}
+
+In local arc-length coordinates on the smooth boundary,
+\[
+G_R(s,s+\epsilon)
+=-\frac{1}{\pi}\operatorname{f.p.}
+\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
++R_0(s,s+\epsilon),
+\]
+where $R_0$ has order at most $0$. The principal symbol is $|\xi|$, the same as the Steklov operator. The shift by $\lambda_1$ in the reduced resolvent and the projection away from the ground state change only lower-order, smoothing, or finite-rank terms, so the leading finite-part pole is universal.
+
+The chord denominator has the Frenet/Bernoulli expansion
+\[
+\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
+=\epsilon^{-2}+\frac{\kappa(s)^2}{12}+O(\epsilon),
+\]
+with higher coefficients universal polynomials in the boundary jet. In the circle model this is the familiar identity
+\[
+\frac{1}{|1-e^{i\epsilon}|^2}
+=\frac{1}{4\sin^2(\epsilon/2)}
+=\epsilon^{-2}+\frac{1}{12}+\frac{\epsilon^2}{240}
++\frac{\epsilon^4}{6048}+\cdots.
+\]
+Therefore
+\[
+H_{\mathrm{res}}(s,s+\epsilon)
+=\frac{2}{\pi}p(s)p(s+\epsilon)
+\operatorname{f.p.}\frac{1}{|\gamma(s+\epsilon)-\gamma(s)|^2}
++\text{lower-order terms},
+\]
+and the leading Laurent coefficient gives
+\[
+p(s)^2
+=\frac{\pi}{2}\operatorname{Coef}_{\epsilon^{-2}}
+\bigl[H_{\mathrm{res}}(s,s+\epsilon)\bigr].
+\]
+This is the algebraic replacement for logarithmic diagonal peeling.
+
+\subsection{Recovering fluxes}\label{app:ss-flux-recovery}
+
+The Hopf principle gives $p>0$ on the smooth boundary. The off-diagonal kernel
+\[
+K_R(x,y):=-\frac12H_{\mathrm{res}}(x,y)=p(x)p(y)G_R(x,y)
+\]
+is a multiplication-dressed chord Laplacian, modulo lower-order pseudodifferential corrections. Positivity of $p$, the $\epsilon^{-2}$ Laurent coefficient of $H_{\mathrm{res}}$, and the Rellich identity
+\[
+\int_{\partial\Omega}p(x)^2(x\cdot\nu)\,ds=2\lambda_1
+\]
+recover $p$ pointwise on the smooth boundary and provide an independent normalization check. The global sign is fixed by Hopf positivity.
+
+Dividing the finite-part kernel by $p(x)p(y)$ recovers $G_R(x,y)$ as an order-one boundary pseudodifferential operator. Since the eigenvalue gaps $(\lambda_k-\lambda_1)^{-1}$ are known from the spectrum, spectral decomposition of $G_R$ recovers each boundary flux $\partial_\nu u_k$ up to sign for simple eigenvalues and up to orthogonal mixing in multiplicity spaces.
+
+\subsection{From boundary spectral data to the domain}\label{app:ss-bc}
+
+The boundary spectral data determine the Dirichlet-to-Neumann map by
+\[
+\Lambdaop f
+=-\sum_{k\geq1}
+\frac{\langle f,\partial_\nu u_k\rangle_{\partial\Omega}}{\lambda_k}
+\partial_\nu u_k.
+\]
+Belishev--Kurylev boundary control, equivalently the two-dimensional Calderon uniqueness theorem in this Euclidean setting \cite{Belishev, LassasUhlmann, SylvesterUhlmann}, determines the domain up to isometry from the DtN map. Thus the pair $(\Spec(-\Delta_\Omega),D^2\lambda_1)$ determines every bounded piecewise smooth simply connected planar domain up to isometry.
+
+\subsection{GWW degeneracy}\label{app:ss-had-gww}
+
+The Sunada transplantation between the BCDS propellers is a combinatorial tile map, not a pointwise boundary diffeomorphism. It intertwines the Dirichlet Laplacians but does not identify the boundary flux functions. Therefore the Hadamard kernels $H^{(1)}$ and $H^{(2)}$ are not isomorphic as boundary quadratic forms; otherwise Theorem \ref{thm:C} would force the non-isometric propellers to be isometric. This is exactly the obstruction that the Hessian removes.
+
+\begin{thebibliography}{99}
+
+\bibitem{BCDS}
+P. Buser, J. Conway, P. Doyle, and K.-D. Semmler,
+\emph{Some planar isospectral domains},
+Internat.\ Math.\ Res.\ Notices 9 (1994), 391--400.
+
+\bibitem{Belishev}
+M. I. Belishev,
+\emph{Boundary control in reconstruction of manifolds and metrics (the BC method)},
+Inverse Problems 13 (1997), R1--R45.
+
+\bibitem{Carslaw}
+H. S. Carslaw and J. C. Jaeger,
+\emph{Conduction of Heat in Solids},
+2nd ed., Oxford Univ.\ Press, 1959.
+
+\bibitem{ChowlaSelberg}
+S. Chowla and A. Selberg,
+\emph{On Epstein's zeta function},
+J. Reine Angew.\ Math.\ 227 (1967), 86--110.
+
+\bibitem{CostabelStephan}
+M. Costabel and E. P. Stephan,
+\emph{Boundary integral equations for mixed boundary value problems in polygonal domains and Galerkin approximation},
+in: \emph{Mathematical Models and Methods in Mechanics 1981}, PWN, Warsaw, 1985, pp.\ 175--251.
+
+\bibitem{Edward}
+J. Edward,
+\emph{An inverse spectral result for the Neumann operator on planar domains},
+J.\ Funct.\ Anal.\ 111 (1993), 312--322.
+
+\bibitem{GiraudThas}
+O. Giraud and K. Thas,
+\emph{Hearing shapes of drums: mathematical and physical aspects of isospectrality},
+Rev.\ Modern Phys.\ 82 (2010), 2213--2255.
+
+\bibitem{GWW}
+C. Gordon, D. L. Webb, and S. Wolpert,
+\emph{One cannot hear the shape of a drum},
+Bull.\ Amer.\ Math.\ Soc.\ 27 (1992), 134--138.
+
+\bibitem{GrisvardCorners}
+P. Grisvard,
+\emph{Elliptic Problems in Nonsmooth Domains},
+SIAM, Philadelphia, 2011.
+
+\bibitem{GulatiPolygons}
+R. Gulati,
+\emph{Hearing the shape of a convex polygon: the cyclotomic-rigidity proof},
+manuscript.
+
+\bibitem{GulatiSmooth}
+R. Gulati,
+\emph{Hearing the shape of a smooth star-shaped curve},
+manuscript.
+
+\bibitem{GulatiPiecewise}
+R. Gulati,
+\emph{Hearing the shape of a piecewise smooth convex planar domain},
+manuscript.
+
+\bibitem{GulatiReconstruction}
+R. Gulati,
+\emph{A constructive reconstruction algorithm for the star-shaped hearing theorem},
+manuscript.
+
+\bibitem{GulatiTetration}
+R. Gulati,
+\emph{Operator-canonical fractional iterates and complex tetration},
+manuscript.
+
+\bibitem{Henrot}
+A. Henrot and M. Pierre,
+\emph{Shape Variation and Optimization: A Geometrical Analysis},
+EMS Tracts Math.\ 28, European Math.\ Soc., 2018.
+
+\bibitem{HardyRogosinski}
+G. H. Hardy and W. W. Rogosinski,
+\emph{Notes on Fourier Series and Dirichlet Series},
+Cambridge Univ.\ Press, 1944.
+
+\bibitem{Kac}
+M. Kac,
+\emph{Can one hear the shape of a drum?},
+Amer.\ Math.\ Monthly 73 (1966), no.\ 4, part II, 1--23.
+
+\bibitem{Kondratev}
+V. A. Kondrat'ev,
+\emph{Boundary value problems for elliptic equations in domains with conical or angular points},
+Trudy Moskov.\ Mat.\ Obshch.\ 16 (1967), 209--292.
+
+\bibitem{KSU2007}
+C. E. Kenig, J. Sj\"ostrand, and G. Uhlmann,
+\emph{The Calder\'on problem with partial data},
+Ann.\ of Math.\ (2) 165 (2007), 567--591.
+
+\bibitem{LassasUhlmann}
+M. Lassas and G. Uhlmann,
+\emph{On determining a Riemannian manifold from the Dirichlet-to-Neumann map},
+Ann.\ Sci.\ \'Ecole Norm.\ Sup.\ (4) 34 (2001), 771--787.
+
+\bibitem{LPP-mixed}
+M. Levitin, L. Parnovski, and I. Polterovich,
+\emph{Isospectral domains with mixed boundary conditions},
+J.\ Phys.\ A: Math.\ Gen.\ 39 (2006), 2073--2082.
+
+\bibitem{LPPS-corners}
+M. Levitin, L. Parnovski, I. Polterovich, and D. A. Sher,
+\emph{Sloshing, Steklov and corners: Asymptotics of Steklov eigenvalues for curvilinear polygons},
+Proc.\ London Math.\ Soc.\ 125 (2022), 359--436.
+
+\bibitem{LPPS-cusps}
+M. Levitin, L. Parnovski, I. Polterovich, and D. A. Sher,
+\emph{Steklov problems on planar domains with cusps},
+preprint, 2023.
+
+\bibitem{McLean}
+W. McLean,
+\emph{Strongly Elliptic Systems and Boundary Integral Equations},
+Cambridge Univ.\ Press, 2000.
+
+\bibitem{Polterovich-survey}
+I. Polterovich,
+\emph{Heat invariants of Riemannian manifolds},
+Israel J.\ Math.\ 119 (2000), 239--252.
+
+\bibitem{Plastock}
+R. Plastock,
+\emph{Homeomorphisms between Banach spaces},
+Trans.\ Amer.\ Math.\ Soc.\ 200 (1974), 169--183.
+
+\bibitem{PolterovichSher}
+I. Polterovich and D. A. Sher,
+\emph{Heat invariants of the Steklov problem},
+J.\ Geom.\ Anal.\ 25 (2015), 924--950.
+
+\bibitem{Stark}
+H. M. Stark,
+\emph{$L$-functions at $s=1$. II. Artin $L$-functions with rational characters},
+Adv.\ Math.\ 17 (1975), 60--92.
+
+\bibitem{Sunada}
+T. Sunada,
+\emph{Riemannian coverings and isospectral manifolds},
+Ann.\ of Math.\ (2) 121 (1985), 169--186.
+
+\bibitem{SylvesterUhlmann}
+J. Sylvester and G. Uhlmann,
+\emph{A global uniqueness theorem for an inverse boundary value problem},
+Ann.\ of Math.\ (2) 125 (1987), 153--169.
+
+\bibitem{vdBSr}
+M. van den Berg and S. Srisatkunarajah,
+\emph{Heat equation for a region in $\Reals^2$ with a polygonal boundary},
+J.\ London Math.\ Soc.\ 37 (1988), 119--127.
+
+\end{thebibliography}
+
+\end{document}

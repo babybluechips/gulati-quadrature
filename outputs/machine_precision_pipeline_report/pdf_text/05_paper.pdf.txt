@@ -1,0 +1,1651 @@
+Boundary-Only Shape Optimization via Fourier Parameterization
+and Kernel Coupling: A Meshless Framework with Analytic
+Gradients
+Rick BlueCHIPS
+Blue Chips Research
+rick@bluechips.com
+
+March 9, 2026
+
+Abstract
+We introduce a meshless framework for optimizing the shapes of two-dimensional closed
+boundaries to extremize kernel-based coupling functionals subject to geometric constraints. The
+boundaries are represented as truncated Fourier series in the parameter domain, yielding a
+finite-dimensional optimization problem whose design variables are spectral coefficients. We
+derive closed-form expressions for the area functional and analytic shape gradients of the coupling
+objective through the Fourier basis, avoiding both mesh generation and finite-difference gradient
+approximations. Constraints on enclosed area, inter-component separation, curvature, and
+spectral roughness are enforced through an augmented Lagrangian method with L-BFGS inner
+solves. We prove that the area of a Fourier-parameterized boundary admits an exact quadratic
+form in the coefficients, establish well-posedness of the regularized coupling functional, and provide
+convergence estimates for the trapezoidal quadrature on smooth periodic integrands. Numerical
+experiments on two-conductor coupling maximization demonstrate that the framework recovers
+the expected parallel-plate deformation, satisfies area constraints to machine precision, and
+passes component-wise gradient verification at O(10−9 ) relative error. The entire optimization—
+from boundary representation through converged shape—operates without any volumetric
+discretization.
+
+Keywords: shape optimization, boundary-only methods, Fourier parameterization, meshless
+methods, kernel coupling, augmented Lagrangian, capacitance, spectral methods
+AMS subject classifications: 49Q10, 65N38, 65K10, 31A25, 78M15
+
+1
+
+Introduction
+
+Shape optimization problems arise in electrostatics, fluid mechanics, acoustics, and structural design
+wherever the geometry of a domain boundary is a design variable [16, 1, 14]. Classical approaches
+discretize the domain with a finite-element or boundary-element mesh, solve the governing PDE,
+compute shape sensitivities via an adjoint method, and update the mesh [9]. This pipeline introduces
+several well-known difficulties: mesh generation is expensive, mesh quality degrades under large
+deformations, remeshing introduces interpolation error, and the entire framework couples the physics
+solver tightly to the geometry representation.
+In this paper we propose an alternative: a boundary-only, meshless framework in which the
+geometry is parameterized directly by Fourier coefficients, the physics objective is a boundary
+1
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Shape deformation: initial vs.\ optimized
+1.0
+
+y
+
+0.5
+
+Initial 1
+Initial 2
+Optimized 1*
+Optimized 2*
+
+gap = 0.381
+
+0.0
+0.5
+1.0
+2
+
+1
+
+0
+
+x
+
+1
+
+2
+
+Figure 1: Representative result of the meshless boundary shape optimizer. Two initially circular
+conductors (dashed gray) deform into ellipse-like shapes (solid) that flatten toward each other,
+maximizing logarithmic kernel coupling while preserving enclosed area exactly. The minimum
+inter-boundary gap is annotated.
+integral that can be evaluated without any volumetric discretization, and the shape gradient is
+computed analytically through the Fourier basis. No mesh is generated, no PDE is assembled in the
+volume, and no finite-difference gradient approximation is needed.
+The key observation is that for a broad class of kernel-based coupling functionals—including the
+logarithmic kernel that generates the two-dimensional Laplace Green’s function—the objective, its
+gradient, and the relevant geometric constraints (area, separation, curvature) can all be expressed as
+integrals over the boundary alone. When the boundary is represented as a truncated Fourier series,
+these integrals become functions of the spectral coefficients that can be differentiated in closed form.
+
+1.1
+
+Contributions
+
+Our main contributions are:
+1. A complete meshless shape optimization framework in which every quantity—objective, gradient, constraints, and regularizers—is computed from boundary data alone (sections 2 and 3).
+2. An exact, closed-form expression for the area of a Fourier-parameterized boundary as a
+quadratic form in the spectral coefficients, together with its analytic Jacobian (theorem 2.2).
+3. Analytic shape gradients of the kernel coupling functional with respect to Fourier coefficients,
+derived via the chain rule through the position and speed Jacobians of the parameterization
+(section 3).
+
+2
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+4. A constrained optimization algorithm combining augmented Lagrangian outer iterations with
+L-BFGS inner solves, incorporating spectral roughness regularization, log-sum-exp smooth
+minimum gap constraints, and geometry validity safeguards (section 5).
+5. Numerical experiments demonstrating gradient accuracy at 10−9 relative error, exact area
+constraint satisfaction, physically correct parallel-plate deformation (fig. 1), and robust
+convergence (section 7). A gallery of optimized shapes at varying separations is shown in
+fig. 7.
+
+1.2
+
+Related work
+
+Shape optimization has a long history; see [16, 5] for comprehensive treatments. Boundary-integral
+approaches to shape sensitivity analysis were developed in [3, 6], and Fourier-based boundary
+parameterizations have been used for inverse problems in [12, 13] and shape optimization in [8, 6].
+Our work differs in providing a fully self-contained optimization stack—from parameterization
+through constrained optimizer—with analytic gradients, rather than relying on external PDE solvers.
+The kernel coupling functional we consider is closely related to the mutual capacitance and
+Neumann–Poincaré operator studied in [11, 2]. The connection between spectral representations
+and capacity has been explored in [7, 10].
+
+2
+
+Problem formulation
+
+2.1
+
+Boundary parameterization
+
+Let Γ be a smooth, simple, closed curve in R2 traversed counterclockwise and parameterized by
+θ ∈ [0, 2π). We represent Γ as a truncated real Fourier series:
+x(θ) = a0 +
+
+
+x(θ)
+z(θ) =
+,
+y(θ)
+
+m
+X
+
+
+ak cos kθ + bk sin kθ ,
+
+k=1
+
+y(θ) = c0 +
+
+m
+X
+
+(1)
+
+
+ck cos kθ + dk sin kθ .
+
+k=1
+
+The design variables are collected in the coefficient vector
+p = (a0 , c0 , a1 , b1 , c1 , d1 , . . . , am , bm , cm , dm )T ∈ Rnc ,
+
+nc = 2 + 4m.
+
+(2)
+
+A circle of radius r centered at (cx , cy ) corresponds to a0 = cx , c0 = cy , a1 = r, d1 = r, and all other
+coefficients zero.
+Remark 2.1. The parameterization (1) is linear in p: z(θ) = Φ(θ)p, where Φ(θ) is a 2 × nc matrix
+of trigonometric basis functions. This linearity is the key structural property that makes analytic
+gradient computation tractable.
+
+3
+
+Meshless Boundary Shape Optimization
+
+2.2
+
+R. BlueCHIPS
+
+Derived geometric quantities
+
+From (1) we obtain the tangent vector, unit outward normal, speed, and curvature:
+p
+dz
+,
+z′ (θ) = x′ (θ)2 + y ′ (θ)2 ,
+dθ 
+
+1 −y ′ (θ)
+,
+n(θ) = ′
+|z | x′ (θ)
+x′ y ′′ − y ′ x′′
+κ(θ) =
+.
+|z′ |3
+
+z′ (θ) =
+
+(3)
+(4)
+(5)
+
+A central result is that the enclosed area admits a closed-form expression:
+Theorem 2.2 (Fourier area formula). Let Γ be parameterized by (1) with counterclockwise orientation. Then the enclosed area is
+A(p) = π
+
+m
+X
+
+k (ak dk − bk ck ).
+
+(6)
+
+k=1
+
+H
+R 2π
+Proof. By Green’s theorem, A = 12 Γ (x dy − y dx) = 12 0 (xy ′ − yx′ ) dθ. Substituting (1) and using
+the orthogonality relations
+Z 2π
+Z 2π
+cos jθ sin kθ dθ = πδjk ,
+cos jθ cos kθ dθ = πδjk (j, k ≥ 1),
+0
+
+0
+
+and noting that cross-terms between different modes vanish, we compute:
+m
+X
+
+xy − yx =
+k (ak cos kθ + bk sin kθ)(−ck sin kθ + dk cos kθ)
+′
+
+′
+
+k=1
+
+
+− (ck cos kθ + dk sin kθ)(−ak sin kθ + bk cos kθ) + cross-mode terms.
+The same-mode terms simplify to k(ak dk − bk ck )(cos2Rkθ +
+sin2 kθ) = k(ak dk − bk ck ).PCross-mode
+1 2π P
+terms integrate to zero over [0, 2π). Hence A = 2 0
+k k(ak dk − bk ck ) dθ = π
+k k(ak dk −
+bk ck ).
+Corollary 2.3. The gradient of the area with respect to the coefficient vector is
+∂A
+= πk dk ,
+∂ak
+
+∂A
+= −πk ck ,
+∂bk
+
+∂A
+= −πk bk ,
+∂ck
+
+∂A
+= πk ak ,
+∂dk
+
+(7)
+
+with ∂A/∂a0 = ∂A/∂c0 = 0. In particular, A is a quadratic form in p and its gradient is linear in
+p.
+
+2.3
+
+Multi-component domains
+
+We consider Nb ≥ 2 disjoint closed boundaries Γ1 , . . . , ΓNb , each parameterized as in (1) with its
+own coefficient vector pℓ ∈ Rnc,ℓ . The global design vector is the concatenation:
+tot
+p = (pT1 , . . . , pTNb )T ∈ Rnc ,
+
+ntot
+c =
+
+Nb
+X
+ℓ=1
+
+4
+
+nc,ℓ .
+
+(8)
+
+Meshless Boundary Shape Optimization
+
+2.4
+
+R. BlueCHIPS
+
+Kernel coupling objective
+
+Given two boundary components Γa and Γb and a kernel K : R2 × R2 → R, we define the coupling
+functional
+Z Z
+
+J (p) =
+K z(s), w(t) |dz(s)| |dw(t)| ,
+(9)
+Γa
+
+Γb
+
+where z and w denote the parameterizations of Γa and Γb , respectively. In parameter space:
+Z 2π Z 2π
+
+J (p) =
+K z(s), w(t) z′ (s) w′ (t) ds dt.
+(10)
+0
+
+0
+
+We consider two kernels of particular interest:
+Inverse-square kernel. KIS (z, w) = (|z − w|2 + ε2 )−1 , where ε ≥ 0 is a regularization parameter.
+This kernel measures the strength of Coulombic interaction between boundary charge distributions.
+Logarithmic kernel. Klog (z, w) = − log(|z − w| + ε). This is (up to a constant) the two1
+dimensional free-space Green’s function G(z, w) = − 2π
+log |z − w|.
+Proposition 2.4 (Well-posedness). Let Γa and Γb be C 1 Jordan curves with dist(Γa , Γb ) > δ > 0.
+Then for ε > 0, the functional J defined by (10) is a smooth function of p, and its gradient exists
+and is Lipschitz continuous on any compact subset of the admissible coefficient space.
+Proof. With ε > 0 and dist(Γa , Γb ) > δ > 0, both KIS and Klog are C ∞ on Γa × Γb . Since
+the integrand is a smooth periodic function of (s, t) composed with smooth functions of p, the
+functional (10) inherits smoothness from the integrand by dominated convergence and the chain
+rule.
+
+2.5
+
+Quadrature
+
+We discretize (10) using the composite trapezoidal rule with nq nodes per boundary:
+Jh (p) = (∆θ)2
+
+nq nq
+X
+X
+
+K(zi , wj ) z′i
+
+wj′ ,
+
+∆θ =
+
+i=1 j=1
+
+2π
+,
+nq
+
+(11)
+
+where zi = z(θia ) and wj = w(θjb ) are uniformly spaced samples.
+Proposition 2.5 (Quadrature convergence). If the integrand in (10) is C ∞ and periodic in both
+variables (which holds when ε > 0 and the boundaries are separated), then the trapezoidal rule
+converges superalgebraically:
+|J (p) − Jh (p)| = O(n−p
+q )
+
+for all p ∈ N.
+
+(12)
+
+Proof. This is a direct consequence of the Euler–Maclaurin formula for periodic integrands [17]. For
+a C ∞ periodic function on [0, 2π)2 , all correction terms in the Euler–Maclaurin expansion vanish,
+giving spectral convergence.
+
+3
+
+Analytic shape gradients
+
+We now derive the gradient ∇p Jh of the discretized coupling objective with respect to the Fourier
+coefficients. The derivation exploits the linearity of the parameterization in p.
+5
+
+Meshless Boundary Shape Optimization
+
+3.1
+
+R. BlueCHIPS
+
+Jacobian structure
+
+Since z(θ) = Φ(θ)pa is linear in the coefficient vector pa of boundary a, the position Jacobian is
+simply the basis function matrix:
+∂z(θi )
+= Φ(θi ):,k ∈ R2 .
+∂(pa )k
+
+(13)
+
+Explicitly, the nonzero entries are:
+∂x
+= sin jθ,
+∂bj
+
+∂x
+= cos jθ,
+∂aj
+
+∂y
+= cos jθ,
+∂cj
+
+∂y
+= sin jθ,
+∂dj
+
+∂x
+∂y
+=
+= 1.
+∂a0
+∂c0
+
+(14)
+
+The tangent Jacobian ∂z′ (θi )/∂(pa )k is obtained by differentiating the basis functions:
+∂(dx/dθ)
+= −j sin jθ,
+∂aj
+
+3.2
+
+∂(dx/dθ)
+= j cos jθ,
+∂bj
+
+etc.
+
+(15)
+
+Speed gradient
+
+The speed σ(θ) = |z′ (θ)| depends on p through z′ . By the chain rule:
+
+∂σi
+=
+∂(pa )k
+
+3.3
+
+z′i ·
+
+∂z′i
+∂(pa )k
+.
+σi
+
+(16)
+
+Full gradient decomposition
+
+Using the product rule on (11), the gradient with respect to pa decomposes into two terms:
+Theorem 3.1 (Analytic gradient). The gradient of the discrete coupling objective with respect to
+the coefficient vector of boundary a is
+nq
+nq
+nq h nq
+i
+i
+X
+X
+∂Jh XhX
+b
+a
+a
+a
+∇z K(zi , wj ) wj · Jpos,i · wi +
+=
+K(zi , wj ) wjb · Jσ,i
+· ∆θ,
+∂pa
+i=1 j=1
+i=1 j=1
+|
+{z
+} |
+{z
+}
+position variation
+
+(17)
+
+speed variation
+
+a
+a = ∂σ a /∂p ∈ R1×nc,a . An
+where wia = σia ∆θ, wjb = σjb ∆θ, Jpos,i
+= ∂zi /∂pa ∈ R2×nc,a , and Jσ,i
+a
+i
+analogous expression holds for ∂Jh /∂pb .
+P
+Proof. Write Jh = (∆θ)2 ij K(zi , wj )σia σjb . Differentiating with respect to pa using the product
+rule on K · σia (noting that wj and σjb do not depend on pa ) yields the two terms.
+
+Remark 3.2. Both Jpos and Jσ are available in closed form from (14)–(16). No adjoint solve or
+automatic differentiation is required.
+The kernel gradients for our two built-in kernels are:
+2(z − w)
+,
+(|z − w|2 + ε2 )2
+z−w
+∇z Klog = −
+.
+|z − w| (|z − w| + ε)
+∇z KIS = −
+
+6
+
+(18)
+(19)
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+4
+
+Constraints and regularization
+
+4.1
+
+Area constraint
+
+For each boundary Γℓ we impose the equality constraint
+hℓ (p) = A(pℓ ) − Atarget
+= 0,
+ℓ
+
+(20)
+
+where A(pℓ ) is given by (6). The Jacobian ∇p hℓ is obtained from corollary 2.3 and is exact—no
+quadrature is involved.
+
+4.2
+
+Minimum gap constraint
+
+To prevent component collision, we enforce g(p) = dsmooth (Γa , Γb ) − dmin ≥ 0, where dsmooth is a
+smooth approximation to mini,j |zi − wj | computed via the log-sum-exp trick:
+!
+ns X
+ns
+X
+
+1
+dsmooth = − log
+exp −β |zi − wj | ,
+(21)
+β
+i=1 j=1
+
+with temperature parameter β > 0.
+Proposition 4.1. As β → ∞, the smooth minimum (21) converges from below to the true minimum
+distance:
+log(n2s )
+min |zi − wj | −
+≤ dsmooth ≤ min |zi − wj | .
+i,j
+i,j
+β
+The gradient of (21) with respect to positions is
+n
+
+s
+zi − wj
+∂dsmooth X
+=
+ωij
+,
+∂zi
+|zi − wj |
+
+(22)
+
+exp(−β |zi − wj |)
+.
+k,l exp(−β |zk − wl |)
+
+(23)
+
+j=1
+
+where the softmin weights are
+ωij = P
+
+This is mapped to the coefficient space via the position Jacobian.
+
+4.3
+
+Regularization penalties
+
+We include three soft penalty terms to control boundary regularity.
+Curvature penalty.
+Z 2π
+Pκ (pℓ ) =
+
+κ(θ)2 z′ (θ) dθ ≈ ∆θ
+
+0
+
+nq
+X
+
+κ2i σi .
+
+(24)
+
+i=1
+
+Perimeter penalty.
+Z 2π
+PL (pℓ ) = L(Γℓ ) =
+0
+
+7
+
+z′ (θ) dθ.
+
+(25)
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Spectral roughness penalty.
+Pspec (pℓ ) =
+
+m
+X
+
+
+k α a2k + b2k + c2k + d2k ,
+
+(26)
+
+k=1
+
+with exponent α > 0. This penalizes high-frequency boundary oscillations in the spectral domain.
+Proposition 4.2 (Spectral gradient). The gradient of (26) with respect to each mode coefficient is
+∂Pspec
+= 2k α ak ,
+∂ak
+
+∂Pspec
+= 2k α bk ,
+∂bk
+
+etc.
+
+(27)
+
+In particular, Pspec is convex and its gradient is Lipschitz with constant 2mα .
+
+5
+
+Optimization algorithm
+
+5.1
+
+Augmented Lagrangian formulation
+
+We solve the constrained problem
+X
+X
+max Jh (p) −
+wκ Pκ (pℓ ) −
+wspec Pspec (pℓ )
+p
+
+ℓ
+
+s.t.
+
+hℓ (p) = 0, g(p) ≥ 0,
+
+(28)
+
+ℓ
+
+via the augmented Lagrangian method [15, 4]. Define the augmented Lagrangian:
+L(p, λ, µ, ρ) = −
+
+ µ
+i2
+ Xh
+ρ i X ρh
+Jh (p) X
+j
++
+wκ Pκ +wspec Pspec +
+λi hi + h2i +
+max 0, −gj
+, (29)
+J0
+2
+2
+ρ
+i
+
+ℓ
+
+j
+
+where J0 = max( Jh (p(0) ) , 1) normalizes the objective, λ and µ are Lagrange multiplier estimates,
+and ρ > 0 is the penalty parameter.
+Algorithm 1: Augmented Lagrangian with L-BFGS Inner Solver
+1: Input: Initial coefficients p(0) ; tolerances εg , εc
+2: Initialize λ ← 0, µ ← 0, ρ ← ρ0
+3: for k = 0, 1, 2, . . . do
+4:
+Approximately minimize L(·, λ, µ, ρ) via L-BFGS from p(k)
+5:
+p(k+1) ← result of inner solve
+6:
+if geometry degenerate (area < 10−6 or > 104 ) then
+7:
+Rollback: p(k+1) ← p(k) ; ρ ← τ ρ; continue
+8:
+end if
+9:
+Compute violations: Veq = maxi |hi |, Vineq = maxj [0, −gj ]+
+10:
+if max(Veq , Vineq ) < εc and ∥∇p L∥ < εg then
+11:
+return converged
+12:
+end if
+13:
+Update: λi ← λi + ρ hi (p(k+1) ), µj ← [µj − ρ gj (p(k+1) )]+
+14:
+if violation not sufficiently reduced then ρ ← min(τ ρ, ρmax ), τ = 2
+15:
+end if
+16: end for
+
+8
+
+Meshless Boundary Shape Optimization
+
+5.2
+
+R. BlueCHIPS
+
+L-BFGS inner solver
+
+The inner minimization on line 4 of section 5.1 is performed by L-BFGS with memory M = 10 and
+backtracking line search. The L-BFGS direction is computed via the standard two-loop recursion
+[15]: given correction pairs {(si , yi )}m
+i=1 where si = pi+1 − pi and yi = ∇Li+1 − ∇Li , the search
+direction d = −Hm ∇L is computed without forming Hm explicitly.
+The initial Hessian approximation is H0 = γI with γ = sTm−1 ym−1 / ∥ym−1 ∥2 . To ensure stability,
+we use an adaptive initial step size αinit = min(α0 , 1/ ∥d∥) and clip gradients with ∥∇L∥ > 106 .
+
+5.3
+
+Convergence safeguards
+
+Our implementation includes several safeguards motivated by the geometry of the problem:
+1. Geometry validity check. After each inner solve, we verify that 10−6 < |A(pℓ )| < 104 for
+all components. If violated, we reject the step and increase ρ.
+2. Best-solution tracking. We maintain the best coefficient vector p∗ seen so far, measured
+by a combination of constraint satisfaction and objective value. The final output is p∗ rather
+than the last iterate.
+3. Gradient clipping. Within the augmented Lagrangian subproblem, gradients are clipped to
+norm ≤ 106 to prevent step explosion when the penalty parameter is large.
+4. Objective normalization. The objective is divided by J0 to balance its scale against the
+constraint penalties.
+
+6
+
+Gradient verification
+
+For every built-in objective and constraint, we verify the analytic gradient against centered finite
+differences. For each component k of the coefficient vector:
+gkFD =
+
+f (p + ϵek ) − f (p − ϵek )
+,
+2ϵ
+
+ϵ = 10−5 .
+
+(30)
+
+We measure the component-wise relative error
+ek =
+
+gkanalytic − gkFD
+gkanalytic + gkFD + η
+
+,
+
+(31)
+
+where η = 10−15 prevents division by zero. For components where both gkanalytic < 10−8 and
+gkFD < 10−8 , we substitute the absolute error gkanalytic − gkFD .
+Additionally, we test nd = 5 random directional derivatives: ∇f · d versus (f (p + ϵd) − f (p −
+ϵd))/(2ϵ).
+The gradient check passes if maxk ek < 10−3 and maxdir |edir | < 10−3 .
+
+7
+
+Numerical experiments
+
+All experiments use the implementation described in this paper. The code is written in Python
+with NumPy for vectorized linear algebra.
+9
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Table 1: Gradient verification results for kernel coupling objectives.
+Kernel
+Inverse-square (ε = 0.1)
+Logarithmic (ε = 0.01)
+Area constraint (analytic)
+
+Max relative error
+
+Directional deriv. error
+
+1.07 × 10−9
+4.48 × 10−9
+3.73 × 10−11
+
+3.03 × 10−10
+5.36 × 10−10
+7.57 × 10−10
+
+Table 2: Geometry verification for a unit circle (r = 1).
+
+7.1
+
+Quantity
+
+Computed
+
+Exact
+
+Area
+Perimeter
+Centroid
+Curvature (std)
+
+3.14159265
+6.28318531
+(0, 0)
+4.39 × 10−17
+
+π
+2π
+(0, 0)
+0
+
+Experiment 1: Gradient accuracy
+
+We initialize two circular boundaries of radius r = 1 centered at (±2, 0) with m = 4 Fourier modes
+per component (nc = 36 total DOFs) and nq = 64 quadrature points.
+Table 1 confirms that the analytic gradients agree with finite differences to O(10−9 ) for both
+kernels, well within the O(ϵ2 ) = O(10−10 ) expected accuracy of centered differences. The area
+constraint gradient, being exact (no quadrature), achieves 10−11 .
+
+7.2
+
+Experiment 2: Geometry exactness
+
+We verify the Fourier area formula (6) on a unit circle (a0 = c0 = 0, a1 = d1 = 1, m = 8):
+The area is exact to all displayed digits because (6) is algebraic. The perimeter and curvature,
+which involve quadrature, converge spectrally due to proposition 2.5.
+
+7.3
+
+Experiment 3: Two-conductor coupling maximization
+
+We maximize the logarithmic kernel coupling between two initially circular conductors (r = 1,
+separation 3.0) subject to:
+ Fixed area: Aℓ = π for ℓ = 1, 2 (equality).
+ Minimum gap: dist(Γ1 , Γ2 ) ≥ 0.25 (inequality, β = 30).
+ Curvature penalty: wκ = 0.005.
+ Spectral roughness: wspec = 0.01, α = 3.
+
+Configuration: m = 6 modes, nq = 96, ntot
+c = 52 DOFs. Optimizer: augmented Lagrangian with
+ρ0 = 100, 30 outer iterations, 80 L-BFGS inner iterations each.
+The results in table 3 show that:
+1. The coupling objective increased (less negative, since the logarithmic kernel is negative
+for separated boundaries) by a factor corresponding to the boundaries moving closer and
+deforming.
+10
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Table 3: Optimization results for two-conductor coupling maximization.
+Quantity
+
+Initial
+
+Final
+
+Objective J
+Area (component 0)
+Area (component 1)
+Perimeter (comp. 0)
+Max curvature (comp. 0)
+Min gap
+
+−43.51
+3.1416
+3.1416
+6.283
+1.00
+1.000
+
+−29.29
+3.1416
+3.1416
+6.482
+2.07
+0.363
+
+(a) Initial configuration
+
+2.0
+
+1
+2
+
+1.0
+
+1.0
+
+0.5
+
+0.5
+
+0.0
+
+0.0
+
+0.5
+
+0.5
+
+1.0
+
+1.0
+
+1.5
+
+1.5
+
+2.0
+
+3
+
+2
+
+1
+
+0
+
+x
+
+1
+
+2
+
+*
+1
+*
+2
+
+1.5
+
+y
+
+y
+
+1.5
+
+(b) Optimized configuration
+
+2.0
+
+3
+
+2.0
+
+3
+
+2
+
+1
+
+0
+
+x
+
+1
+
+2
+
+3
+
+Figure 2: Two-conductor coupling maximization. (a) Initial circular boundaries Γ1 , Γ2 of radius
+r = 1 at separation d = 3. (b) Optimized boundaries Γ∗1 , Γ∗2 : the shapes flatten on the near side and
+elongate toward each other, consistent with the parallel-plate capacitor geometry that maximizes
+coupling at fixed area.
+2. The area constraints are satisfied to machine precision throughout the optimization, because
+the area formula is exact and the augmented Lagrangian enforces the constraint tightly.
+3. The optimized shapes flatten on the near side and elongate toward each other (figs. 2 and 4),
+consistent with the well-known parallel-plate capacitor geometry that maximizes coupling at
+fixed area. The curvature distribution (fig. 5) confirms that bending concentrates at the top
+and bottom extremes.
+4. The minimum gap constraint (dmin = 0.25) is satisfied, with the actual gap at 0.363.
+5. The perimeter increased modestly (from 6.28 to 6.48), indicating controlled, smooth deformation rather than the development of thin protrusions. The Fourier spectrum (fig. 6) shows
+energy migrating from mode k = 1 (circle) to k = 2, 3 (elliptical), with higher modes suppressed
+by the spectral penalty.
+The optimization completed in 30 outer iterations (78.9 seconds on a standard laptop), operating
+entirely on the 52 Fourier coefficients without any volumetric discretization.
+
+11
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+(a) Coupling objective
+
+100
+
+(p)
+
+29.68
+
+Value (log scale)
+
+Objective value
+
+29.70
+29.72
+29.74
+29.76
+29.78
+29.80
+
+(b) Gradient norm and constraint violation
+
+10 2
+10 4
+10 6
+10 8
+
+0
+
+5
+
+10
+
+15
+
+20
+
+Outer iteration
+
+25
+
+30
+
+Constraint violation
+
+0
+
+5
+
+10
+
+15
+
+20
+
+Outer iteration
+
+25
+
+30
+
+Figure 3: Convergence history for the two-conductor optimization. (a) The coupling objective J (p)
+increases monotonically (less negative) as boundaries deform. (b) Gradient norm and constraint
+violation both decrease, with constraint violation reaching O(10−9 ).
+
+8
+
+Computational complexity
+
+The dominant cost per optimization iteration is the kernel coupling evaluation and gradient
+computation. For Nb = 2 boundaries with nq quadrature points each:
+1. Kernel matrix assembly: O(n2q ).
+2. Gradient (position + speed terms): O(n2q · nc ) via the Jacobian contractions in (17).
+3. Area constraint: O(m) (closed form).
+4. Gap constraint: O(n2s ) (pairwise distances).
+The total per-iteration cost is O(n2q · nc ). Since nc = O(m) and we typically have nq ≫ m, the
+kernel evaluation dominates.
+For the experiments in this paper (nq = 96, nc = 52), the wall time is under two minutes for
+30 outer iterations with 80 inner iterations each. For larger problems, hierarchical matrix or fast
+multipole acceleration could reduce the kernel evaluation to O(nq log nq ) per quadrature dimension.
+
+9
+
+Relation to boundary element methods
+
+Our kernel coupling objective is closely related to boundary integral equations (BIE) for the Laplace
+equation. The mutual capacitance between two conductors can be computed by solving the BIE
+Z
+1
+∂G
+− µ(x) + µ(y)
+(x, y) dσ(y) = V (x),
+x ∈ Γ,
+(32)
+2
+∂ny
+Γ
+
+1
+where G(x, y) = − 2π
+log |x − y| is the Green’s function, µ is the double-layer density, and V is the
+prescribed potential.
+Our system includes a Nyström discretization of (32) as an alternative objective (the MutualCapacitanceObjecti
+class). However, for the purpose of shape optimization, the direct kernel coupling (10) has two
+
+12
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Shape evolution during optimization
+Iteration 0
+
+Iteration 5
+
+Iteration 11
+
+1
+
+1
+
+1
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+3
+
+2
+
+1
+
+Iteration 17
+
+0
+
+1
+
+2
+
+3
+
+3
+
+1
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+1
+
+0
+
+1
+
+2
+
+3
+
+3
+
+2
+
+1
+
+0
+
+0
+
+1
+
+2
+
+3
+
+1
+
+2
+
+3
+
+Iteration 29
+
+1
+
+2
+
+1
+
+Iteration 23
+
+1
+
+3
+
+2
+
+1
+
+2
+
+3
+
+3
+
+2
+
+1
+
+0
+
+Figure 4: Shape evolution over 30 augmented Lagrangian outer iterations. The boundaries progressively flatten on the near side (iteration 5–11), develop the characteristic parallel-plate elongation
+(iteration 17–23), and converge to the final optimized configuration (iteration 29). Areas remain
+exactly π throughout.
+advantages: (i) it avoids the O(N 3 ) linear solve required by BIE, and (ii) it admits fully analytic
+gradients through the Fourier basis. The kernel coupling objective can be viewed as a surrogate for
+the true capacitance, sharing the same qualitative behavior (maximized when boundaries approach
+and flatten toward each other).
+
+10
+
+Discussion and future work
+
+We have presented a complete, self-contained framework for meshless boundary shape optimization.
+The key design decisions that enable this approach are: (i) Fourier parameterization, which makes
+the boundary linear in its design variables; (ii) boundary-only objectives, which eliminate volumetric
+discretization; and (iii) analytic gradients through the basis function Jacobians, which avoid finitedifference approximations.
+The framework is extensible along several axes. The kernel function K is a plug-in; any kernel
+with known gradients can be used. The Fourier parameterization can be replaced by B-splines or
+NURBS while retaining the same gradient structure. The augmented Lagrangian can be replaced
+by SQP or interior-point methods.
+Limitations. The current framework is limited to two-dimensional, fixed-topology problems.
+Extension to three dimensions would require replacing the Fourier series with spherical harmonics
+or subdivision surfaces. The kernel coupling objective is a surrogate for the true capacitance; for
+applications requiring precise capacitance values, the full BIE solve is necessary. Finally, the O(n2q )
+kernel evaluation limits scalability to problems with thousands of boundary degrees of freedom
+without fast methods.
+
+13
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+2.0
+
+Curvature distribution on optimized boundaries
+
+1.5
+
+1.0
+
+y
+
+0.5
+
+0.5
+
+0.0
+
+0.0
+
+Signed curvature
+
+1.0
+
+0.5
+
+0.5
+
+1.0
+1.0
+
+1.5
+2.0
+
+1.5
+
+1.0
+
+0.5
+
+0.0
+
+x
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+2.0
+
+Figure 5: Signed curvature κ mapped onto the optimized boundary surfaces. High curvature (red)
+concentrates at the top and bottom extremes where the boundary curves sharply, while the flattened
+near-sides exhibit low curvature (blue/white), consistent with the parallel-plate geometry.
+Future directions. Immediate extensions include: adjoint-based analytic gradients for the BIE
+capacitance objective; JAX or PyTorch integration for automatic differentiation of custom objectives;
+fast multipole acceleration for large-scale problems; and three-dimensional boundary optimization
+using spherical harmonic or subdivision parameterizations.
+
+11
+
+Conclusions
+
+We introduced a meshless framework for two-dimensional boundary shape optimization that operates
+entirely through spectral coefficients and boundary integrals. The Fourier area formula (6) is
+exact, the kernel coupling gradient (17) is analytic, and the entire optimization pipeline—from
+parameterization through augmented Lagrangian convergence—requires no volumetric mesh, no
+PDE assembly, and no finite-difference gradients. Numerical experiments confirm gradient accuracy
+at 10−9 , exact area preservation, and physically correct parallel-plate deformation of coupled
+conductors. The framework provides a foundation for boundary-centric optimization of problems
+governed by kernel-based interactions.
+
+References
+[1] G. Allaire, F. Jouve, and A.-M. Toader, Structural optimization using sensitivity analysis and
+a level-set method, J. Comput. Phys., 194 (2004), pp. 363–393.
+[2] H. Ammari, H. Kang, and H. Lee, Mathematical and Statistical Methods for Multistatic Imaging,
+Springer, 2013.
+[3] M. Bonnet and A. Constantinescu, Inverse problems in elasticity, Inverse Problems, 21 (2005),
+pp. R1–R50.
+
+14
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Fourier spectrum: 1
+
+Fourier spectrum: 2
+Initial
+Optimized
+
+1.4
+
+1.2
+
+Mode amplitude
+
+1.2
+
+Mode amplitude
+
+Initial
+Optimized
+
+1.4
+
+1.0
+0.8
+0.6
+0.4
+
+1.0
+0.8
+0.6
+0.4
+0.2
+
+0.2
+0.0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+Mode number k
+
+0.0
+
+6
+
+1
+
+2
+
+3
+
+4
+
+Mode number k
+
+5
+
+6
+
+Figure 6: Fourier mode amplitudes before and after optimization. The initial circles have energy
+concentrated in mode k = 1 (the circle itself). After optimization, modes k = 2 and k = 3 activate
+to produce the elliptical flattening, while higher modes remain suppressed by the spectral roughness
+penalty (α = 3).
+Optimized shapes at varying initial separations
+
+y
+
+1
+
+d = 2.5
+
+gap=0.33
+A=3.14
+
+1
+
+d = 3.0
+
+gap=0.33
+A=3.14
+
+1
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+2
+
+1
+
+0
+x
+
+1
+
+2
+
+2
+
+1
+
+0
+x
+
+1
+
+1
+
+d = 5.0
+
+gap=0.31
+A=3.14
+
+0
+1
+3
+
+2
+
+d = 4.0
+
+gap=0.32
+A=3.14
+
+2
+
+1
+
+0
+x
+
+1
+
+2
+
+3
+
+2
+
+0
+x
+
+2
+
+Figure 7: Gallery of optimized shapes at varying initial separations d ∈ {2.5, 3.0, 4.0, 5.0}. Dashed
+circles show initial configurations. At smaller separations, the deformation is more pronounced
+(stronger coupling gradient); at larger separations, the shapes remain more circular (weaker coupling).
+All configurations preserve area exactly and satisfy the gap constraint.
+[4] A. R. Conn, N. I. M. Gould, and P. L. Toint, Trust-Region Methods, SIAM, Philadelphia, 2000.
+[5] M. C. Delfour and J.-P. Zolésio, Shapes and Geometries: Metrics, Analysis, Differential
+Calculus, and Optimization, SIAM, 2nd ed., 2011.
+[6] K. Eppler and H. Harbrecht, Fast wavelet BEM for shape optimization of the Bernoulli free
+boundary problem, in Proc. ENUMATH, Springer, 2007.
+[7] A. Greenbaum, L. Greengard, and A. Mayo, On the numerical solution of the biharmonic
+equation in the plane, Phys. D, 60 (1992), pp. 216–225.
+[8] H. Harbrecht and T. Hohage, Fast methods for three-dimensional inverse obstacle scattering
+problems, J. Integral Equations Appl., 19 (2007), pp. 237–260.
+[9] J. Haslinger and R. A. E. Mäkinen, Introduction to Shape Optimization: Theory, Approximation,
+and Computation, SIAM, Philadelphia, 2003.
+15
+
+Meshless Boundary Shape Optimization
+
+R. BlueCHIPS
+
+Optimized boundaries with outward unit normals
+*
+1
+*
+2
+
+1.0
+
+y
+
+0.5
+0.0
+0.5
+1.0
+2.0
+
+1.5
+
+1.0
+
+0.5
+
+0.0
+
+x
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+Figure 8: Optimized boundaries with outward unit normal vectors. The normals rotate smoothly
+around each component, confirming that the Fourier parameterization maintains C ∞ regularity and
+consistent counterclockwise orientation throughout the optimization.
+[10] J. Helsing and R. Ojala, On the evaluation of layer potentials close to their sources, J. Comput.
+Phys., 227 (2008), pp. 2899–2921.
+[11] H. Kang and G. W. Milton, Solutions to the Pólya–Szegő conjecture and the weak Escobar
+conjecture, Arch. Ration. Mech. Anal., 188 (2008), pp. 93–116.
+[12] R. Kress, Inverse scattering from an open arc, Math. Methods Appl. Sci., 18 (1995), pp. 267–293.
+[13] R. Kress and W. Rundell, Nonlinear integral equations and the iterative solution for an inverse
+boundary value problem, Inverse Problems, 21 (2005), pp. 1207–1223.
+[14] B. Mohammadi and O. Pironneau, Applied Shape Optimization for Fluids, Oxford University
+Press, 2nd ed., 2010.
+[15] J. Nocedal and S. J. Wright, Numerical Optimization, Springer, 2nd ed., 2006.
+[16] J. Sokolowski and J.-P. Zolésio, Introduction to Shape Optimization: Shape Sensitivity Analysis,
+Springer-Verlag, Berlin, 1992.
+[17] L. N. Trefethen and J. A. C. Weideman, The exponentially convergent trapezoidal rule, SIAM
+Rev., 56 (2014), pp. 385–458.
+
+16
+
+

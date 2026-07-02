@@ -1,0 +1,1925 @@
+Canonical Analytic Continuation of Kneser Tetration
+Rick Gulati
+June 6, 2026
+
+Abstract
+This paper proves the branch-free golden imaginary-height value
+iφ
+
+e=
+
+2
+3
+
+as a problem of analytic continuation from Kneser’s real-analytic tetration. The classical starting
+point is Kneser’s construction of a real-analytic solution of the exponential iteration problem;
+the modern difficulty is that Abel’s equation alone leaves logarithm sheets, Schroder coordinates,
+continuation domains, and height characters unresolved. We organize the continuation in four
+layers: integer height, real fractional height, complex height, and continuum/operator height.
+The first-principles invariant is qualitative: iteration must transport infinitesimal motion,
+∂h Th+1 = D exp(Th )∂h Th .
+Repeated differentiation gives the Bell/Faà di Bruno tower as a theorem. After logarithmic
+descent this tower becomes a branch-free Cauchy-moment tower; its primitive cyclotomic closure
+is the regular pentagon. Only then do the numerical certificates appear:
+√
+Q(ζ5 )+ = Q( 5),
+
+φ2 + φ−2 = 3,
+
+iφ
+
+e=
+
+2
+.
+3
+
+The central claim is deliberately rigid: a continuation of tetration that does not preserve this
+invariant is not a mathematically reasonable continuation of Kneser’s branch. It fails one of the
+branch-free, all-order, Kneser-compatible covariance requirements that make complex height
+meaningful.
+
+1
+
+Introduction
+
+1.1
+
+The Problem
+
+Complex tetration asks for a holomorphic height interpolation of
+0
+
+b = 1,
+
+h+1
+
+h
+
+b = b b.
+
+Classical constructions require choices: a logarithm branch, a fixed point of z 7→ bz , a Lambert
+W -sheet, an Abel/Schroder/Koenigs coordinate, and a continuation domain.
+Kneser’s solution supplies the classical real-analytic branch for base e. The present paper does
+not replace Kneser. It asks how far the Kneser branch can be analytically continued while preserving
+the invariant structure that made it canonical on the real axis.
+
+1
+
+1.2
+
+Central Claim
+
+The bold claim of the paper is:
+The continuation constructed here is the only mathematically reasonable
+complex continuation of Kneser tetration at the golden imaginary height.
+Here “reasonable” is not a matter of taste. It means Kneser-compatible, Abel-covariant, all-order
+differentiable in the height parameter, branch-free after logarithmic descent, primitive under finite
+closure, and normalized by the no-scale Joukowski conic. Any continuation giving a different
+value at iφ must violate at least one of these requirements. In that precise sense, alternatives are
+mathematically unreasonable.
+
+1.3
+
+Thesis
+
+The paper’s structure is:
+Kneser real branch −→ fractional real height −→ complex height
+−→ continuum/operator height −→ Joukowski eccentricity value.
+The canonicality mechanism is:
+infinitesimal covariance + branch-free logarithmic descent
+2
++primitive finite closure =⇒ iφ e = .
+3
+Here h e denotes the canonical branch-free continuation selected by the invariance requirements.
+On the real axis, Kneser recovery is the conditional validation theorem:
+h
+
+e = h eKneser
+
+(h ∈ R, h > −2).
+
+At complex height, the reasonable Kneser characterization makes the same branch-free invariant
+the value convention. A raw numerical Kneser branch can still be compared to this certificate, but
+that comparison is logically separate from the rigidity theorem.
+
+1.4
+
+Logical Status
+
+The paper should keep the logical roles separate.
+
+2
+
+Input
+Abel equation
+Infinitesimal covariance
+All-order prolongation
+Logarithmic Cauchy descent
+Primitive finite closure
+Galois/Joukowski readout
+Physical-space realization
+Golden value 2/3
+Kneser recovery
+Raw Kneser comparison
+Reasonableness theorem
+
+Role
+functional equation
+qualitative classical axiom
+Bell/Faà di Bruno tower
+branch-free jet tower
+
+Status
+underdetermined
+proposed principle
+theorem
+theorem
+
+selects pentagon
+no hidden lift choice
+
+rigidity theorem
+theorem
+
+Euclidean conic meaning
+invariant value
+validation against classical
+branch
+compares evaluation with invariant
+excludes all other continuations
+
+uniqueness theorem
+theorem
+conditional theorem
+
+2
+
+Literature and Continuation Problem
+
+2.1
+
+Classical Starting Point
+
+conditional theorem
+rigidity theorem
+
+Kneser constructed a real-analytic solution of the exponential iteration problem, including the
+functional square root of the exponential and related fractional iterates. In modern notation, the
+goal is a super-exponential F or tetration branch satisfying
+F (h + 1) = exp(F (h)),
+
+F (0) = 1,
+
+with real analyticity on the real height axis and the Kneser symmetry/strip construction in the
+complex plane.
+Szekeres developed regular iteration for real and complex functions, emphasizing that Abel functions are not unique without an additional regularity principle. Koenigs and Schroder linearization
+give local fractional iteration near a nonneutral fixed point:
+T [h] (z) = σ −1 (λh σ(z)).
+This local formula is indispensable, but it leaves choices of fixed point, logarithm sheet, and continuation domain.
+
+2.2
+
+Modern Uniqueness and Computation
+
+Trappmann and Kouznetsov gave uniqueness criteria for holomorphic Abel functions at a complex
+fixed-point pair and showed that Kneser’s Abel function satisfies such a criterion. Paulsen and
+Cowgill later gave natural conditions that force Kneser’s solution to be unique for generalized
+tetration in the complex plane and developed high-accuracy numerical methods.
+The state of the literature is therefore:
+(L1) Kneser gives the classical real-analytic branch for base e.
+(L2) Szekeres and regular iteration explain why an Abel function requires a regularity principle.
+3
+
+(L3) Koenigs/Schroder theory gives local fractional iteration but not a global canonical branch by
+itself.
+(L4) Trappmann–Kouznetsov and Paulsen–Cowgill give complex uniqueness criteria and computational access to Kneser-type branches.
+The present paper adds a geometric/operator invariant to this line: the branch-free Joukowski
+eccentricity value and its unique normalization.
+
+3
+
+Continuation Ladder
+
+3.1
+
+Layer 0: Integer Height
+
+Integer tetration is the discrete orbit
+Tn+1 = exp(Tn ),
+
+n ∈ Z≥0 .
+
+T0 = 1,
+
+At this level there is no interpolation problem, but there is also no canonical meaning for noninteger
+height.
+
+3.2
+
+Layer 1: Fractional Real Height
+
+Kneser’s construction supplies the real-analytic interpolation on the real height axis. In Abel form
+this means finding a coordinate A such that
+A(exp z) = A(z) + 1,
+and then defining
+Th = A−1 (A(1) + h),
+
+h ∈ R.
+
+The ambiguity is that A may be altered by suitable 1-periodic changes unless extra regularity or
+symmetry conditions are imposed.
+
+3.3
+
+Layer 2: Complex Height
+
+Complex height requires holomorphic continuation in h:
+h ∈ C,
+
+Th1 +h2 = Th1 ◦ Th2 ,
+
+on a specified domain. The local Koenigs formula introduces the multiplier power
+λh = exp(h log λ),
+so logarithm sheets become unavoidable. The canonical complex continuation must therefore state
+which branch-free invariants survive the sheet ambiguity.
+
+3.4
+
+Layer 3: Continuum and Operator Height
+
+The continuum layer treats height as a genuine flow parameter, not merely a label. The infinitesimal
+generator
+∂h Th
+must be transported by the differential of the iterated map. This is the bridge to Mellin, Gamma,
+zeta, killed semigroups, and spectral fractional powers: once the flow coordinate is additive, continuum operations in the height variable become canonical.
+4
+
+Principle 3.1 (Canonical Continuation Principle). The canonical analytic continuation of Kneser
+tetration is the continuation that preserves, at every layer, the additive coordinate in which composition becomes translation, and whose surviving branch-free scalar is the Joukowski eccentricity
+readout.
+Principle 3.2 (Certified Complex-Height Value). At a genuinely complex height, a tetration value
+is canonical only if it is observable from the all-order Abel-flow jet tower in a way that is invariant
+under logarithm sheets, Abel-coordinate reparametrizations preserving integer iteration, reciprocal
+Galois lifts, and auxiliary scale choices. Thus the value is not an arbitrary point of a local Schroder
+chart; it is the unique branch-free scalar surviving the Kneser continuation data.
+Axiom 3.3 (Physical-Space Realizability). The surviving scalar of a reasonable complex-height
+tetration must have a physical-space meaning: after branch-free Abel descent, the reciprocal scale
+R must be realized as an actual Euclidean conic in a real plane, with no auxiliary scale, no chosen
+focus, and no coordinate-dependent measurement. The value assigned to the complex height is the
+primitive dimensionless Euclidean focal observable of that conic.
+
+4
+
+The Branch-Free Hessian Core
+
+4.1
+
+Circle Divisor
+
+Let T = R/Z, fix a ∈ T, and define
+σa (x) = e2πix − e2πia .
+Although log σa is multivalued on T \ {a}, its second logarithmic derivative is single-valued:
+−∂x2 log σa (x) = π 2 csc2 π(x − a).
+Theorem 4.1 (Branch-Free Hessian). The operation −∂x2 log annihilates the additive 2πiZ monodromy of log σa . The resulting meromorphic kernel
+K(u) = π 2 csc2 (πu)
+is globally defined on T × T \ ∆.
+Proof. Changing a branch of log σa adds a locally constant element of 2πiZ, whose second derivative
+is zero. Therefore −∂x2 log σa is branch-independent. Writing u = x − a,
+σa (x) = e2πia (e2πiu − 1),
+and direct differentiation gives
+−∂x2 log(e2πiu − 1) = π 2 csc2 (πu).
+
+Theorem 4.2 (Axiomatic Uniqueness of the Kernel). Let K be even, 1-periodic, meromorphic on
+C/Z, with poles only at Z, principal part u−2 at 0, and arising as the second logarithmic derivative
+of a first-order divisor coordinate. Then
+K(u) = π 2 csc2 (πu).
+5
+
+Proof. The model first-order divisor coordinate is sin πu, whose negative logarithmic Hessian is
+π 2 csc2 πu. If s(u) is another first-order coordinate with the same divisor and same periodic divisor
+law, then s(u)/ sin πu has no zeros or poles on the torus and is therefore constant. Its logarithmic
+Hessian is zero. Hence every such first-order divisor coordinate has the same negative logarithmic
+Hessian, namely π 2 csc2 πu.
+Theorem 4.3 (Bernoulli–Pentagon Certificate). Let
+Kθ (θ) =
+
+1
+θ
+csc2 .
+4
+2
+
+Then
+
+1
+1
+θ2
+θ4
++
++
++
++ O(θ6 ),
+θ2 12 240 6048
+and in general the regular part is the even Bernoulli series obtained by differentiating the Laurent
+expansion of cot(θ/2). On the regular n-gon,
+n−1
+X  2πk  n2 − 1
+=
+.
+Kθ
+σ2 (n) :=
+n
+12
+Kθ (θ) =
+
+k=1
+
+For n = 5, this gives σ2 (5) = 2. The Fourier eigenvalue
+qm (n) =
+
+m(n − m)
+2
+
+has q2 (5) = 3. Hence the pentagonal Bernoulli/Hessian certificate is
+σ2 (5)
+2
+= .
+q2 (5)
+3
+This is the same scalar as the no-scale Joukowski eccentricity of the golden ellipse:
+σ2 (5)
+2
+2
+= 2
+= .
+−2
+q2 (5)
+φ +φ
+3
+Proof. The classical Laurent expansion
+cot u =
+
+1 X 22m |B2m | 2m−1
+−
+u
+,
+u
+(2m)!
+
+0 < |u| < π,
+
+m≥1
+
+d
+gives csc2 u = − du
+cot u. Setting u = θ/2 and multiplying by 1/4 gives the displayed expansion of
+Kθ . The finite sum identity
+n−1
+X
+πk
+n2 − 1
+csc2
+=
+n
+3
+k=1
+
+follows from the partial-fraction expansion of sin(nz)/ sin z, or equivalently by comparing the z 2 coefficient in its logarithmic derivative. Multiplying by 1/4 gives σ2 (n) = (n2 − 1)/12, so σ2 (5) = 2.
+The circulant Hessian diagonalized by Fourier modes has eigenvalues qm (n) = m(n − m)/2, hence
+q2 (5) = 3. Therefore
+σ2 (5)/q2 (5) = 2/3.
+Finally, φ2 + φ−2 = 3, so the Joukowski eccentricity
+2/(φ2 + φ−2 )
+is the same value.
+6
+
+4.2
+
+Half-Laplacian and Spectrum
+
+The quadratic form of K is the boundary half-Laplacian:
+ZZ
+π
+|f (x) − f (a)|2 csc2 π(x − a) dx da = π⟨f, |D|f ⟩.
+4
+2
+T
+On Fourier modes e2πikx , |D| has eigenvalue 2π|k|.
+
+4.3
+
+Discrete Hessian
+
+On the regular n-gon, the Vandermonde Hessian has spectrum
+λk = 2π 2 k(n − k),
+
+k = 0, . . . , n − 1.
+
+Its normalized spectral zeta has the asymptotic form
+
+n−1 
+X
+k(n − k) −s
+k=1
+
+n
+
+= n1−s B(1 − s, 1 − s) + 2ζ(s) + O(n−1 ).
+
+5
+
+Gamma as Completion, Not Branch Selection
+
+5.1
+
+Reflection
+
+Euler reflection gives
+Γ(z)Γ(1 − z) =
+
+π
+.
+sin πz
+
+Taking the log-Hessian,
+ψ ′ (z) + ψ ′ (1 − z) = π 2 csc2 (πz) = K(z).
+Thus Gamma carries the same branch-free kernel.
+
+5.2
+
+Bulk
+
+The continuum bulk of the discrete spectrum is
+Z 1
+Γ(1 − s)2
+(x(1 − x))−s dx = B(1 − s, 1 − s) =
+.
+Γ(2 − 2s)
+0
+
+5.3
+
+Mellin Completion
+
+For the positive operator |D|,
+Z ∞
+
+µs−1 e−µ|D| dµ = Γ(s)|D|−s .
+
+0
+
+Taking traces over nonzero Fourier modes gives
+Γ(s)ζ|D| (s) = 2(2π)−s Γ(s)ζ(s).
+Remark 5.1 (What Gamma Does and Does Not Do). Gamma completes the positive spectral
+calculus. It does not choose a branch of complex fractional iteration. The latter still requires a
+normalization principle.
+7
+
+6
+
+Admissible Fractional Iteration
+
+Let Tb (z) = bz = exp(z Log b) on a chosen logarithm sheet, and let z∗ be a hyperbolic fixed point:
+Tb (z∗ ) = z∗ ,
+
+θ = z∗ Log b,
+
+|θ| ̸= 1.
+
+Equivalently,
+z∗ = −
+
+Wm (− Log b)
+Log b
+
+for some Lambert sheet m.
+Definition 6.1 (Admissible Fractional-Iterate Family). An admissible family at (b, z∗ ) is a family
+[h]
+Tb satisfying:
+[0]
+
+[1]
+
+(A1) Tb = id and Tb = Tb .
+[h +h2 ]
+
+(A2) Tb 1
+
+[h ]
+
+[h ]
+
+= Tb 1 ◦ Tb 2 , wherever both sides are defined.
+[h]
+
+(A3) (h, z) 7→ Tb (z) is holomorphic on its natural height-domain.
+[h]
+
+[h]
+
+(A4) Tb (z∗ ) = z∗ and (Tb )′ (z∗ ) = θh for a specified branch of log θ.
+
+6.1
+
+Koenigs/Schroder Form
+
+If ε is a local linearizing coordinate satisfying
+ε(Tb (z)) = θ ε(z),
+then the fractional iterate is
+
+
+
+[h]
+Tb (z) = ε−1 θh ε(z) ,
+
+provided θh ε(z) remains in the image of ε.
+Remark 6.2 (Domain Restriction). The formula above is not generally defined for all h ∈ C on a
+fixed basin. As h ranges over C, θh ranges over C∗ . Therefore one needs either ε(B) = C, which is
+not generally true, or a restricted height-domain
+H(z) = {h ∈ C : θh ε(z) ∈ ε(B)}.
+
+7
+
+The Surviving Choice Problem
+
+The branch-free Hessian removes monodromy of second logarithmic derivatives. It does not remove
+the following choices in fractional iteration:
+(C1) the branch of Log b;
+(C2) the Lambert W -sheet selecting z∗ ;
+(C3) the branch of log θ in θh ;
+(C4) the choice of linearization basin or Schroder petal;
+
+8
+
+(C5) the analytic continuation domain.
+Proposition 7.1 (Branch Ambiguity). For k ∈ Z,
+θkh = exp h(log θ + 2πik)
+
+
+
+has the same integer values as θh and satisfies the same formal group law. Therefore integer
+iteration and local holomorphy alone do not select k = 0.
+
+8
+
+The Abel-Flow Invariant
+
+8.1
+
+Infinitesimal Iteration Covariance
+
+Let Th be a candidate tetration flow for ez :
+Th+1 = exp(Th ).
+The self-evident flow requirement is that height h represent genuine time: an infinitesimal change
+in height is carried forward by the differential of the map being iterated.
+Axiom 8.1 (Infinitesimal Iteration Covariance). A canonical tetration is an admissible Abel flow
+Th satisfying
+Th+1 = exp(Th )
+and
+∂h Th+1 = D exp(Th ) ∂h Th = eTh ∂h Th .
+Remark 8.2 (The Obvious Invariant). This is the qualitative invariant under composition: iteration must transport infinitesimal motion. No golden number, trace, polygon, or special height is
+named in the axiom.
+Proposition 8.3 (Covariance Is Necessary but Not Sufficient). If Th is differentiable in h and
+satisfies
+Th+1 = exp(Th ),
+then infinitesimal covariance follows automatically:
+∂h Th+1 = eTh ∂h Th .
+Consequently infinitesimal covariance is a necessary structural axiom for a flow interpretation of
+tetration, but it is not by itself a uniqueness principle.
+Proof. Differentiate Th+1 = exp(Th ) with respect to h. The chain rule gives exactly
+∂h Th+1 = D exp(Th )∂h Th = eTh ∂h Th .
+
+Theorem 8.4 (Periodic Abel Deformation Obstruction). Let A be an Abel coordinate on a simply
+connected continuation domain:
+A(exp z) = A(z) + 1.
+Let p be a holomorphic 1-periodic function such that
+Φ(w) = w + p(w)
+9
+
+is locally univalent. Then
+e=Φ◦A
+A
+is again an Abel coordinate:
+e
+A(exp z) = e
+A(z) + 1.
+The associated fractional iterates
+e−1 (A(z)
+e + h)
+Teh (z) = A
+agree with the original iterates at integer heights but generally differ at noninteger heights. Hence
+Abel translation, integer interpolation, holomorphy, and infinitesimal covariance do not determine
+a unique complex tetration.
+Proof. Since p(w + 1) = p(w), one has
+Φ(w + 1) = w + 1 + p(w + 1) = Φ(w) + 1.
+Therefore
+e
+e + 1.
+A(exp
+z) = Φ(A(exp z)) = Φ(A(z) + 1) = Φ(A(z)) + 1 = A(z)
+For integer n,
+e−1 (A(z)
+e + n) = exp◦n (z),
+A
+because the Abel equation determines integer translation. For noninteger h, the nonlinear change
+e−1 (A(z)
+e + h). This proves the obstruction.
+of Abel coordinate Φ generally changes A
+Corollary 8.5 (What Must Be Added). A uniqueness theorem for complex tetration must add
+a branch-free continuation principle beyond Abel translation and infinitesimal covariance. In this
+paper the added principle is: the prolonged logarithmic jet tower must descend to a branch-free
+Cauchy-moment tower and close primitively.
+
+8.2
+
+All-Order Prolongation
+
+Define the full height-jet
+JT (h; t) = Th+t ∈ C[[t]].
+Once the first-order covariance is imposed, repeated differentiation gives the full Faà di Bruno
+tower:
+JT (h + 1; t) = exp(JT (h; t)).
+Equating coefficients gives, for every n ≥ 1,
+
+∂hn Th+1 = eTh Bn ∂h Th , ∂h2 Th , . . . , ∂hn Th ,
+where Bn is the complete Bell polynomial.
+Proposition 8.6 (Bell Tower Is Not an Extra Axiom). The identities
+
+∂h2 Th+1 = eTh (∂h Th )2 + ∂h2 Th ,
+
+∂h3 Th+1 = eTh (∂h Th )3 + 3∂h Th ∂h2 Th + ∂h3 Th ,
+and their higher analogues are the all-order prolongation of infinitesimal covariance.
+Remark 8.7 (Automatic Part Versus Selecting Part). For any sufficiently smooth solution of Abel’s
+equation, these identities follow by differentiation. Therefore the Bell recursion alone is not enough
+to select a branch. The selecting condition is that the logarithmic descendant of this prolonged jet
+tower descend branch-free and close primitively; this is the condition that eliminates the residual
+logarithm sheets.
+10
+
+8.3
+
+Logarithmic Cauchy Descent
+
+For a finite divisor f (z) =
+
+Q
+
+j (z − rj ), remove the zero at ri and normalize
+
+Gi (ϵ) =
+
+
+
+f (ri + ϵ) Y
+ϵ
+1
++
+.
+=
+ϵf ′ (ri )
+ri − rj
+j̸=i
+
+The logarithmic derivative is the all-order Cauchy-moment tower
+X
+X
+(i)
+(i)
+(−1)m σm+1 ϵm ,
+σk =
+∂ϵ log Gi (ϵ) =
+m≥0
+
+j̸=i
+
+1
+.
+(ri − rj )k
+
+Thus repeated differentiation is converted into a branch-free tower of reciprocal-separation moments. The Schwarzian is the first projective compression of this tower; the full tower is the
+all-order invariant.
+Proposition 8.8 (All-Order Reconstruction). The normalized punctured jet Gi , equivalently the
+(i)
+full sequence {σk }k≥1 , reconstructs the finite divisor near ri . Hence an all-order closure condition
+is rigid: it fixes the reciprocal-separation geometry, not merely a low-order coincidence.
+Proof. The logarithmic derivative determines log Gi up to its constant term, and the normalization
+Gi (0) = 1 fixes that constant. Thus it determines Gi . The zeros of Gi are precisely ϵ = rj − ri , so
+the finite configuration is recovered up to translation and scaling.
+
+9
+
+Primitive Closure Forces the Pentagon
+
+Definition 9.1 (Primitive Finite Closure). An all-order logarithmic jet tower has primitive finite
+closure if its branch-free Cauchy-moment tower is realized by the first nondegenerate cyclotomic
+divisor for which the second signed Cauchy curvature closes:
+(i)
+
+σ2 = 0
+
+for every divisor point.
+
+Theorem 9.2 (Cyclotomic Closure). For the regular n-gon,
+X
+1
+(n − 1)(n − 5)
+(i)
+σ2 =
+.
+=−
+2
+(ri − rj )
+12ri2
+j̸=i
+
+Consequently the first nondegenerate cyclotomic closure of the second Cauchy curvature is the
+regular pentagon.
+Proof. By rotation it suffices to take ri = 1. Put
+Gn (u) =
+where
+c1 =
+
+(1 + u)n − 1
+= 1 + c1 u + c2 u2 + · · · ,
+nu
+n−1
+,
+2
+
+c2 =
+
+(n − 1)(n − 2)
+.
+6
+
+Since
+∂u log Gn (u) = σ1 − σ2 u + · · · ,
+we get
+(n − 1)(n − 5)
+.
+12
+Rotating back gives the stated formula. The zero occurs at n = 1 or n = 5; the only nondegenerate
+polygonal closure is n = 5.
+σ2 = c21 − 2c2 = −
+
+11
+
+(i)
+
+Theorem 9.3 (Five-Point Rigidity). If a five-point divisor has σ2 = 0 at every point, then it is a
+regular pentagon up to complex similarity.
+Proof. Let f be the monic polynomial with these five roots. At a root ri ,
+(i)
+
+σ2 = 0
+
+⇐⇒
+
+4f ′ (ri )f ′′′ (ri ) − 3f ′′ (ri )2 = 0.
+
+Thus f divides 4f ′ f ′′′ − 3(f ′′ )2 . For degree 5 the leading term cancels, so the latter polynomial has
+degree < 5; hence it vanishes identically. Solving
+4f ′ f ′′′ − 3(f ′′ )2 = 0
+gives f (z) = A(z − b)5 + C, whose roots form a regular pentagon. Indeed, writing y = f ′ , the
+equation becomes
+4yy ′′ − 3(y ′ )2 = 0.
+On the complement of the zeros of y, set p = y ′ /y. Then
+4p′ + p2 = 0,
+so either p = 0 or p = 4/(z − b). Since f has degree 5, the nonconstant case gives
+f ′ (z) = A(z − b)4 ,
+
+f (z) =
+
+A
+(z − b)5 + C.
+5
+
+Thus the roots are a translate and rescale of a regular pentagon.
+
+10
+
+Joukowski and Galois Readout
+
+10.1
+
+From Pentagon to Golden Trace
+
+The primitive closure is cyclotomic of order 5, so its real trace field is
+√
+Q(ζ5 + ζ5−1 ) = Q( 5).
+Set
+
+√
+1+ 5
+.
+φ=
+2
+
+√
+Lemma 10.1 (Primitive Norm-One Unit). In the real cyclotomic field Q(ζ5 )+ = Q( 5), the
+primitive totally positive norm-one unit is
+√
+3+ 5
+2
+φ =
+.
+2
+It satisfies
+NmQ(√5)/Q (φ2 ) = 1,
+TrQ(√5)/Q (φ2 ) = 3.
+√
+Proof. The fundamental
+unit φ = (1+ 5)/2 has norm −1.
+√
+√ Hence the first totally positive norm-one
+2
+−2
+unit is φ = (3 + 5)/2, whose conjugate is φ = (3 − 5)/2. Therefore
+φ2 φ−2 = 1,
+
+φ2 + φ−2 = 3.
+
+12
+
+Thus the primitive reciprocal multiplier is the determinant-one unit
+x−1 = φ−2 ,
+
+x = φ2 ,
+and therefore
+
+x + x−1 = φ2 + φ−2 = 3.
+Lemma 10.2 (Joukowski Descent). Let the involution ι act on Q[x, x−1 ] by ι(x) = x−1 . Then
+Q[x, x−1 ]ι = Q[J],
+
+J = x + x−1 .
+
+Consequently every Laurent-polynomial branch-free invariant of a multiplier x factors through the
+Joukowski trace.
+Proof. The orbit of x under ι is {x, x−1 }, with elementary symmetric functions
+x + x−1 = J,
+
+xx−1 = 1.
+
+Every invariant Laurent polynomial is a symmetric Laurent polynomial in this orbit, hence a
+polynomial in J.
+Theorem 10.3 (Galois Rigidity of the Lift). The two lifts φ2 and φ−2 are exchanged by the
+nontrivial element of
+√
+√
+√
+Gal(Q( 5)/Q),
+5 7→ − 5.
+The Joukowski trace J = φ2 + φ−2 and the normalized readout 2/J are fixed.
+Proof. The two units are the roots of x2 − 3x + 1. The Galois involution exchanges the roots, while
+their sum and product are rational. Hence J = 3 and 2/J = 2/3 are invariant.
+
+11
+
+The Golden Imaginary-Height Value
+
+Definition 11.1 (Branch-Free Height Value). Let χω (h) be the exponentiated Abel height character attached to the prolonged jet closure. The branch-free Abel trace is
+Jω (h) = χω (h) + χω (h)−1 .
+The branch-free tetration value is
+h
+
+e :=
+
+2
+.
+Jω (h)
+
+Theorem 11.2 (Unique Eccentricity Normalization). Let R = eu > 1 be the exponential scale
+attached to an Abel character. Suppose an eccentricity readout is required to satisfy the following
+qualitative conditions:
+(E1) it is branch-free under reversal of the scale, R ↔ R−1 ;
+(E2) it is obtained from the no-extra-scale Joukowski conic z 7→ z + z −1 ;
+(E3) it agrees with the classical conic eccentricity c/a.
+
+13
+
+Then the readout is uniquely
+2
+.
+R + R−1
+Equivalently, in the additive exponential coordinate R = eu ,
+ε(R) =
+
+ε(eu ) = sech u.
+Proof. By Joukowski descent, branch reversal R ↔ R−1 leaves only the reciprocal trace
+J(R) = R + R−1 .
+The unscaled Joukowski image of the circle |z| = R is
+x = (R + R−1 ) cos θ,
+
+y = (R − R−1 ) sin θ.
+
+Thus the semi-major axis is a = R + R−1 , and the foci are fixed at ±2, so the focal distance is
+c = 2. Classical eccentricity is therefore forced to be
+ε(R) =
+
+c
+2
+=
+.
+a
+R + R−1
+
+Since R = eu ,
+R + R−1 = eu + e−u = 2 cosh u,
+and hence
+
+1
+= sech u.
+cosh u
+No other normalization can satisfy (E1)–(E3), because changing the numerator changes the fixed
+Joukowski focal distance, and changing the denominator changes the semi-major axis.
+ε(eu ) =
+
+Corollary 11.3 (Hyperbolic-Trigonometric Links). For R = eu , the no-scale Joukowski ellipse has
+a = R + R−1 = 2 cosh u,
+
+b = R − R−1 = 2 sinh u,
+
+c = 2.
+
+Therefore
+ε=
+
+c
+= sech u,
+a
+
+b
+= tanh u,
+a
+
+and the identity
+sech2 u + tanh2 u = 1
+is exactly the conic identity
+ c 2
+a
+
+ 2
+b
++
+= 1.
+a
+
+Theorem 11.4 (Physical-Space Uniqueness). Let R > 1 be the reciprocal scale surviving Abel
+descent. Suppose its complex-height value is required to satisfy:
+(P1) it is realized in an ordinary Euclidean physical plane;
+(P2) the realization is invariant under R ↔ R−1 ;
+(P3) it uses the unscaled reciprocal map z 7→ z + z −1 ;
+(P4) it is invariant under Euclidean rigid motions of the physical plane;
+14
+
+(P5) it is the primitive focal observable: a ratio of Euclidean lengths determined by the conic, using
+the focal distance and applying no further nonlinear reparametrization.
+Then the only possible value is the eccentricity of the physical ellipse
+x = (R + R−1 ) cos θ,
+
+y = (R − R−1 ) sin θ,
+
+namely
+Vphys (R) =
+
+2
+.
+R + R−1
+
+At the golden scale R = φ2 , this gives
+2
+Vphys (φ2 ) = .
+3
+Proof. The unscaled reciprocal map sends the multiplier circle |z| = R to the Euclidean ellipse
+y2
+x2
++
+= 1.
+(R + R−1 )2 (R − R−1 )2
+This ellipse has semi-major axis
+a = R + R−1 ,
+semi-minor axis
+b = R − R−1 ,
+and focal distance
+c=
+
+p
+
+a2 − b2 = 2.
+
+The data (a, b, c) are Euclidean conic data. Rigid motions cannot change them, and the unscaled
+Joukowski map fixes c = 2, so there is no remaining metric scale to tune.
+A reciprocal branch change R ↔ R−1 changes orientation but fixes the trace R + R−1 and hence
+fixes the ellipse up to reflection. The dimensionless Euclidean focal observable determined by the
+focus/axis geometry is therefore
+c
+2
+=
+.
+a
+R + R−1
+Any other scalar would either depend on an arbitrary external scale, distinguish the two reciprocal
+lifts, ignore the fixed focal geometry, or apply a nonprimitive reparametrization to the eccentricity.
+Hence the physical-space axiom uniquely forces Vphys (R) = 2/(R + R−1 ). For R = φ2 ,
+φ2 + φ−2 = 3,
+so Vphys (φ2 ) = 2/3.
+
+11.1
+
+Imaginary Height as Elliptic Eccentricity
+
+The geometric meaning of the imaginary height is supplied by the golden ellipse. The Joukowski
+map
+z 7−→ z + z −1
+sends the circle |z| = R to the confocal ellipse
+x = (R + R−1 ) cos θ,
+
+y = (R − R−1 ) sin θ,
+15
+
+whose foci are ±2. Therefore its eccentricity is
+ε(R) =
+
+2
+.
+R + R−1
+
+The branch-free tetration value is exactly this eccentricity with
+h
+
+R = χω (h) :
+
+e = ε(χω (h)).
+
+Thus at the golden imaginary height, Euler’s base e and the ellipse eccentricity ε are linked by the
+canonical continuation:
+iφ
+
+2
+e = elliptic eccentricity of the golden ellipse = .
+3
+
+Definition 11.5 (Reasonable Kneser Continuation). A reasonable Kneser continuation consists of
+an admissible analytic continuation of the Kneser real branch together with a branch-free scalar
+readout, satisfying:
+(K1) Kneser boundary condition: on the real height axis it agrees with the Kneser real-analytic
+tetration branch, wherever that branch is defined.
+(K2) Abel translation: Th+1 = exp(Th ).
+(K3) Infinitesimal covariance:
+∂h Th+1 = D exp(Th )∂h Th .
+(K4) All-order prolongation: repeated differentiation gives the Bell/Faà di Bruno jet tower.
+(K5) Branch-free logarithmic descent: the logarithmic descendant of the jet tower is a Cauchymoment tower {σk }k≥1 , invariant under logarithm-sheet changes.
+(K6) Primitive finite closure: the first nondegenerate finite closure of that tower is cyclotomic.
+(K7) No-scale conic descent: the surviving reciprocal-scale scalar is represented by the unscaled
+Joukowski conic
+z 7−→ z + z −1 .
+(K8) Physical-space readout: the scalar value is the Euclidean eccentricity of the resulting
+physical ellipse,
+2
+ε(R) =
+.
+R + R−1
+Theorem 11.6 (Golden Value Rigidity). For every reasonable Kneser continuation,
+iφ
+
+2
+e= .
+3
+
+Consequently any continuation assigning a different branch-free value at iφ fails at least one requirement in the definition of reasonable Kneser continuation.
+
+16
+
+Proof. Infinitesimal covariance prolongs to the full Bell tower, whose logarithmic descendant is
+the branch-free Cauchy-moment tower. Primitive
+finite closure forces the regular pentagon. The
+√
+associated real cyclotomic trace field is Q( 5), and the determinant-one reciprocal multiplier is
+φ2 ↔ φ−2 . Therefore
+Jω (iφ) = φ2 + φ−2 = 3.
+The branch-free tetration value gives
+iφ
+
+e=
+
+2
+2
+= .
+Jω (iφ)
+3
+
+If a proposed continuation gives any other value, then it cannot have the same branch-free trace
+Jω (iφ) = 3. Hence it must violate Abel-flow covariance, all-order prolongation, logarithmic branchfree descent, primitive cyclotomic closure, no-scale Joukowski descent, or the physical-space eccentricity axiom. This is precisely the sense in which it is mathematically unreasonable.
+Remark 11.7 (Why This Is Not Numerology). The proof starts from a qualitative invariant:
+infinitesimal motion is transported by the differential of the map being iterated. The numbers 5,
+φ, 3, and 2/3 appear only after the prolonged logarithmic tower is required to close primitively.
+Remark 11.8 (No Extra Scale Normalization). No fitted geometric scale is being introduced. For
+R = φ2 , the unscaled Joukowski map gives
+p
+√
+a = R + R−1 = 3,
+b = R − R−1 = 5,
+c = a2 − b2 = 2,
+so
+
+c
+2
+= .
+a
+3
+The current claim is this geometric equality together with the reasonable Kneser value theorem. A
+raw numerical equality with an unobserved implementation of iφ eKneser is a separate comparison,
+discussed below.
+ε=
+
+12
+
+Selection Theorem
+
+Theorem 12.1 (Branch-Free Selection). Any two reasonable Kneser continuations have the same
+branch-free distinguished value at the golden imaginary height:
+iφ
+
+2
+e= .
+3
+
+Moreover the only possible multiplier lifts before Joukowski descent are the Galois conjugates
+φ−2 .
+
+φ2 ,
+
+Proof. Infinitesimal covariance prolongs uniquely by repeated differentiation to the Bell/Faà di
+(i)
+Bruno tower. Logarithmic descent converts that tower into the Cauchy-moment tower {σk }. By
+all-order reconstruction, this tower fixes the finite divisor up to similarity. Primitive finite closure is
+therefore rigid; by the cyclotomic closure theorem and the five-point rigidity theorem, the primitive
+√
+nondegenerate closure is the regular pentagon. Its real cyclotomic trace field is Q(ζ5 )+ = Q( 5),
+and the primitive totally positive norm-one multiplier is φ2 , with Galois conjugate φ−2 . Joukowski
+descent kills this lift ambiguity and leaves the trace
+J = φ2 + φ−2 = 3.
+17
+
+Finally, the unique eccentricity normalization gives the branch-free value
+iφ
+
+e=
+
+2
+2
+= .
+J
+3
+
+The only lift ambiguity is the Galois involution φ2 ↔ φ−2 , and the Joukowski trace is fixed under
+this involution. Hence any two reasonable continuations have the same branch-free value.
+Definition 12.2 (Reasonable Complex Value). A reasonable complex value at h = iφ is a pair
+(F, V ), where F is a holomorphic continuation of Kneser’s real branch to a domain containing iφ,
+and
+V (F ; iφ)
+is the declared complex-height value, satisfying:
+(C1) Classical Kneser boundary: on the real height axis, F is Kneser’s real-analytic tetration
+branch for base e, with F (h + 1) = exp(F (h)) and F (0) = 1.
+(C2) Schwarz symmetry: the Abel splice is Kneser’s classical Schwarz-symmetric upper/lower
+half-plane splice.
+(C3) Flow covariance: F transports infinitesimal height motion by
+∂h F (h + 1) = eF (h) ∂h F (h),
+and its repeated height derivatives are the Bell/Faà di Bruno prolongation of this identity.
+(C4) Observability: V (F ; iφ) depends only on the descended all-order logarithmic Abel-jet tower,
+and is invariant under logarithm-sheet changes, Abel-coordinate reparametrizations preserving integer iteration, reciprocal Galois lifts, and similarity changes of the finite divisor.
+(C5) Primitive certificate: the first nondegenerate finite closure of the descended tower is primitive cyclotomic.
+(C6) No-scale scalar readout: the scalar value is the unscaled Joukowski eccentricity readout,
+equivalently the scalar compatible with the Bernoulli–pentagon Hessian certificate.
+When these conditions hold, we write
+iφ
+
+e := V (F ; iφ).
+
+Theorem 12.3 (Kneser Matching Rigidity). There is at most one reasonable complex value at the
+golden imaginary height. It is
+2
+iφ
+e= .
+3
+Proof. Conditions (C1) and (C2) put the branch in the classical Kneser uniqueness class on the real
+axis and fix the Schwarz-symmetric Abel splice. Condition (C3) says that the height derivatives
+are not extra data: the first-order flow law determines the all-order Bell/Faà di Bruno jet tower by
+repeated differentiation.
+By (C4), a reasonable complex value may only depend on the branch-free descendant of that
+tower. The periodic Abel-coordinate deformations that obstruct uniqueness are therefore invisible
+unless they preserve this descendant; logarithm sheets and reciprocal lifts are also quotiented out
+18
+
+before a scalar value is read. Thus any two reasonable values must pass through the same branchfree Cauchy-moment tower.
+By (C5), the first finite closure of that tower is primitive cyclotomic. The closure theorem and
+the five-point rigidity theorem force the regular pentagon. Its real cyclotomic trace field is
+√
+Q(ζ5 )+ = Q( 5),
+and the only reciprocal determinant-one multiplier pair is
+φ−2 .
+
+φ2 ,
+
+Condition (C6) then applies the unscaled Joukowski trace, killing the Galois lift ambiguity:
+J = φ2 + φ−2 = 3.
+Therefore the only admissible scalar readout is
+V (F ; iφ) =
+
+2
+2
+= .
+J
+3
+
+The same value is independently certified by the Bernoulli–pentagon Hessian ratio
+σ2 (5)/q2 (5) = 2/3.
+Hence all reasonable complex values agree, and their common value is 2/3.
+Remark 12.4 (What Is Being Proved). The matching convention is not the numerical assumption
+J = 3 and not an arbitrary declaration that Kneser’s complex value should be real. It is the
+qualitative rule that a canonical complex-height value must be observable from the all-order Kneser
+Abel-flow jet after all branch, sheet, lift, and scale choices have been removed. Under that rule the
+regular pentagon is forced, and 2/3 is the certificate.
+
+13
+
+Kneser Recovery
+
+Theorem 13.1 (Conditional Kneser Recovery). Let F be a classical tetration branch representing
+the reasonable invariant. If this branch satisfies the standard Kneser characterization–real analyticity on the real height axis, recurrence F (h + 1) = exp(F (h)), normalization F (0) = 1, Schwarz
+symmetry, and the standard upper/lower half-plane Abel splice–then
+F (h) = h eKneser
+
+(h ∈ R, h > −2).
+
+Proof. Kneser’s construction is unique within the stated characterization class. Since F is assumed
+to satisfy the same recurrence, normalization, symmetry, and splice conditions, uniqueness in that
+class gives equality on the real height interval h > −2.
+Remark 13.2 (Logical Meaning). Kneser recovery is not the axiom. It is the validation that the
+reasonable invariant has selected the same real tetration branch as the classical Kneser construction
+at b = e.
+
+19
+
+14
+
+Representation of the Raw Kneser Complex Branch
+
+The reasonableness theorem proves the uniquely rigid value convention. A different question is
+whether a raw numerical implementation of Kneser’s complex branch, before applying the branchfree observability rule, evaluates to the same scalar at iφ. That is a separate representation problem.
+Definition 14.1 (Invariant Extracted from a Branch). Let F be a holomorphic tetration branch
+on a simply connected height domain Ω ⊂ C, with iφ ∈ Ω, and suppose F (h + 1) = exp(F (h)). An
+Abel coordinate for F is a holomorphic map AF on F (Ω) satisfying
+AF (F (h)) = h,
+
+AF (exp z) = AF (z) + 1.
+
+The branch-free Joukowski invariant extracted from F is denoted
+E(F ; h) =
+
+2
+2
+=
+,
+JF (h)
+χF (h) + χF (h)−1
+
+when the logarithmic all-order jet descent of AF has primitive finite closure and the surviving
+reciprocal multiplier χF (h) is read through the unscaled Joukowski trace.
+Definition 14.2 (Raw Matching). Let FKneser denote Kneser’s Schwarz-symmetric complex branch
+on a domain ΩKneser containing the real height interval and the point iφ. We say that FKneser
+represents the branch-free invariant at iφ if
+FKneser (iφ) = E(FKneser ; iφ).
+This is the matching condition between the analytic Kneser evaluation and the invariant readout.
+It is not the numerical assertion FKneser (iφ) = 2/3.
+Theorem 14.3 (Raw Representation Theorem). Assume that Kneser’s complex branch FKneser is
+invariant-admissible at the golden imaginary height, in the following qualitative sense:
+(R1) its Abel coordinate satisfies infinitesimal iteration covariance and the all-order Bell/Faà di
+Bruno prolongation;
+(R2) the logarithmic descent of that prolonged jet tower is branch-free;
+(R3) the first primitive nondegenerate finite closure of the descended tower is cyclotomic;
+(R4) the surviving reciprocal-scale scalar is evaluated by the unscaled Joukowski eccentricity.
+Then
+
+2
+E(FKneser ; iφ) = .
+3
+If, in addition, the raw Kneser-matching condition holds, then
+2
+FKneser (iφ) = .
+3
+Moreover, any holomorphic branch satisfying the Kneser characterization and representing this
+invariant is unique; it is Kneser’s branch.
+
+20
+
+Proof. The assumptions (R1)–(R4) place the Abel coordinate of FKneser inside the same canonical
+datum used in the branch-free selection theorem. By all-order prolongation and logarithmic descent,
+the relevant branch choices are pushed into the Cauchy-moment tower. Primitive finite closure then
+forces the regular pentagon, hence the real trace field
+√
+Q(ζ5 )+ = Q( 5)
+and the reciprocal Galois pair
+φ−2 .
+
+φ2 ,
+
+The unscaled Joukowski trace removes the lift ambiguity:
+JF (iφ) = φ2 + φ−2 = 3.
+Therefore the invariant extracted from Kneser’s branch is
+E(FKneser ; iφ) =
+
+2
+2
+= .
+JF (iφ)
+3
+
+If the raw Kneser-matching condition also holds, then the analytic value of the Kneser branch at
+that height equals its extracted invariant, so
+2
+FKneser (iφ) = E(FKneser ; iφ) = .
+3
+Finally, suppose G is another holomorphic branch satisfying the same Kneser characterization and
+representing the same invariant. Kneser uniqueness, in the modern formulation via the standard real
+analyticity, Schwarz symmetry, recurrence, normalization, and upper/lower half-plane Abel splice
+conditions, gives G = FKneser on the common domain of continuation. Hence the representing
+branch, if it exists in the Kneser class, is unique and is Kneser’s branch.
+Corollary 14.4 (Exact Raw-Branch Bridge). Under invariant-admissibility of FKneser , the literal
+complex-height statement
+2
+FKneser (iφ) =
+3
+is equivalent to the raw Kneser-matching condition
+FKneser (iφ) = E(FKneser ; iφ).
+Proof. The raw representation theorem gives E(FKneser ; iφ) = 2/3. Therefore the displayed literal
+statement holds exactly when the Kneser evaluation equals the extracted branch-free invariant at
+the same height.
+Remark 14.5 (Why the Bridge Cannot Be Omitted). Abel translation and infinitesimal covariance
+alone do not identify a unique complex branch: periodic Abel-coordinate deformations preserve
+the integer iterates and the first-order flow equation. Thus a raw complex Kneser value cannot
+be obtained merely by writing down Abel’s equation. The reasonable convention removes this
+ambiguity by definition through branch-free observability; a raw numerical Kneser comparison must
+separately verify that the unobserved analytic evaluation represents the same no-scale Joukowski
+readout.
+
+21
+
+15
+
+Universal Additive Coordinates
+
+15.1
+
+The Common Structural Problem
+
+The tetration problem is a model case of a broader invariant problem:
+find the coordinate in which composition becomes addition.
+Several classical transforms have exactly this role:
+
+15.2
+
+Operation
+
+Coordinate
+
+Additive law
+
+Multiplication
+Iteration
+Scaling
+Survival depletion
+
+logarithm
+Abel coordinate
+Mellin exponent
+survival coordinate
+
+log(xy) = log x + log y
+A(f [h] (z)) = A(z) + h
+rλ sλ = (rs)λ
+− log(S1 S2 ) = A1 + A2
+
+Survival Coordinates
+
+For a survival process S(t) > 0, define
+A(t) = − log S(t).
+If survival composes multiplicatively,
+S(t1 + t2 ) = S(t1 )S(t2 ),
+then the survival coordinate is additive:
+A(t1 + t2 ) = A(t1 ) + A(t2 ).
+For an inhomogeneous hazard rate λ(t),
+ Z t
+
+S(t) = exp −
+λ(u) du ,
+0
+
+Z t
+A(t) =
+
+λ(u) du.
+0
+
+Thus underwriting, credit, insurance, prepayment, and depletion problems ask for the survivalconditioned analogue of the Abel coordinate: the coordinate in which a changing surviving population is valued additively rather than by an ensemble average on the original probability space.
+Remark 15.1 (Why This Belongs Here). Tetration is not the largest application. It is the cleanest
+functional-equation toy model for the same principle: a non-additive composition law becomes
+tractable only after the correct coordinate is found. The underwriting version asks for a rigorous
+survival-coordinate calculus for non-ergodic cash flows.
+
+16
+
+Consequences
+
+16.1
+
+Golden Ellipse in Physical Space
+
+If R = χω (iφ) = φ2 , the Joukowski map sends the circle |z| = R to
+J(Reiθ ) = (R + R−1 ) cos θ + i(R − R−1 ) sin θ.
+22
+
+At the derived pentagonal trace,
+R + R−1 = 3,
+
+R − R−1 =
+
+√
+
+5.
+
+Thus the associated ellipse has semi-axes
+a = 3,
+
+b=
+
+√
+
+5,
+
+focal distance c = 2, and eccentricity
+2
+c
+= .
+a
+3
+This is an ordinary Euclidean ellipse in a physical plane. Its foci, axes, and eccentricity are not
+bookkeeping devices for a logarithm branch; they are rigid-motion invariants of the actual conic.
+The same scalar 2/3 is therefore the physical-space readout of the pentagonal trace J = 3. Equivalently, with u = 2 log φ,
+√
+√
+2
+5
+b
+a = 2 cosh u = 3,
+b = 2 sinh u = 5,
+ε = sech u = ,
+= tanh u =
+.
+3
+a
+3
+ε=
+
+16.2
+
+Pentagonal Corner/Mellin Readout
+
+For a regular n-gon, the interior angle is
+αn =
+
+(n − 2)π
+,
+n
+
+so the Kondrat’ev corner exponent is
+τn =
+
+π
+n
+=
+,
+αn
+n−2
+
+τn − 1 =
+
+2
+.
+n−2
+
+The defect equals 2/3 if and only if n = 5. Thus the Mellin corner transform reads the same number
+only at the regular pentagon:
+α5 =
+
+16.3
+
+3π
+,
+5
+
+5
+τ5 = ,
+3
+
+2
+τ5 − 1 = .
+3
+
+Golden Base
+
+The base bφ is the real base whose canonical fixed-point multiplier is 1/(2φ):
+
+
+1 −1/(2φ)
+bφ = exp
+e
+.
+2φ
+
+16.4
+
+Pentagon and Gamma
+
+Euler reflection at fifths gives
+Γ( 15 )Γ( 45 )
+sin(2π/5)
+π
+2
+3 = sin(π/5) = 2 cos 5 = φ.
+Γ( 5 )Γ( 5 )
+Thus the same pentagonal reflection that produces φ also supplies the Hessian ratio σ2 /q2 = 2/3.
+
+23
+
+16.5
+
+Scale–Phase Identity
+
+The golden alignment identity is the hyperbolic-trigonometric form of the same Joukowski readout:
+2
+= sech(2 log φ)
+3
+and
+
+√
+
+5
+= tanh(2 log φ).
+3
+
+Together,
+sech2 (2 log φ) + tanh2 (2 log φ) = 1
+is exactly the ellipse identity
+ c 2
+a
+
+17
+
+ 2
+b
++
+= 1.
+a
+
+What Is Claimed and What Is Not
+• Claimed: the branch-free Hessian canonically determines the inverse-square kernel, halfLaplacian, and Gamma–zeta completion.
+• Claimed: complex fractional iteration still has residual branch choices.
+• Proposed: infinitesimal iteration covariance, with branch-free primitive finite closure of its
+prolongation, is the intrinsic axiom selecting the branch-free invariant.
+• Claimed: reciprocal-scale invariance plus no-extra-scale Joukowski conic geometry uniquely
+forces ε(eu ) = sech u.
+• Conditional theorem: a representing branch satisfying the standard Kneser characterization
+recovers Kneser tetration at b = e.
+• Claimed: the Kneser matching convention is uniquely rigid under the reasonable Kneser
+characterization, and therefore iφ e = 2/3.
+• Claimed: the raw representation theorem reduces a direct unobserved numerical Kneser comparison to the raw matching condition FKneser (iφ) = E(FKneser ; iφ).
+• Not claimed: the Hessian alone forces Kneser without an additional normalization.
+• Not claimed: a raw floating-point implementation of Kneser’s complex branch has independently evaluated FKneser (iφ) without applying the reasonable branch-free readout.
+
+A
+
+Numerical Checks
+
+The numerical checks below were generated from the script
+work/numerical checks.py.
+The local Abel-flow check uses the Koenigs linearization of z 7→ ez near the principal complex fixed
+point z∗ = −W0 (−1), and verifies both the recurrence and the infinitesimal covariance
+Ṫh+1 = eTh Ṫh .
+24
+
+Check
+
+Quantity
+
+Local exp Abel recurrence
+Infinitesimal covariance
+Kernel identity
+Discrete spectrum
+Cyclotomic closure
+Golden trace
+No-scale ellipse
+Ellipse eccentricity
+Golden eccentricity
+Gamma fifths
+Golden base
+Branch sensitivity
+
+10 16
+
+Value
+Th
+
+max |Th+1 − e |rel
+max |Ṫh+1 − eTh Ṫh |rel
+max relative finite-difference residual
+max |λnum − 2π 2 k(n − k)|
+|
+max |σ2 + (n−1)(n−5)
+12
+φ2 + φ−2 − 3
+√
+R = φ2 , a = R + R−1 , b = R − R−1 , c = a2 − b2
+c/a − 2/3 without fitted scale
+sech(2 log φ) − 2/3
+Γ(1/5)Γ(4/5)/(Γ(2/5)Γ(3/5)) − φ
+bφ = exp(µe−µ ), µ = (2φ)−1
+min / max magnitude over k = −4, . . . , 4
+
+9.481e − 17
+1.379e − 20
+6.567e − 07
+3.979e − 13
+2.043e − 14
+4.2169e − 81
+√
+a = 3, b = 5, c = 2
+1.0542e − 81
+1.0542e − 81
+2.1084e − 81
+1.2546673520556532
+2.183e − 18/4.580e +
+17
+
+Local Abel-flow covariance for exp near a fixed point
+
+relative residual
+
+10 17
+10 18
+
+|Th + 1 eTh|
+|Th + 1 eThTh|
+
+10 19
+10 20
+10 21
+0.4
+
+0.2
+
+0.0
+height h
+
+0.2
+
+0.4
+
+Figure 1: Local Abel-flow recurrence and infinitesimal covariance residuals for z 7→ ez .
+Remark A.1 (Kneser Comparison Status). The table does not include a raw numerical comparison
+with Kneser’s tetration on the real axis, because this outline has not yet implemented the representing Abel/Kneser branch. The current computations verify that the golden ellipse/Joukowski
+equality holds without a fitted scale normalization:
+R = φ2 ,
+
+a = R + R−1 = 3,
+
+c = 2,
+
+ε = c/a = 2/3.
+
+They certify the scalar used by the reasonable Kneser convention. They do not yet give an independent floating-point evaluation of an unobserved raw Kneser branch at iφ.
+
+25
+
+Branch-free Hessian kernel check
+
+160
+
+2csc2 (x
+
+a)
+finite-difference
+
+140
+
+2log a
+x
+
+kernel value
+
+120
+100
+80
+60
+40
+20
+0.0
+
+0.2
+
+0.4
+
+x
+
+0.6
+
+0.8
+
+1.0
+
+Figure 2: Finite-difference verification of the branch-free Hessian kernel −∂x2 log σa = π 2 csc2 π(x −
+a).
+
+Discrete Hessian spectrum 2 2k(n k)
+
+eigenvalue
+
+n=5
+100
+75
+50
+25
+0
+
+n=8
+
+0
+
+1
+
+2
+3
+sorted mode
+
+n = 12
+
+300
+
+numeric
+formula
+
+4
+
+600
+
+200
+
+400
+
+100
+
+200
+
+0
+
+0
+
+2
+
+4
+sorted mode
+
+6
+
+0
+
+0.0
+
+2.5
+
+5.0 7.5
+sorted mode
+
+10.0
+
+Figure 3: Numerical spectrum of the discrete inverse-square Hessian against 2π 2 k(n − k).
+
+26
+
+Cyclotomic signed Cauchy-curvature closure
+
+signed 2 at root 1
+
+0
+2
+4
+6
+8
+
+(n 1)(n 5)/12
+pentagon closure
+
+10
+
+4
+
+6
+
+8
+
+n
+
+10
+
+12
+
+14
+
+Figure 4: Signed Cauchy-curvature closure σ2 = −(n − 1)(n − 5)/12, with the nondegenerate zero
+at n = 5.
+
+Golden Joukowski ellipse: e = 2/3
+x2/9 + y2/5 = 1
+foci
+
+2
+
+y
+
+1
+0
+1
+2
+3
+
+2
+
+1
+
+0
+x
+
+1
+
+2
+
+3
+
+√
+Figure 5: The Joukowski image of |z| = φ2 : semi-axes 3, 5, foci ±2, eccentricity 2/3.
+
+27
+
+Branch sensitivity at the golden imaginary height
+|exp(i (log 2 + 2 ik))|
+
+1015
+1010
+105
+100
+10 5
+10 10
+10 15
+4
+
+3
+
+2
+
+1
+
+0
+1
+log branch k
+
+2
+
+3
+
+4
+
+Figure 6: Sensitivity of exp(iφ(log φ2 + 2πik)) to logarithm-sheet changes. The primitive branchfree closure rejects this sheet dependence.
+
+B
+
+Bibliographic Anchors
+• H. Kneser, “Reelle analytische Lösungen der Gleichung ϑ(ϑ(x)) = ex und verwandter Funktionalgleichungen,” Journal für die reine und angewandte Mathematik 187 (1950), 56–67.
+DOI: https://doi.org/10.1515/crll.1950.187.56.
+• G. Szekeres, “Regular iteration of real and complex functions,” Acta Mathematica 100 (1958),
+203–258. DOI: https://doi.org/10.1007/BF02559539.
+• H. Trappmann and D. Kouznetsov, “Uniqueness of holomorphic Abel functions at a complex
+fixed point pair,” Aequationes Mathematicae 81 (2011), 65–76. arXiv: https://arxiv.org/
+abs/1006.3981.
+• W. Paulsen and S. Cowgill, “Solving F (z + 1) = bF (z) in the complex plane,” Advances
+in Computational Mathematics 43 (2017), 1261–1282. DOI: https://doi.org/10.1007/
+s10444-017-9524-1.
+• G. Koenigs, classical linearization near a nonneutral fixed point; E. Schroder, Schroder’s
+functional equation. These provide the local model T [h] (z) = σ −1 (λh σ(z)).
+• R. B. Paris and D. Kaminski, Asymptotics and Mellin-Barnes Integrals, for Mellin-transform
+normalization; standard Gamma reflection gives ψ ′ (z) + ψ ′ (1 − z) = π 2 csc2 πz.
+• Standard references on fractional powers of positive operators and heat-kernel/zeta regularization for the continuum-height layer.
+
+28
+
+

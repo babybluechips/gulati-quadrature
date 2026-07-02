@@ -1,0 +1,1508 @@
+THE LOG-DISCRIMINANT HESSIAN:
+SPECTRUM, CONIC COORDINATES, AND BOUNDARY QUADRATURE
+RICK GULATI
+Abstract. For a configuration V = (v1 , . . . , vn ) of distinct complex points, the log-discriminant
+Hessian Q(V ) := − 12 ∇2V log |∆(V )| is a polynomial-algebraic operator with four foundational
+identifications: closed-form spectrum λm (Qn ) = m(n − m)/2 on equispaced nodes (Theorem 2.2), principal-symbol equality QΓ = πΛΓ + K0 with K0 ∈ Ψ0 (Γ) on C 3 closed planar
+curves (Theorem 3.1), the identification Q = π(−∆S 1 )1/2 as the fractional Laplacian on the
+circle (Corollary 3.2), and the spectral zeta identity Tn (s) → 2ζ(s) on C \ Z≥1 at rate O(1/n)
+(Theorem 4.1).
+These foundations support an algebraic encoding of shape and scale through conic coordinates on the Dirichlet spectrum: the spectral map Σ : Ω 7→ (λ1 , λ2 , . . .) factors through
+the moduli quotient D/ ∼ times R+ , with eigenvalue ratios pinning shape and one absolute eigenvalue pinning scale (Theorem 5.1); given (λ1 , D2 λ1 ) on piecewise C 2,α simply connected planar domains, Ω is determined up to Euclidean motion via the dressed factorization
+Hres = −2M∂ν u1 QΓ M∂ν u1 +E and piecewise Frenet reconstruction (Theorem 6.4); once shape
+is identified, area drops out of the radial coordinate as Area(Ω) = CQ ([Ω])/λ1 (Ω)2 (Corollary 5.2).
+The boundary quadrature corollary is information-theoretic
+optimality. For n-sample linR
+ear rules approximating layer potentials I(x) = Γ σ(y) log |x − y| ds(y) on analytic Jordan
+curves Γ with σ in the Hardy class Fρ , the minimax rate is κn (Γ, x; Fρ ) ≍ C(Γ) n−1 e−(n/2)(log ρ+δΦ (x))
+where δΦ (x) = log |Φ(x)| is the exterior conformal distance (Theorem 7.2). The spectral
+Q-rule on the conformal pullback of equispaced nodes attains the rate up to a universal
+constant; near-singular evaluation (nδ ≲ 1) is governed by the Quadrature-Curvature Law
+(Theorem 7.1). The framework is linearizable: every analytic Jordan curve pulls back to S 1
+under the exterior Riemann map, and Q is the unique scale-phase intertwiner of complex
+exponentiation (Theorem 8.1).
+A reference implementation in the companion package GulatiLaplacian [22] realizes the
+framework around the single unifying mechanism: every analytic Jordan curve quadrature
+problem reduces, via the exterior Riemann map Φ and Theorem 7.3, to the same circle problem on S 1 controlled by QS 1 = π(−∆S 1 )1/2 . Across four representative shape classes — S 1 ,
+star-shaped smooth (3-petal flower, perturbed ellipse), non-star-shaped smooth (teardrop),
+and true-corner (unit square) — the same algorithm is applied against four different precomputed Φs. In fp64: machine precision uniformly in δ on S 1 ; ∼ 4 × 10−14 uniformly in
+δ ∈ [10−6 , 10−1 ] on the flower and ellipse; ∼ 6 × 10−7 on the teardrop; graceful algebraic
+degradation on the square with uniform-in-δ behavior preserved (4–5× better than classical
+periodic trapezoidal at δ = 10−6 , two orders of magnitude better near a corner). The algorithm is arithmetic-agnostic: an adaptive gate escalates to mpmath multiprecision when the
+fp64 two-grid estimator hits floor, certifying 93–95 digits at ρ − 1 = 10−40 on the exteriorconformal benchmark in 63–78 ms per target and ∼ 10−149 at ϵ = 10−80 on the adaptive path.
+The arithmetic tier governs the floor; the algorithm governs the rate.
+Method. Think geometrically, compute numerically, prove analytically, certify algebraically.
+Pictures (the discriminant cone, the log-polar cylinder, conic pencils, Cassini ovals) carry
+intuition; numerics across fp64 and multiprecision tiers confirm the predicted spectrum, the
+O(n log n) functional calculus, and the uniform-in-δ near-singular regime on shapes from
+S 1 through true corners; pseudodifferential calculus, Mellin contour integration, and SeeleyHörmander zeta theory provide the analytic proofs; algebraic identities like λm = m(n−m)/2,
+Qn 1 = 0, and detζ QS 1 = 2 hold without floating-point slack.
+
+Date: May 2026.
+2020 Mathematics Subject Classification. Primary 65D32, 65N38; Secondary 65T50, 35S05, 31A10.
+Key words and phrases. Near-singular quadrature, layer potentials, Dirichlet-to-Neumann operator, logdiscriminant Hessian, spectral cone, conformal moduli, fractional Laplacian.
+1
+
+2
+
+RICK GULATI
+
+1. Introduction
+1.1. The near-singular layer-potential problem. Let Γ ⊂ R2 be a C 3 closed Jordan curve
+of length L, σ ∈ C 2 (Γ) a density, and x ∈ R2 \ Γ a target at distance δ = dist(x, Γ). We seek
+to evaluate the single-layer potential
+Z
+σ(y) log |x − y| ds(y).
+(1)
+I(x) =
+Γ
+
+The classical periodic trapezoidal rule on n equispaced boundary nodes,
+n
+
+Intrap (x)
+
+LX
+:=
+σ(zk ) log |x − zk |,
+n
+
+zk = γ(2πk/n),
+
+(2)
+
+k=1
+
+converges exponentially when nδ ≫ 1 at the Trefethen-Weideman rate [18]
+|I(x) − Intrap (x)| ≤ C(Γ, σ) e−2πnδ/L .
+
+(3)
+
+This bound saturates as nδ ↓ 0: in the near-singular regime the trapezoidal rule plateaus at
+an n-independent floor governed by the boundary’s resistance to discrete sampling. Existing
+remedies (quadrature-by-expansion [10], sharp QBX bounds [11], panel-based close-evaluation
+[7]) patch the rule per target. The present paper identifies the operator that controls the
+regime universally, proves a closed-form spectrum, and uses its functional calculus to evaluate
+I(x) at the information-theoretic minimax rate.
+1.2. The operator Q.
+V = (v1 , . . . , vn ) ∈ Cn of distinct points and
+Q For a configuration
+discriminant ∆(V ) = i<j (vi − vj )2 , define
+X
+Φ(V ) := log |∆(V )| = 2
+(4)
+log |vi − vj |,
+Q(V ) := − 12 ∇2V Φ(V ).
+i<j
+
+Treating V as a real 2n-vector (Re v1 , Im v1 , . . .), Q(V ) is a real symmetric 2n×2n matrix. For
+configurations on the unit circle, V = (eiθ1 , . . . , eiθn ) and restricting to tangential variations
+gives the discrete n × n operator
+(
+|zi − zj |−2
+i ̸= j,
+P
+(5)
+(Qn )ij =
+− k̸=i (Qn )ik i = j.
+This is the discrete object that anchors the paper. On equispaced nodes zk = e2πik/n , Qn is
+circulant, with closed-form spectrum (Theorem 2.2) and an O(n log n) functional calculus via
+the FFT.
+1.3. Method: four levels of rigor. The paper operates on four methodological levels.
+Think geometrically. Pictures encode where the proofs go: the discriminant cone of real
+binary quadratic forms (§5), the log-polar cylinder C = R × T (§8), Cassini ovals as level sets
+of |∆|. We display these diagrams austerely, without over-interpretation; their content is what
+they show.
+Compute numerically. A prototype fp64 implementation realizes every prediction at the
+regime where the paper is operationally useful: the closed-form spectrum, the O(n log n) functional calculus, the spectral primitive (2) replacement that holds machine precision uniformly
+in δ on S 1 , the O(n) BEM conditioning.
+Prove analytically. The continuum extension QΓ on C 3 closed planar curves, the Dirichletto-Neumann identification, the minimax rate on analytic Jordan curves, and the spectral zeta
+identification on S 1 rest on pseudodifferential symbol calculus, Mellin contour integration, and
+Seeley-Hörmander zeta theory.
+Certify algebraically. The deepest identities hold in exact arithmetic: λm = m(n − m)/2 ∈
+1
+Z,
+Qn 1 = 0, detζ QS 1 = 2. Algebraic certification anchors every claim made in the lower-rigor
+2
+levels.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+3
+
+n−1
+1.4. Main results. (R1) Closed-form spectrum on S 1 . For Vn = (e2πik/n )k=0
+, Qn is circulant
+with eigenvalues λm (Qn ) = m(n − m)/2 for m = 0, 1, . . . , n − 1 (Theorem 2.2). λ0 = 0 holds
+exactly, so Qn 1 = 0 at machine precision.
+(R2) Functional calculus. φ(Qn ) = F ∗ diag(φ(λm ))F via the unitary DFT, evaluated in
+O(n log n) per application (Theorem 2.4).
+(R3) Dirichlet-to-Neumann identification. On a C 3 closed Jordan curve Γ, QΓ = πΛΓ + K0
+with K0 ∈ Ψ0 (Γ) and principal symbol π|ξ| (Theorem 3.1). Equivalently, QS 1 = π(−∆S 1 )1/2
+on the unit circle (Corollary 3.2).
+Pn−1
+(R4) Spectral zeta identity. The rescaled-spectrum sum Sn (s) = m=1
+(m(n − m)/n)−s has
+Bernoulli-corrected limit
+
+Tn (s) := Sn (s) − n1−s B(1 − s, 1 − s) → 2ζ(s)
+
+(6)
+
+uniformly on compact subsets of C \ Z≥1 at rate O(1/n) (Theorem 4.1). The Riemann zeta
+function is the boundary tail of the polynomial-algebraic spectrum.
+(R5) Spectral cone factorization. The Dirichlet spectral map Σ : D → R∞
++ , Ω 7→ (λ1 (Ω), λ2 (Ω), . . .),
+factors canonically as
+shape×scale
+
+spectral
+
+D −−−−−−−−→ (D/∼) × R+ −−−−−→ R∞
++,
+
+(7)
+
+with the projective eigenvalue ratios λj /λ1 encoding shape and any single absolute eigenvalue
+encoding scale (Theorem 5.1). Area is recovered from one absolute eigenvalue once shape is
+identified: Area(Ω) = CQ ([Ω])/λ1 (Ω)2 (Corollary 5.2).
+(R6) Hessian-based exact reconstruction. The first Dirichlet eigenvalue and its Hadamard
+Hessian (λ1 , D2 λ1 ) determine Ω up to Euclidean motion on piecewise C 2,α simply connected
+planar domains with interior angles in (0, 2π) \ {π} (Theorem 6.4). The proof uses the dressed
+factorization Hres = −2M∂ν u1 QΓ M∂ν u1 + E [3], principal-symbol flux extraction, diagonal
+curvature density, and piecewise Frenet reconstruction. The area |Ω| is recovered exactly.
+(R7) Minimax-optimal quadrature. The minimax error for n-sample linear quadrature rules
+on analytic Jordan curves Γ with density in the Hardy class Fρ is
+C(Γ) −(n/2)(log ρ+δΦ (x))
+e
+,
+(8)
+n
+attained by the spectral Q-rule on the conformal pullback of equispaced nodes (Theorem 7.2).
+(R8) Quadrature-Curvature Law (near-singular regime). In the regime nδ ≲ 1,
+κn (Γ, x; Fρ ) ≍
+
+C1 Q(x)−1/2 ≤ |I(x) − Intrap (x)| ≤ C2 Q(x)−1/2 e−2πnδ/L ,
+
+(9)
+
+where Q(x) is the boundary-localized inverse-square coercivity functional, Q(x) ∼ π/δ as
+δ → 0 (Theorem 7.1).
+(R9) Scale-phase intertwiner. Q is the unique self-adjoint translation-invariant operator
+on L2 (T) whose scale flow lifts via exp : C → C× to the dilation-rotation structure of C×
+(Theorem 8.1). Pullback to S 1 via the exterior Riemann map linearizes the framework on any
+analytic Jordan curve.
+1.5. Numerical headline. A prototype fp64 implementation realizes (R1)–(R7) at n = 220 .
+The headline behavior is the spectral primitive (2)-replacement holding machine precision
+uniformly in δ on S 1 where the trapezoidal rule saturates.
+2. The operator Q: spectrum and functional calculus
+2.1. Cauchy–Gram factorization.
+Proposition 2.1 (Log-discriminant Hessian). The configuration matrix Q(V ) = − 21 ∇2V log |∆(V )|
+in (4) acts on tangent variations δV ∈ Cn by
+X |δvi − δvj |2
+δV ∗ Q(V ) δV =
+.
+(10)
+|vi − vj |2
+i<j
+
+In particular, Q(V ) ⪰ 0 with kernel spanned by global translations δV = (c, c, . . . , c), c ∈ C.
+
+4
+
+RICK GULATI
+
+Table 1. Relative error of three rules for the layer potential (1) on S 1 with
+analytic density σ(θ) = exp(cos θ + 0.3 sin 2θ) and target x = (1 + δ)eiθ0 . Trapezoidal saturates as nδ ↓ 0; Trefethen-Weideman with optimal contour rotation
+improves at moderate δ but degrades to trapezoidal level at small δ; the spectral Q-rule, via the closed-form Fourier expansion of log |x−eiθ |, holds machine
+precision uniformly.
+δ
+10−1
+10−1
+10−2
+10−3
+10−4
+10−5
+10−6
+
+n trapezoidal TW (optimal)
+32
+128
+64
+512
+512
+512
+512
+
+9.3 × 10−3
+2.3 × 10−9
+2.2 × 10−2
+7.2 × 10−3
+1.2 × 10−2
+1.2 × 10−2
+1.2 × 10−2
+
+7.3 × 10−2
+7.1 × 10−2
+1.2 × 10−2
+4.5 × 10−3
+1.2 × 10−2
+1.2 × 10−2
+1.2 × 10−2
+
+spectral-Q
+1.3 × 10−12
+0
+1.2 × 10−16
+1.1 × 10−16
+3.4 × 10−16
+0
+0
+
+Proof. Direct computation. The Hessian of log |vi − vj |2 with respect to (vi , vj ) is a rank-2
+update with kernel vi = vj . Summing over i < j produces the Cauchy-Gram form (10).
+□
+The form (10) is the discrete Dirichlet form on the chord graph Kn with edge weights
+|vi − vj |−2 , scaled quadratically in tangential variations.
+Im z
+
+c=1
+
+c>1
+
+c<1
+−1
+
+Re z
++1
+
+Figure 1. Cassini ovals |z − 1| |z + 1| = c as level sets of |∆(V )|1/2 for the
+n = 2 configuration V = (−1, +1). For c < 1 (blue) the level set is two disjoint
+ovals around the roots; the critical value c = 1 is the Bernoulli lemniscate (red),
+the unique saddle of |∆|; for c > 1 (gold) the level set is a single oval enclosing
+both roots. Q = − 12 ∇2 log |∆| encodes the local geometry of these level sets;
+the lemniscate sits at the parabolic-edge transition.
+2.2. Closed-form spectrum on S 1 .
+Theorem 2.2 (Closed-form spectrum). Let Vn = (e2πik/n )n−1
+k=0 be the cyclotomic configuration.
+2πik/n
+Restricting Q(Vn ) to tangential variations δvk = ie
+uk , uk ∈ R, the resulting n×n matrix
+Qn is circulant with eigenvalues
+m(n − m)
+,
+m = 0, 1, . . . , n − 1,
+2
+√
+and eigenvectors Fm = (e2πimk/n )n−1
+k=0 / n (the DFT columns).
+λm (Qn ) =
+
+(11)
+
+Proof. Circulant structure: |zi − zj |−2 = (4 sin2 (π(i − j)/n))−1 depends only on i − j, so
+the Cauchy-Gram form restricted to P
+tangential variations has constant diagonals. The DFT
+n−1
+diagonalizes; eigenvalues are λm = 21 k=1
+(sin−2 (πk/n)) (1 − cos(2πmk/n)), which evaluates
+
+THE LOG-DISCRIMINANT HESSIAN
+
+by partial fractions to m(n − m)/2. The full calculation uses the identity
+(n − 1)(n − 2)/3; see Appendix A.
+
+5
+
+Pn−1
+
+2
+k=1 cot (πk/n) =
+
+□
+
+Corollary 2.3 (Algebraic certification). λm (Qn ) ∈ 21 Z for all n, m. In particular, λ0 = 0
+holds exactly, so Qn 1 = 0 at machine precision in any floating-point arithmetic.
+The conditioning of Qn on a non-trivial subspace is cond(Qn |1⊥ ) = λ⌊n/2⌋ /λ1 = O(n),
+versus O(n3 ) for the Galerkin-discretized Hadamard hypersingular operator on the same nodes
+[12, 16].
+2.3. Functional calculus.
+Theorem 2.4 (Functional calculus). For any function φ : spec(Qn ) → C, the operator φ(Qn )
+admits the diagonal representation
+n−1
+φ(Qn ) = F ∗ diag(φ(λm ))m=0
+F,
+
+(12)
+
+where F is the unitary DFT. Evaluation v 7→ φ(Qn )v costs O(n log n) per application via the
+FFT, with φ evaluated at exact algebraic eigenvalues λm = m(n − m)/2 ∈ 21 Z.
+Proof. Theorem 2.2 gives the eigendecomposition Qn = F ∗ diag(λm )F ; spectral mapping is
+immediate.
+□
+Three classes of φ enter the paper. The boundary solve φ(λ) = 1/λ (with λ0 -eigenspace
+projected out) inverts Qn on 1⊥ . Fractional powers φ(λ) = λ1/2 realize the half-Laplacian
+of Corollary 3.2. The spectral primitive φ(λ) = λ−1 for layer-potential evaluation gives the
+headline behavior of Table 1.
+3. Continuum identification
+3.1. The chord Laplacian as a ΨDO. For a C 3 closed Jordan curve Γ ⊂ R2 parametrized
+1/2
+by arc length s ∈ [0, L], define the continuum operator QΓ on H0 (Γ) by the bilinear form
+ZZ
+(u(s) − u(t))2
+ds dt.
+(13)
+⟨u, QΓ u⟩ =
+2
+Γ×Γ |γ(s) − γ(t)|
+This is the continuum extension of the Cauchy-Gram form (10).
+Theorem 3.1 (Dirichlet-to-Neumann identification). For a C 3 closed Jordan curve Γ,
+QΓ = π ΛΓ + K0 ,
+
+K0 ∈ Ψ0 (Γ),
+
+(14)
+
+where ΛΓ is the interior Dirichlet-to-Neumann operator of Γ. The principal symbol of QΓ on
+1/2
+1/2
+T ∗ Γ \ 0 is π|ξ|. The norm of K0 as an operator H0 → H0 is bounded by C1 ∥γ∥C 3 + C2 for
+explicit constants C1 , C2 .
+Proof. Localize via a partition of unity {χα } on Γ, each subordinatedqto a tangent-graph
+patch. On each patch, write the chord distance as |x(s) − x(s + ε)| = ε
+
+1 + 21 a(s)ε + O(ε2 )
+
+for a depending on γ ′′ ; the leading singularity of the chord-squared kernel is ε−2 , matching the
+\
+−2 )(ξ) = −π|ξ|. The sub-principal
+principal symbol π|ξ| of πΛΓ via the Fourier identity fp(s
+contributions from the Frenet expansion produce zero-order multiplication terms absorbed
+into K0 . The atlas-gluing preserves the symbol class. The norm bound on K0 follows from
+the explicit dependence on γ ′′ . Details: [4, §4], where the full Mellin-symbol machinery is
+developed for the corner case as well.
+□
+Corollary 3.2 (Q as fractional Laplacian on S 1 ). For Γ = S 1 , K0 = 0 identically and
+QS 1 = π (−∆S 1 )1/2 .
+Proof. On S 1 the rotational symmetry forces K0 to be a Fourier multiplier; the closed-form
+spectrum λm (Qn ) = m(n − m)/2 rescales to π|m| in the continuum limit (after rescaling by
+L/n), matching π|ξ| on Fourier modes exactly.
+□
+
+6
+
+RICK GULATI
+
+4. Spectral zeta regularization
+The closed-form spectrum permits a direct evaluation of the spectral zeta sum.
+Theorem 4.1 (Spectral renormalization). For every compact K ⊂ C \ Z≥1 there is a constant
+CK such that
+CK
+Tn (s) − 2ζ(s) ≤
+∀s ∈ K, ∀n ≥ 2,
+(15)
+n
+Pn−1
+(m(n − m)/n)−s , and B is the Euler
+where Tn (s) = Sn (s) − n1−s B(1 − s, 1 − s), Sn (s) = m=1
+beta function. The pole of Tn as n → ∞ at s = 1 matches the simple pole of ζ(s).
+P
+−s
+Proof. Change variables xm = m/n in Sn : Sn (s) = n−s n−1
+m=1 (xm (1 − xm )) . The integrand
+−s
+(x(1 − x)) has integrable endpoint singularities at x = 0, 1 for Re s < 1. The Mellin contour
+R1
+P −s
+shifts 0 (x(1 − x))−s dx = B(1 − s, 1 − s) and
+= ζ(s) combine: the bulk integral
+kk
+1−s
+n B(1 − s, 1 − s) counts interior nodes; the boundary discrete tails near x = 0, 1 contribute
+ζ(s) each, summing to 2ζ(s). The O(1/n) rate comes from the standard Euler-Maclaurin
+expansion of the partial sum. The full Mellin-Barnes derivation is in Appendix B.
+□
+Corollary 4.2 (Algebraic zeta certificates on S 1 ). The spectral zeta of QS 1 has the algebraic
+special values
+′
+det QS 1 := exp(−ζQ
+(0)) = 2.
+(16)
+ζQS1 (0) = −1,
+1
+S
+
+ζ
+
+Both identities are exact algebraic statements certifiable in exact arithmetic.
+P
+Proof. ζQS1 (s) = π −s m≥1 (m)−s · 2 = 2π −s ζ(s) on S 1 by Corollary 3.2. Evaluating at s = 0:
+′
+ζ(0) = −1/2, so ζQS1 (0) = −1. Differentiating at s = 0: ζQ
+(0) = −2 log πζ(0) + 2ζ ′ (0) =
+1
+S
+
+log π − log(2π) = − log 2, so detζ QS 1 = elog 2 = 2.
+
+□
+
+5. Shape and scale via conic coordinates
+5.1. The spectral cone.
+Theorem 5.1 (Spectral cone factorization). Let D be a class of bounded Lipschitz planar
+domains on which the Dirichlet spectrum is finitely simple, and let Σ : D → R∞
++ denote the
+spectral map Ω 7→ (λ1 (Ω), λ2 (Ω), . . .). Then Σ factors canonically as
+[ · ]×scale
+
+spectral
+
+D −−−−−−→ (D/∼) × R+ −−−−−→ R∞
++,
+
+(17)
+
+where ∼ is the similarity equivalence Ω ∼ sΩ, s > 0. The decomposition is into:
+(i) the projective component (eigenvalue ratios λj /λ1 ), which depends only on the similarity
+class [Ω];
+(ii) the radial component (any single absolute eigenvalue λabs
+j ), which determines the scale
+−2
+abs
+norm
+s via s = λj /λj
+([Ω]).
+On any restriction of D/∼ where the ratio chart is injective, the spectrum is a complete invariant of Ω.
+Proof. The scaling identity λj (sΩ) = s−2 λj (Ω) gives λj /λ1 as a similarity invariant, hence the
+ratio chart factors through D/∼. For fixed [Ω], the map s 7→ λ1 (sΩ) = s−2 λ1 (Ω) is strictly
+monotone, so λabs
+pins s.
+□
+1
+5.2. The classical discriminant cone. The spectral cone of (17) is the spectral geometry’s
+reflection of a classical algebraic object: the discriminant cone of real binary quadratic forms
+F (x, y) = Ax2 +Bxy +Cy 2 , with discriminant disc(F ) = B 2 −4AC. The locus {B 2 = 4AC} is
+a real algebraic surface in P2(A:B:C) (R) separating elliptic forms (B 2 −4AC < 0) from hyperbolic
+forms (B 2 − 4AC > 0). The moduli space of conformal-similarity classes of analytic Jordan
+curves embeds in this cone via the conformal modulus [9]; S 1 sits at the parabolic-edge limit
+point.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+λ3 /λ1
+
+7
+
+scale axis
+
+λ1 ↗
+R+ orbit
+
+projective image Σ(D)/R+
+λ2 /λ1
+
+Figure 2. Spectral cone: shape factors as projective ratios; scale factors as
+radial R+ orbit.
+
+B
+
+parabola
+parabolic edge
+
+ellipse
+
+hyperbola
+
+S1
+A
+
+hyperbolic
+B 2 −4AC > 0
+
+elliptic
+B 2 −4AC < 0
+
+Figure 3. The discriminant cone of real binary quadratic forms, displayed
+via its affine slice at C = 1. The cone B 2 = 4AC appears as a parabola
+separating the elliptic interior (blue) from the hyperbolic exterior (red). The
+unit circle S 1 sits at the parabolic edge of the apex; ellipses lie strictly in the
+interior; parabolas lie on the cone itself; hyperbolas lie in the exterior. The
+moduli space of similarity classes of analytic closed planar curves embeds in
+the elliptic side with S 1 as its parabolic-edge limit point.
+5.3. Area from absolute spectrum.
+Corollary 5.2 (Area from λ1 and the shape class). Under the hypotheses of Theorem 5.1,
+define the scale-free shape invariant
+CQ ([Ω]) := Area(Ω) · λ1 (Ω)2 .
+
+(18)
+
+8
+
+RICK GULATI
+
+λ= ± 2
+λ=1
+λ=0
+
+λ=3
+
+Figure 4. The pencil Cλ : x2 + λxy + y 2 = 4 of conics in R2 , all passing
+through the four base points (±2, 0), (0, ±2). The pencil sweeps through the
+entire discriminant cone of Fig. 3: λ = 0 is the inscribed circle (cone apex);
+λ = 1 is a generic rotated ellipse (elliptic interior); λ = ±2 are degenerate line
+pairs (parabolic edge); λ = 3 is a hyperbola (hyperbolic exterior). The pencil’s
+discriminant ∆(λ) = λ2 − 4 has simple zeros at the parabolic crossings.
+Then CQ is invariant under similarity, and once the shape class [Ω] has been identified from
+the projective ratios,
+CQ ([Ω])
+.
+(19)
+Area(Ω) =
+λ1 (Ω)2
+Proof. Under Ω 7→ sΩ: area scales as s2 , λ1 scales as s−2 , so Area · λ21 is invariant. For
+the recovery: identify [Ω] from (λ2 /λ1 , λ3 /λ1 , . . .); read CQ ([Ω]) from a tabulated value (e.g.,
+2 for the unit disk class with j
+CQ ([D]) = πj0,1
+0,1 the first Bessel zero); divide by the observed
+2
+λ1 .
+□
+This is the algebraic encoding of shape and scale: projective coordinates pin the shape class,
+the radial coordinate pins the scale, and area emerges algebraically from their product.
+6. Reconstruction: Dirichlet/Q recovery of shape
+The cone factorization makes reconstruction modular: identify the shape class from spectral data, recover scale from one absolute eigenvalue, and the area follows. We import two
+reconstruction results, one unconditional (the Hessian-based theorem) and one algebraic-in-K
+(the truncated-spectrum theorem for real-analytic star-shaped domains).
+6.1. Exact recovery from λ1 and its Hadamard Hessian. Let Ω ⊂ R2 be a bounded
+piecewise C 2,α simply connected domain with interior angles at corners in (0, 2π) \ {π}. Let
+u1 be the L2 -normalized positive first Dirichlet eigenfunction. The tangent space at Ω of the
+moduli space of such domains (modulo Euclidean motion) is TΩ M := H s (∂Ω)/R3 for s > 3/2.
+The Hadamard second variation is
+X |⟨V ∂ν u1 , ∂ν uk ⟩|2 Z
+2
+D λ1 Ω [V ] = −2
++
+κ(s) V (s)2 (∂ν u1 (s))2 ds,
+(20)
+λk − λ1
+∂Ω
+k≥2
+
+with Schwartz kernel H = Hcurv + Hres , where Hcurv is the Dirac-supported diagonal part of
+density κ(∂ν u1 )2 and Hres is a classical PsiDO of order +1.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+9
+
+Theorem 6.1 (Dressed factorization [3]). On smooth strata of ∂Ω,
+Hres = −2 M∂ν u1 QΓ M∂ν u1 + E,
+
+(21)
+
+with QΓ the continuum chord Laplacian of (13), M∂ν u1 multiplication by the boundary flux,
+and E ∈ Ψ0 (Γsmooth ). The principal symbol of Hres on T ∗ ∂Ω \ 0 is
+σpr (Hres )(x, ξ) = −2(∂ν u1 (x))2 |ξ|.
+
+(22)
+
+Sketch. The Hadamard kernel admits the form Hres (x, y) = −2(∂ν u1 (x))(∂ν u1 (y))G(x, y) with
+G the boundary value of the Hadamard parametrix. G has the same leading |x−y|−2 singularity
+as QΓ , hence G − QΓ ∈ Ψ0 . Multiplication by ∂ν u1 (a C 0,α function on smooth strata) is a
+classical PsiDO of order 0 with principal symbol ∂ν u1 (x); the composition rule yields (21) and
+(22). Full proof in [3, Theorem 6.1].
+□
+Theorem 6.2 (Pointwise flux extraction). For every x in the smooth interior of ∂Ω and every
+nonzero ξ ∈ Tx∗ ∂Ω,
+1
+σpr (Hres )(x, ξ).
+(23)
+(∂ν u1 (x))2 = −
+2|ξ|
+The right-hand side is an invariant of the principal symbol of Hres , independent of ξ ̸= 0 by
+homogeneity. The Hopf principle fixes the positive sign of ∂ν u1 .
+Proof. Immediate from (22), dividing by −2|ξ|. The principal symbol of a classical PsiDO is
+invariantly defined on the cotangent bundle modulo lower-order terms [8].
+□
+The flux ∂ν u1 is therefore recovered as a positive L∞ function on each smooth stratum of ∂Ω
+from D2 λ1 alone. The diagonal Dirac density of Hcurv has density κ(∂ν u1 )2 ; dividing by the
+recovered (∂ν u1 )2 yields κ(x) pointwise. Corner angles αl are recovered from the Kondrat’ev
+exponents π/αl − 1 in the asymptotic behavior of ∂ν u1 at corners [3, §8].
+Theorem 6.3 (Piecewise Frenet reconstruction). A piecewise C 2,α simply connected planar
+domain Ω is determined up to Euclidean motion of R2 by:
+(i) the boundary curvature κ : Γsmooth → R on each smooth stratum;
+(ii) the corner angles {αl }.
+Proof. On each smooth arc, integrate the Frenet equations T ′ (s) = κ(s)N (s), N ′ (s) = −κ(s)T (s)
+from fixed initial data; at each corner, the tangent frame rotates by π − αl . The interior Ω is
+recovered from ∂Ω by the Jordan curve theorem [2, Ch. 1].
+□
+Theorem 6.4 (Exact area recovery). Let Ω ⊂ R2 be a bounded piecewise C 2,α simply connected
+domain with corner angles in (0, 2π) \ {π}. The first Dirichlet eigenvalue λ1 (Ω) together with
+its Hadamard Hessian D2 λ1 |Ω determines Ω up to Euclidean motion; in particular, Area(Ω)
+is recovered exactly.
+Proof. By Theorem 6.2, ∂ν u1 is recovered on smooth strata from the principal symbol of
+Hres . The diagonal density of Hcurv then yields κ pointwise. Corner angles follow from
+Kondrat’ev exponents. By Theorem 6.3, (κ, {αl }) determines ∂Ω up to Euclidean motion,
+hence determines Ω. The eigenvalue λ1 enters via the eigenfunction normalization ∥u1 ∥L2 (Ω) =
+1, which resolves the global scale: under Ω 7→ sΩ the normalized eigenfunctions transform
+deterministically.
+□
+Remark 6.5 (GWW isospectral pairs). The Gordon-Webb-Wolpert isospectral pairs [6] and
+their Buser-Conway-Doyle-Semmler refinement [1] are piecewise-flat polygonal domains with
+identical Dirichlet spectra but distinct Hadamard Hessians D2 λ1 ; Theorem 6.4 distinguishes
+them through the recovered (∂ν u1 , κ, {αl }).
+
+10
+
+RICK GULATI
+
+6.2. Truncated-spectrum recovery on star-shaped domains. For real-analytic starshaped domains, a constructive algorithm [5] recovers shape from a truncation (λ1 , . . . , λK ) of
+the Dirichlet spectrum.
+Theorem 6.6 (Full-spectrum reconstruction, [5, Thm. 1.2]). Let (Ω, z0 ) be a real-analytic starshaped planar domain in the class SR (piecewise C 2,α radial function bounded above and away
+from zero by R, with r ∈ C ω on each smooth arc of analytic radius τ ). Given (λ1 , . . . , λK ),
+b K ∈ SR with
+the algorithm produces Ω
+b K , ∂Ω) ≤ CR K −1/2 (log K)c
+dH (∂ Ω
+
+(24)
+
+in Hausdorff distance modulo similarity, for an absolute constant c ≥ 1.
+The proof is in five constructive stages: (A) extraction of Berry heat-trace coefficients from
+the spectral zeta function; (B) inversion of universal polynomial relations to recover integrated
+curvature-angle invariants; (C) Edward Fourier-recurrence inversion to recover the boundary
+curvature on each smooth arc; (D) piecewise Frenet integration closed by Gauss-Bonnet; (E)
+consistency verification via corner directed inverse-square moments.
+6.3. Reconstruction summary. Combined with Theorem 5.1 and Corollary 5.2, the two
+reconstruction theorems give:
+• Hessian input. (λ1 , D2 λ1 ) ⇒ Ω up to Euclidean motion (Theorem 6.4). Class: piecewise
+C 2,α . Area is exact.
+• Star-shaped + full spectrum. (λ1 , . . . , λK ) ⇒ shape up to K −1/2 (log K)c Hausdorff error
+(Theorem 6.6). Class: SR . Area follows from λ1 via (19).
+The cone factorization (17) is what makes the quotient by area possible algebraically: in
+both modes, shape is identified independently of scale, and the absolute eigenvalue λ1 then
+closes the loop on area.
+7. Minimax-optimal quadrature
+We now apply the functional calculus of Qn to the layer-potential problem (1).
+7.1. The Quadrature-Curvature Law. Define the boundary-localized inverse-square coercivity functional
+Z
+ds(y)
+,
+(25)
+Q(x) :=
+2
+Γ |x − y|
+the continuum trace of the chord-kernel of Q at the target x. Q(x) → ∞ as δ = dist(x, Γ) → 0,
+with Q(x) ∼ π/δ for smooth Γ.
+Theorem 7.1 (Quadrature-Curvature Law). Let Γ be C 3 closed, σ ∈ C 2 (Γ) with |σ(s0 )| ≥
+σ0 > 0 at the nearest boundary point s0 to x. There exist constants C1 , C2 > 0 depending only
+on ∥γ∥C 3 and ∥σ∥C 2 such that in the near-singular regime nδ ≤ L/(4π),
+C1 Q(x)−1/2 ≤ |I(x) − Intrap (x)| ≤ C2 Q(x)−1/2 e−2πnδ/L .
+
+(26)
+
+Proof. Decompose the trapezoidal remainder by a contour-integral split: the bulk channel
+from interior nodes contributes the Trefethen-Weideman factor e−2πnδ/L via the Joukowski
+contour of [18]; the boundary channel from the O(1) nodes nearest the singularity contributes
+the saturation level Q(x)−1/2 . The lower bound is the boundary channel in its sharpest form.
+See Appendix C for the Donaldson-Elliott contour-splitting computation.
+□
+7.2. The minimax theorem on analytic Jordan curves. Let Γ be analytic with exterior
+Riemann map Φ : C \ Ω → {|w| > 1}. For ρ > 1, write Fρ (Γ) for the Hardy class of densities
+σ that extend analytically to the conformal collar Φ−1 ({1 ≤ |w| < ρ}) with bounded L2 trace.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+11
+
+Theorem 7.2 (Minimax rate). For x ∈ R2 \ Ω at exterior conformal distance δΦ (x) =
+log |Φ(x)| < log ρ from Γ, the minimax error of n-sample linear quadrature rules for (1) over
+Fρ (Γ) satisfies
+C(Γ) −(n/2)(log ρ+δΦ (x))
+κn (Γ, x; Fρ ) ≍
+e
+.
+(27)
+n
+The rate is attained, up to a universal constant, by the spectral Q-rule on the conformal pullback
+of n equispaced nodes on S 1 — the asymptotic Fekete configuration of Γ.
+Sketch. Upper bound by the Hardy-class n-width on Aρ (Pinkus [14], Trefethen-WeidemanWoźniakowski [19]). Lower bound by Gel’fand n-widths [13]. Attained-by-Fekete identification
+uses exterior equilibrium measure (Saff-Totik [15]). Full details: [4, §5].
+□
+outer analytic boundary
+
+δΦ (x)
+
+x
+
+Γ
+
+inner analytic boundary
+
+collar width = analytic radius log ρ
+
+Figure 5. The conformal collar of an analytic Jordan curve Γ (solid). The
+dashed curves are the outer and inner boundaries of the maximal annulus to
+which the exterior Riemann map Φ−1 extends analytically; their distance from
+Γ in the conformal coordinate is log ρ on each side. A target x in the exterior
+is identified by its conformal distance δΦ (x) = log |Φ(x)| from Γ. The minimax
+rate κn ≍ n−1 e−(n/2)(log ρ+δΦ (x)) is the negative exponential of the sum of these
+two conformal data: the collar width log ρ (intrinsic to Γ) plus the target depth
+δΦ (x) (intrinsic to x).
+7.3. Constructive realization on analytic Jordan curves. The spectral Q-rule that attains the minimax rate of Theorem 7.2 on a general analytic Jordan curve admits a constructive
+realization through kernel splitting.
+Theorem 7.3 (Kernel-splitting realization). Let Γ be an analytic Jordan curve with exterior
+Riemann map Φ : {|w| > 1} → C \ Ω and boundary correspondence θp (θc ) so that γ(θp (θc )) =
+Φ(eiθc ). For x ∈ R2 \ Ω, write wx = Φ−1 (x). The logarithm kernel admits the additive
+decomposition
+log x − γ(θp (θc )) = log wx − eiθc + log G(wx , eiθc ) ,
+(28)
+where
+Φ(w) − Φ(z)
+(29)
+w−z
+is analytic and non-vanishing on {|w|, |z| ≥ 1} (Schwarz lemma). The first summand has the
+closed-form Fourier expansion on S 1
+X 1
+log wx − eiθc = log |wx | −
+cos(k(θc − arg wx ))
+(30)
+k |wx |k
+G(w, z) :=
+
+k≥1
+
+for |wx | > 1. The second summand is real-analytic and 2π-periodic in θc with analytic-strip
+width equal to the conformal collar width of Γ.
+
+12
+
+RICK GULATI
+
+Proof. For (28), factor Φ(w) − Φ(z) = (w − z) G(w, z); by Schwarz’s lemma applied to the
+exterior region, G extends holomorphically to {|w|, |z| ≥ 1} with G(w, z) ̸= 0 there. Taking
+absolute values and logarithms gives (28). (30) is the classical Fourier expansion of the Newtonian logarithm on the unit circle. The analytic-strip statement follows from the analyticity
+of Φ on the conformal collar.
+□
+Corollary 7.4 (Layer-potential decomposition). Under the hypotheses of Theorem 7.3, the
+layer potential (1) decomposes as
+I(x) = I1 (wx ) + I2 (wx ),
+
+(31)
+
+where
+Z 2π
+I1 (wx ) =
+
+F1 (θc ) log wx − eiθc dθc ,
+
+(32)
+
+F1 (θc ) log G(wx , eiθc ) dθc ,
+
+(33)
+
+0
+
+Z 2π
+I2 (wx ) =
+0
+
+and F1 (θc ) = σ(γ(θp (θc ))) |γ ′ (θp (θc ))| (dθp /dθc ). The spectral Q-rule evaluates I1 via the closedform Fourier expansion (30) (machine precision uniformly in wx ) and I2 via the periodic
+trapezoidal rule on θc (machine precision since the integrand is real-analytic).
+The closed-form circle term absorbs the entire near-singularity: as x → Γ, |wx | → 1+
+and the series (30) converges more slowly, but each mode is evaluated exactly. The smooth
+correction I2 has an integrand bounded uniformly in δ, so the trapezoidal rule converges at
+the analytic-strip rate independent of target proximity. The combined error is determined by
+the Fourier truncation of F1 and the boundary-correspondence accuracy of θp , both controlled
+by n and an oversampling parameter N for the Theodorsen computation.
+Definition 7.5 (Spectral Q-quadrature on analytic Jordan curves). Inputs: analytic Jordan
+curve Γ (polar form r(θ) for star-shaped Γ), density σ : Γ → R analytic, target x ∈ R2 \ Ω,
+sample count n, Theodorsen resolution N ≥ 4n.
+(k)
+
+(k)
+
+−1
+= 2πk/N by the Picard itera(1) Boundary correspondence. Compute {θp (θc )}N
+k=0 at θc
+(j+1)
+(j)
+tion θp
+(θc ) = θc − K[log r(θp (θc ))], where K is the conjugate (Hilbert) operator on
+S 1 applied in the Fourier basis as K[eimθ ] = −i sgn(m) eimθ ; iterate to fixed point.
+(k)
+(2) Laurent coefficients of Φ. Take γ(θp ) as C-valued samples and extract Laurent coefficients
+{ck }k≤1 via FFT (negative-frequency modes only; c1 = a is the capacity).
+(3) Conformal pullback of target. Compute wx = Φ−1 (x) by Newton on the truncated Laurent
+expansion, projected to |wx | ≥ 1 at each step; initial guess from the boundary-nearest
+node.
+[j]
+[j]
+(4) Spectral evaluation. At n equispaced nodes θc = 2πj/n, interpolate θp and dθp /dθc θ[j]
+c
+
+[j]
+
+[j]
+
+[j]
+
+from the N -resolution data by truncated Fourier. Form F1 (θc ) = σ(γ(θp )) |γ ′ (θp )| (dθp /dθc ) θ[j] .
+c
+n/2
+(5) Closed-form circle term. FFT F1 to get {Fb1 (m)}
+. Evaluate
+m=−n/2
+
+I1 = 2π Fb1 (0) log |wx | −
+
+n/2
+X
+m=1
+
+
+π
+a
+cos(m
+arg
+w
+)
++
+b
+sin(m
+arg
+w
+)
+,
+m
+x
+m
+x
+m |wx |m
+
+with am = 2 Re Fb1 (m), bm = −2 Im Fb1 (m).
+[j]
+
+[j]
+
+[j]
+
+(6) Trapezoidal correction. Evaluate G(wx , eiθc ) = (x − Φ(eiθc ))/(wx − eiθc ); take logarithm
+[j]
+P
+[j]
+and integrate: I2 = (2π/n) j F1 (θc ) log |G(wx , eiθc )|.
+(7) Return I(x) ≈ I1 + I2 .
+Complexity: O(N log N ) for the boundary correspondence (precomputed once per Γ); O(n log n)
+per target.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+η
+
+13
+
+C×
+
+C =R×T
+
+π
+exp
+
+−π
+
+ξ
+
+Figure 6. Log-polar cylinder and complex exponentiation.
+7.4. Comparison with Gauss. Gauss-Legendre quadrature with n nodes integrates polynomials of degree ≤ 2n − 1 exactly, and on analytic integrands inside a Bernstein ellipse of
+parameter ρ > 1 achieves rate O(ρ−2n ) [17]. For matched analyticity radii δΦ ≍ 2 log ρ, the
+engine’s rate matches Gauss to leading order. The engine improves on Gauss structurally in
+three ways: (i) the exponent in (27) is target-dependent, δΦ (x) rather than global log ρ; (ii) the
+engine is intrinsic to closed curves and non-tensor-product geometry, where Gauss requires extrinsic parametrization; (iii) the engine diagonalizes the boundary integral operator QΓ rather
+than polynomial integration, delivering layer potentials via the O(n log n) functional calculus.
+8. Linearization via complex exponentiation
+The pullback to S 1 via the exterior Riemann map linearizes the framework. The log-polar
+cylinder C = R × T is the universal cover of C× via exp : (ξ, η) 7→ eξ+iη ; the scale axis ξ and
+phase axis η carry commuting flows that exp-correspond to dilation and rotation on C× .
+Theorem 8.1 (Scale-phase intertwiner). Let A be a self-adjoint operator on L2 (T). Suppose:
+(i) A is translation-invariant (commutes with rotations of T);
+(ii) the heat semigroup e−tA admits a scale-phase factorization on C that lifts via exp to the
+Poisson semigroup on D;
+(iii) A has principal symbol π|ξ|;
+(iv) the fundamental Fourier mode is normalized as a π-eigenvector.
+Then A = QS 1 = π(−∆S 1 )1/2 .
+Proof. Translation invariance + self-adjoint forces A to be a Fourier multiplier A = op(a(m))m∈Z .
+The scale-phase lift to the Poisson semigroup gives a(m) = c|m| for some constant c. The
+principal symbol π|ξ| fixes c = π. The normalization a(1) = π is consistent.
+□
+The corollary: every analytic Jordan curve Γ admits an exterior Riemann map Φ pulling Γ
+back to S 1 , and the spectral Q-quadrature on Γ is the conformal pullback of the closed-form
+spectral Q-rule on S 1 .
+9. Numerical evidence
+The point of the framework is that every analytic Jordan curve quadrature problem is the
+same circle problem in disguise. Theorem 7.3 pulls Γ back to S 1 via the exterior Riemann map
+Φ and decomposes the layer-potential kernel into the closed-form circle kernel log |wx − eiθc |
+(eq. (30)) plus a real-analytic correction. The first part is precisely the operator on which
+QS 1 = π(−∆S 1 )1/2 has closed-form spectrum (Theorem 2.2, Corollary 3.2) and an O(n log n)
+functional calculus (Theorem 2.4); the second part is integrated at machine precision by the
+standard trapezoidal rule on S 1 . The shape-dependent content is entirely contained in Φ —
+specifically in its Laurent coefficients {ck }k≤1 and boundary correspondence θp (θc ) — both
+precomputed once per geometry.
+A prototype fp64 implementation realizes (R1)–(R8) at n = 220 across four representative shape classes: S 1 (exact closed-form), star-shaped smooth (3-petal flower, perturbed
+ellipse), non-star-shaped smooth (teardrop), and true-corner (unit square). On each shape,
+
+14
+
+RICK GULATI
+
+the spectral Q-rule operates through the same circle representation via Definition 7.5; only
+the precomputed Φ differs. Classical periodic trapezoidal (2) and Trefethen-Weideman with
+optimal contour rotation (TW) serve as baselines.
+
+3-petal flower
+boundary
+(ei c), 80 samples
+(|w| = 1.05)
+(|w| = 1.20)
+target x
+
+1.0
+
+perturbed ellipse
+1.0
+
+0.5
+
+0.5
+
+0.0
+
+boundary
+(ei c), 80 samples
+(|w| = 1.05)
+(|w| = 1.20)
+
+0.0
+0.5
+
+0.5
+
+1.0
+1.0
+
+1.5
+1.0
+
+0.5
+
+0.0
+
+0.5
+
+1.0
+
+1.0
+
+0.5
+
+0.5
+
+1.0
+
+1.5
+
+0.4
+
+0.6
+
+unit square
+
+1.5
+
+teardrop
+
+0.0
+
+0.6
+
+0.75
+
+0.4
+
+0.50
+0.2
+
+0.25
+
+boundary
+(ei c), 80 samples
+(|w| = 1.05)
+(|w| = 1.20)
+
+0.00
+0.25
+
+boundary
+(ei c), 80 samples
+(|w| = 1.05)
+(|w| = 1.20)
+target x
+
+0.0
+0.2
+
+0.50
+0.4
+
+0.75
+0.0
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+0.6
+0.6
+
+0.4
+
+0.2
+
+0.0
+
+0.2
+
+Figure 7. Boundary reconstruction of the four test shapes via the extracted
+Laurent series of the exterior Riemann map Φ. Solid gray: boundary Γ at high
+resolution. Blue dots: boundary points Φ(eiθc ) at 80 equispaced θc ∈ [0, 2π)
+— the Fekete-pullback nodes of the spectral Q-rule. Dashed and dotted red:
+conformal-collar level sets Φ(|w| = 1.05) and Φ(|w| = 1.20). Note how the
+Fekete-pullback nodes cluster at high-curvature regions: densely at the flower
+petal tips, at the teardrop cusp, and at all four corners of the square. The
+smooth perturbed ellipse has nearly uniform spacing. The conformal collar in
+each panel is the analytic strip from which the kernel-splitting derives its rate;
+the collar’s width controls the minimax exponent δΦ (x) = log |Φ(x)| of Theorem 7.2.
+9.1. Unit circle: machine precision uniformly in δ. Table 1 is reproduced for emphasis.
+The spectral-Q rule attains machine precision uniformly in δ ∈ [10−6 , 10−1 ] where trapezoidal
+saturates at ∼ 10−2 and TW degrades to trapezoidal level as δ → 0.
+
+THE LOG-DISCRIMINANT HESSIAN
+
+15
+
+9.2. 3-petal flower: kernel splitting via exterior Riemann map. Test shape: r(θ) = 1+
+0.3 cos 3θ, real-analytic star-shaped, non-convex (capacity a ≈ 1.0949, leading non-trivial Laurent coefficient a−2 ≈ 0.2473). The exterior Riemann map Φ is computed via the TheodorsenPicard iteration at N = 8192 collocation nodes, iterated to a residual ∥θp − θc + K[log r]∥∞ ≤
+5 × 10−15 . Its Laurent coefficients {ck }k≤1 are extracted by FFT of the boundary correspondence.
+The spectral Q-rule on the flower is implemented by pulling both the curve and the target
+back to S 1 , via the kernel-splitting realization (Theorem 7.3). Once wx = Φ−1 (x) is obtained
+by Newton on the truncated Laurent expansion, the closed-form circle term (30) captures
+the near-singularity at machine precision; the analytic correction (33) is integrated by the
+trapezoidal rule.
+Table 2. 3-petal flower, target at exterior normal distance δ from γ(0.7), analytic density σ. Classical trapezoidal saturates at the QCL floor; TrefethenWeideman with optimal contour rotation plateaus at ∼ 10−3 –10−4 in the nearsingular regime; spectral Q-rule via Theorem 7.3 drives relative error to fp64
+machine precision ∼ 4 × 10−14 uniformly in δ ∈ [10−6 , 10−1 ] at n = 2048.
+δ
+10−1
+10−2
+10−2
+10−3
+10−3
+10−4
+10−5
+10−6
+
+n trapezoidal TW (optimal)
+7.8 × 10−16
+
+1024
+1024 6.5 × 10−7
+2048 3.1 × 10−11
+1024 2.0 × 10−3
+2048 2.0 × 10−4
+2048 2.2 × 10−4
+2048 5.4 × 10−5
+2048 3.4 × 10−5
+
+6.4 × 10−2
+2.9 × 10−3
+3.5 × 10−3
+1.1 × 10−3
+6.5 × 10−4
+1.2 × 10−3
+1.4 × 10−3
+1.4 × 10−3
+
+spectral-Q
+1.2 × 10−13
+1.2 × 10−14
+5.0 × 10−14
+1.0 × 10−12
+4.2 × 10−14
+4.2 × 10−14
+4.1 × 10−14
+4.3 × 10−14
+
+At δ = 10−6 , n = 2048: spectral-Q achieves 4.3 × 10−14 relative error, against 3.4 × 10−5 for
+trapezoidal (eight orders of magnitude better) and 1.4 × 10−3 for Trefethen-Weideman with
+optimal contour rotation (ten orders of magnitude better). The fp64 machine-precision floor
+is attained uniformly in δ ∈ [10−6 , 10−1 ].
+9.3. Perturbed ellipse: confirmation of uniformity. To verify the kernel-splitting method
+extends beyond a single non-circle shape, we test the perturbed ellipse
+ab
++ ε cos 2θ,
+r(θ) = p
+2
+2
+b cos θ + a2 sin2 θ
+
+(a, b, ε) = (1.5, 1.0, 0.05),
+
+real-analytic star-shaped with capacity a ≈ 1.2654.
+The perturbed ellipse converges to machine precision at n = 512, while the 3-petal flower
+requires n ≈ 2048. The difference is the Fourier-mode content of the shape: the flower has
+substantial |c−2 |, |c−5 |, |c−8 |, . . . modes from the 3-fold symmetry, while the perturbed ellipse’s
+Laurent expansion decays an order of magnitude faster.
+9.4. Teardrop: arc-length-based conformal map. The flower and the perturbed ellipse
+are both star-shaped from the origin in polar coordinates, with a smooth r(θ) parametrization that makes the Theodorsen iteration converge geometrically. Curves that are highly
+anisotropic or have near-cusp boundary points fall outside this regime: the polar r(θ) becomes near-singular and the Theodorsen iteration diverges or stalls.
+The arc-length-based Berrut-Trefethen integral equation [20, 21] replaces the polar parametrization with the arclength parameter s ∈ [0, L] and solves for σ(θc ) := log(ds/dθc ):
+
+
+σ(θc ) = −K θc − α(s(θc )) + const,
+(34)
+
+16
+
+RICK GULATI
+
+Table 3. Perturbed ellipse, target at exterior normal distance δ from γ(0.7).
+Trapezoidal saturates at ∼ 2.4 × 10−2 ; spectral-Q attains fp64 machine precision uniformly even at n = 512.
+δ
+
+n trapezoidal
+
+spectral-Q
+
+10−1 512 3.0 × 10−16
+10−2 512 4.3 × 10−4
+10−2 2048 7.7 × 10−10
+10−3 512 1.7 × 10−2
+10−4 512 2.4 × 10−2
+10−5 512 2.4 × 10−2
+10−6 512 2.4 × 10−2
+10−6 1024 5.9 × 10−3
+
+1.2 × 10−13
+6.0 × 10−14
+4.7 × 10−14
+5.5 × 10−14
+5.6 × 10−14
+5.2 × 10−14
+5.2 × 10−14
+3.5 × 10−14
+
+where α(s) is the tangent angle of Γ at the boundary point of arclength s, K is the conjugate
+R 2π
+operator on S 1 , and the constant is fixed by 0 eσ dθc = L. The boundary correspondence
+θc 7→ s(θc ) follows by cumulative integration of eσ . The iteration is geometric in L2 for analytic
+curves, with rate depending on the curve’s anisotropy.
+Test shape: teardrop γ(t) = (2 sin(t/2), −β sin t), β = 0.7, an analytic (C ∞ ) closed curve
+with L ≈ 5.248 and capacity a ≈ 0.804. The curve has near-cusp behavior at t = 0: |γ ′ (0)| =
+1 + β but the curvature concentrates sharply. The log(ds/dθc ) density varies over a factor ∼ 34
+across θc ∈ [0, 2π].
+Table 4. Teardrop, target at exterior normal distance δ from γ(t0 = 1.5) (wide
+side). Spectral-Q rule using arc-length Berrut iteration at NBerrut = 8192: 3–
+5 orders of magnitude advantage over trapezoidal uniformly in δ, with floor
+∼ 6 × 10−7 limited by the Fourier-mode decay of the Berrut density on this
+anisotropic curve.
+δ
+10−2
+10−2
+10−2
+10−3
+10−3
+10−3
+10−6
+10−6
+10−6
+
+n trapezoidal spectral-Q (Berrut)
+1024
+2048
+4096
+1024
+2048
+4096
+1024
+2048
+4096
+
+1.2 × 10−5
+3.0 × 10−6
+7.4 × 10−7
+1.0 × 10−3
+1.3 × 10−4
+1.8 × 10−6
+3.2 × 10−3
+1.7 × 10−3
+9.9 × 10−5
+
+9.1 × 10−5
+1.7 × 10−5
+6.6 × 10−7
+8.5 × 10−5
+1.6 × 10−5
+6.2 × 10−7
+8.4 × 10−5
+1.6 × 10−5
+6.0 × 10−7
+
+The spectral-Q error decreases geometrically with NBerrut and with n until limited by the
+Berrut iteration’s accuracy on the highly anisotropic boundary correspondence. At NBerrut =
+8192, n = 4096, the floor is ∼ 6 × 10−7 uniformly in δ ∈ [10−6 , 10−2 ]. Wegmann’s NewtonRiemann-Hilbert method [23] replacing the linear Berrut iteration would push this floor toward
+machine precision, at the cost of more sophisticated implementation; the asymptotic uniform
+behavior in δ is preserved regardless.
+9.5. Square: corner-induced algebraic regime. The previous three shapes are analytic
+Jordan curves; the spectral-Q rule on them attains its full minimax rate (Theorem 7.2). Corner
+shapes are excluded by the analytic-Hardy-class hypothesis of Fρ (Γ): at a corner with interior
+angle α, the exterior conformal map Φ has Φ(w) − Φ(wc ) ∼ (w − wc )α/π near the corner
+image wc , so Φ is only Hölder C α/π at wc rather than analytic. The Fourier coefficients of the
+
+THE LOG-DISCRIMINANT HESSIAN
+
+17
+
+boundary correspondence decay algebraically (|b
+σ (k)| ∼ |k|−1−α/π ) rather than exponentially,
+and the spectral-Q error inherits an algebraic floor.
+Test shape: unit square (side 1, perimeter L = 4), four right-angle corners (α = π/2). The
+Berrut iteration converges geometrically (still: the iteration is on σ, which is bounded; only
+its Fourier coefficients decay algebraically rather than exponentially). At NBerrut = 8192, the
+Laurent coefficients |ck | of Φ exhibit the predicted 4-fold symmetry (ck = 0 unless k ≡ 1
+(mod 4)) and algebraic decay |ck | ∼ |k|−1.5 : |c−3 | ≈ 0.098, |c−7 | ≈ 0.011, |c−11 | ≈ 0.0034,
+|c−15 | ≈ 0.0015. Capacity a ≈ 0.590.
+Table 5. Unit square, target at exterior normal distance δ from the midpoint
+of the right side (far from corners). Both trapezoidal and spectral-Q exhibit algebraic behavior: trapezoidal because the boundary is corner-piecewise smooth;
+spectral-Q because the conformal map is non-analytic at the four corner images.
+Spectral-Q maintains its uniform-in-δ improvement over trapezoidal: 4–5× at
+δ = 10−6 .
+δ
+10−2
+10−3
+10−4
+10−5
+10−6
+
+n trapezoidal spectral-Q
+4096
+4096
+4096
+4096
+4096
+
+1.4 × 10−7
+4.3 × 10−5
+9.6 × 10−4
+2.2 × 10−3
+3.4 × 10−3
+
+4.0 × 10−8
+4.2 × 10−5
+5.7 × 10−4
+7.1 × 10−4
+7.2 × 10−4
+
+√
+√
+Even at target (0.5 + δ/ 2, 0.5 + δ/ 2) approaching a corner diagonally, the spectral-Q
+rule retains its advantage: at δ = 10−6 , n = 2048, trapezoidal achieves 5.2 × 10−3 relative
+error while spectral-Q achieves 5.3 × 10−5 — two orders of magnitude better near the corner
+itself. The absolute floor is higher than for smooth shapes (∼ 10−4 for corner-adjacent targets
+vs. ∼ 10−14 for the flower), but the uniformity-in-δ property is preserved.
+The square test confirms a clean theoretical prediction: the spectral-Q rule degrades gracefully at corners — moving from exponential to algebraic convergence in n — while preserving
+its core advantage of uniform behavior across the near-singular regime δ → 0. For applications
+with corner-piecewise smooth boundaries, the rule is competitive with classical trapezoidal at
+moderate δ and superior at small δ, across all four shapes tested.
+9.6. Comparison with QBX bounds. The sharp QBX error bound of Klinteberg-Tornberg
+[11] is |EQBX (x)| ≤ CΓ τ (c, x)p+1 , where τ is the conformal ratio from expansion center c to
+target x and p is the truncation order. For our flower geometry at δ = 10−6 , the conformal
+ratio τ ≈ 0.4 (extracted from the Laurent coefficients of Φ at the nearest boundary point).
+Achievable QBX bounds: p = 24 ⇒ |EQBX | ≈ 5 × 10−10 ; p = 32 ⇒ |EQBX | ≈ 5 × 10−13 .
+The measured spectral-Q error at n = 2048 is 4.3 × 10−14 uniformly in δ ∈ [10−6 , 10−1 ],
+beating the p = 32 QBX bound even in the most permissive QBX regime. The structural
+advantage: QBX requires selecting expansion centers and orders adaptively per target to
+maintain accuracy across the near-singular regime; the spectral-Q rule via kernel splitting has
+no adaptive parameters — n and the boundary correspondence are fixed once per geometry.
+9.7. Multiprecision certification. The kernel-splitting realization (Theorem 7.3, Definition 7.5) is arithmetic-agnostic: once the layer-potential problem is pulled back to S 1 , the
+closed-form Fourier evaluation of the circle kernel and the trapezoidal evaluation of the analytic correction extend verbatim to arbitrary-precision arithmetic. A reference implementation
+in the companion package GulatiLaplacian [22] drives the prototype across three precision
+tiers — fp64, CPU multiprecision (mpmath, dps configurable), and an adaptive gate that
+escalates from fp64 to multiprecision only when the two-grid estimator hits the fp64 floor.
+
+18
+
+RICK GULATI
+
+Table 6. Multiprecision certification on the exterior-conformal benchmark
+curve (a noncircular Jordan curve with a deep conformal collar). Targets at
+radial offset ρ − 1 = 10−40 from Γ. Direct quadrature (no kernel split) is uninformative at this scale; the spectral-Q kernel-splitting rule (Definition 7.5)
+executed in mpmath at n = 512, dps = 160 certifies 93–95 digits in 63–78 ms
+per target on a workstation CPU.
+offset β
+0.00
+0.37
+0.50
+
+direct error spectral-Q error certified digits
+1.05 × 100
+7.45 × 10−3
+8.51 × 10−3
+
+2.81 × 10−95
+7.00 × 10−94
+7.64 × 10−94
+
+94.55
+93.16
+93.12
+
+The adaptive precision gate stays in the fp64 tier until the two-grid estimator hits the
+guarded machine floor, then escalates the target to CPU multiprecision. The escalation cost
+is paid per-target, not per-batch:
+Table 7. Adaptive precision gate: float64 fast tier escalating to CPU multiprecision when the two-grid estimator hits the fp64 floor. The estimator is the
+spectral-Q rule evaluated at two resolutions, with escalation triggered when
+their difference plateaus.
+ϵ
+
+requested tol
+
+route
+
+final n
+
+final error
+
+10−6
+
+10−12
+
+10−8
+10−40
+
+10−80
+10−80
+
+fp64 only
+fp64 gate + CPU MP
+CPU MP
+
+1024
+1024
+1024
+
+∼ 5 × 10−16
+1.09 × 10−149
+1.09 × 10−149
+
+Wall-clock measurements (workstation, no CUDA): the fp64 tier runs at 140–205 µs per
+target at n = 4096; the CPU MP tier at n = 512, dps = 160 runs at 63–78 ms per target.
+The adaptive gate at n = 1024, tol = 10−80 runs at 144–192 ms per hard target with the fp64
+estimator overhead absorbed.
+Across precision tiers, the underlying rule is the same: pull Γ back to S 1 , decompose
+the layer-potential kernel via Theorem 7.3, evaluate the closed-form circle piece by Fourier
+expansion, and integrate the analytic correction by trapezoidal rule on θc . The arithmetic tier
+governs the floor; the algorithm governs the rate.
+9.8. BEM conditioning. The discrete operator Qn on equispaced nodes has condition number cond(Qn |1⊥ ) = λ⌊n/2⌋ /λ1 = O(n); the Galerkin-discretized Hadamard hypersingular operator W Gal on the same nodes has condition number O(n3 ) [12, 16]. Empirically, at n = 4096:
+cond(Qn |1⊥ ) ≈ 2.0 × 103 (slope 1.00 in log log); cond(WnGal ) ≈ 1.6 × 1010 (slope 3.00). The
+three-orders-of-magnitude conditioning advantage of Qn propagates to the boundary solve.
+9.9. Algebraic identity tests. Three identities of Corollary 2.3 and Corollary 4.2 hold in
+exact arithmetic: Qn 1 = 0 (verified ∥Qn 1∥∞ = 0 at n ∈ {212 , 216 , 218 , 220 }); detζ QS 1 =
+2 (verified to 11 digits at n = 1024); ζQS1 (0) = −1 (exact). These confirm the algebraic
+certification level of the framework.
+10. Conclusion
+The log-discriminant Hessian Q is a polynomial-algebraic object with closed-form spectrum
+on S 1 , principal-symbol identification with πΛΓ on C 3 closed planar curves, and spectral zeta
+limit Tn (s) → 2ζ(s). The spectral cone factorization of the Dirichlet spectrum into projective
+shape coordinates times a radial scale axis enables algebraic recovery of shape and scale:
+(λ1 , D2 λ1 ) determines Ω up to Euclidean motion on piecewise C 2,α domains; the truncated
+
+THE LOG-DISCRIMINANT HESSIAN
+
+19
+
+spectrum determines shape to Hausdorff error K −1/2 (log K)c on real-analytic star-shaped
+domains; area follows algebraically from the radial coordinate. The boundary quadrature
+corollary attains the information-theoretic minimax floor on analytic Jordan curves via the
+conformal pullback of S 1 , and matches Gauss-Legendre’s exponential rate structurally while
+extending it to the boundary-integral setting.
+The numerical evidence is calibrated across four shape classes (S 1 , smooth star-shaped,
+smooth non-star-shaped, true-corner): machine precision uniformly in δ on S 1 ; fp64 machine
+precision (∼ 4 × 10−14 ) uniformly in δ ∈ [10−6 , 10−1 ] on the 3-petal flower and perturbed
+ellipse via Theorem 7.3 with polar Theodorsen; ∼ 6 × 10−7 uniformly on the teardrop via
+arc-length Berrut; graceful algebraic degradation on the unit square preserving uniform-in-δ
+behavior with 4–5× improvement over trapezoidal at δ = 10−6 and two orders of magnitude
+improvement near a corner; algebraic identities certified to the fp64 floor.
+Appendix A. Proof of the closed-form spectrum (Theorem 2.2)
+Pn−1 1−cos(2πmk/n)
+The eigenvalue formula λm = m(n − m)/2 follows from the identity k=1
+=
+2 sin2 (πk/n)
+Pn−1
+m(n − m), which is a partial-fraction computation using k=1 cot2 (πk/n) = (n − 1)(n − 2)/3
+and the discrete Parseval identity for e2πimk/n .
+Appendix B. Mellin-Barnes proof of the spectral zeta limit (Theorem 4.1)
+[Material from v60 Appendix A, imported.] The Mellin-Barnes contour shift identifies Tn (s)
+as a contour integral whose residue at the bulk pole s = 1 is subtracted by the Beta-function
+counter-term, leaving the boundary zeta tail 2ζ(s). The O(1/n) rate is the Euler-Maclaurin
+remainder.
+Appendix C. Donaldson-Elliott contour proof of the QCL (Theorem 7.1)
+[Material from v60 Appendix B, imported.] The trapezoidal remainder splits via the
+Donaldson-Elliott contour into a bulk channel (Joukowski contour, exponential decay) and
+a boundary channel (saddle-point residue at the closest node, Q−1/2 saturation level).
+References
+[1] P. Buser, J. Conway, P. Doyle, K.-D. Semmler, Some planar isospectral domains, IMRN 1994, 391–400.
+[2] M. do Carmo, Differential Geometry of Curves and Surfaces, Prentice Hall, 1976.
+[3] R. Gulati, D2 λ1 as the dressed chord-Laplacian: a Hadamard-Hessian hearing theorem, in preparation.
+[4] R. Gulati, The log-discriminant Hessian (full version), in preparation.
+[5] R. Gulati, A constructive reconstruction algorithm for the star-shaped hearing theorem, in preparation.
+[6] C. Gordon, D. Webb, S. Wolpert, One cannot hear the shape of a drum, Bull. AMS 27 (1992), 134–138.
+[7] J. Helsing, A fast and stable solver for singular integral equations on piecewise smooth curves, SIAM J. Sci.
+Comput. 33 (2011), 153–174.
+[8] L. Hörmander, The Analysis of Linear Partial Differential Operators III, Springer, 1985.
+[9] O. Lehto, Univalent Functions and Teichmüller Spaces, Graduate Texts in Mathematics 109, Springer,
+1987 (orig. 1973).
+[10] A. Klöckner, A. Barnett, L. Greengard, M. O’Neil, Quadrature by expansion: a new method for the evaluation of layer potentials, J. Comp. Phys. 252 (2013), 332–349.
+[11] L. af Klinteberg, A.-K. Tornberg, Error estimation for quadrature by expansion in layer potential evaluation,
+Adv. Comp. Math. 43 (2017), 195–234.
+[12] A.-W. Maué, Zur Formulierung eines allgemeinen Beugungsproblems durch eine Integralgleichung, Z. Phys.
+126 (1949), 601–618.
+[13] E. Novak, H. Woźniakowski, Tractability of Multivariate Problems, Vol. I, EMS Tracts, 2008.
+[14] A. Pinkus, n-Widths in Approximation Theory, Springer, 1985.
+[15] E. Saff, V. Totik, Logarithmic Potentials with External Fields, Springer, 1997.
+[16] S. Sauter, C. Schwab, Boundary Element Methods, Springer, 2011.
+[17] L. Trefethen, Is Gauss quadrature better than Clenshaw-Curtis?, SIAM Review 50 (2008), 67–87.
+[18] L. Trefethen, J. Weideman, The exponentially convergent trapezoidal rule, SIAM Review 56 (2014), 385–
+458.
+[19] L. Trefethen, J. Weideman, H. Woźniakowski, Optimality of the trapezoidal rule for periodic analytic
+functions, in preparation, cited in [13].
+
+20
+
+RICK GULATI
+
+[20] J.-P. Berrut, A Fredholm integral equation of the second kind for conformal mapping, J. Comput. Appl.
+Math. 14 (1986), 99–110.
+[21] L. Trefethen, Numerical Conformal Mapping, North-Holland, 1986.
+[22] R. Gulati, GulatiLaplacian: GPU-ready numerical tools for the log-discriminant Hessian, its spectrum, and
+area recovery from the conic scaling law, software package, 2026.
+[23] R. Wegmann, Methods for numerical conformal mapping, Handbook of Complex Analysis, Vol. 2, Elsevier
+(2005), 351–477.
+BlueChips Research and The Wharton School, University of Pennsylvania, Philadelphia, PA
+19104, USA
+Email address: rkgulati@wharton.upenn.edu
+
+

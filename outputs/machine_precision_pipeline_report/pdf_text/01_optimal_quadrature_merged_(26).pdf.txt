@@ -1,0 +1,3660 @@
+A Complex Laplacian for Optimal Quadrature
+Rick Gulati
+University of Pennsylvania
+rkgulati@upenn.edu
+
+Abstract
+Evaluating a logarithmic layer potential at a target near the curve that carries it is a central, decades-old bottleneck of
+boundary-integral computation, setting the achievable accuracy of boundary-element and Nyström solvers throughout
+acoustics, electromagnetics, viscous flow, and potential theory. Forty years of progress have taken the form of ever-better
+quadrature rules (corrected weights, expansion centers, swapped singularities, interpolated densities), each resolving
+one regime and exposing the next. We instead ask what the optimal rule is, and exhibit the operator that attains it.
+We change the object of study from the rule to a complex boundary Laplacian behind it. Its kernel is not chosen but
+forced, arising as the Hessian of the log-discriminant of the node configuration. On equispaced nodes of the circle it is
+circulant with an exact integer spectrum λm = m(n − m)/2, so the fast Fourier transform evaluates the potential and
+its inverse in O(n log n) time, and as a hypersingular discretization it is O(n)-conditioned against O(n3 ) for standard
+assembly, with no regularization. To a bounded zeroth-order term the operator is the Dirichlet-to-Neumann operator of
+the enclosed domain, hence intrinsic to the geometry rather than to any rule; and because its singular part is a function
+of one fixed transform, every analytic Jordan curve reduces to that transform plus bounded corrections.
+The main results are two optimality statements. First, among admissible Euclidean-covariant chord-graph discretizations of the boundary Dirichlet-to-Neumann operator, the complex Laplacian is the unique one with vanishing principalsymbol defect: it is forced, not convenient. Second, the spectral rule it generates attains the information-theoretic
+minimax error for n-sample layer-potential quadrature on analytic Jordan curves, κn ≍ C(Γ) n−1 e−(n/2)(log ρ+δΦ (x)) , with
+the rate set by the conformal collar width log ρ and the conformal target depth δΦ (x), and attained on the conformal
+image of equispaced nodes, the asymptotic Fekete configuration of the curve. The periodic trapezoidal rule, by contrast,
+attains this rate only where Euclidean and conformal distance agree and is minimax-suboptimal off the curve; a single
+remark records the gap.
+The same residue calculus carries through a corner, where a Mellin/Kondrat’ev exponent and a Hurwitz-zeta weight
+take the place of the smooth profile and the half-order endpoint constant of barrier-option theory reappears as the crack
+case. At four thousand sample points and a target one part in a million from the curve, the classical rule holds four
+digits; the optimal rule here holds sixteen, uniformly in the distance to the boundary.
+Key words. optimal quadrature, minimax error, near-singular quadrature, layer potentials, complex boundary Laplacian, Dirichletto-Neumann operator, log-discriminant Hessian, n-widths, optimal recovery, conformal pullback, Fekete nodes, corner singularities
+MSC codes. 65D32, 65N38, 65T50, 35S05, 31A10, 35J75
+
+1. The Problem
+
+near-boundary regime is the method’s hardest case.
+
+The central computational primitive of boundary-integral
+methods is the evaluation of a logarithmic layer potential.
+Let Γ ⊂ R2 be a smooth closed Jordan curve of length L,
+and let
+Z
+
+I(x) =
+
+log |x − y| σ (y) ds(y),
+
+x ∈ R2 \ Γ,
+
+The field is the source, read through one injective
+transform. The structure that organizes the whole problem is visible before any discretization. The complex
+(Wirtinger) gradient of I is, up to a constant, the Cauchy
+transform of the charge,
+
+(1)
+
+Γ
+
+be the single-layer potential of a density σ on Γ. Physically I is the field of a charge σ ds supported on the curve;
+numerically it is the inner loop of every integral-equation
+solver, evaluated whenever the solution is wanted at a
+point. We need I(x) at a target lying close to the curve,
+δ := dist(x, Γ) small, from n samples of σ on Γ, and the
+
+σ (y) ds(y)
+=: Cσ (x),
+x−y
+Γ
+
+Z
+
+2 ∂x I(x) =
+
+and the Cauchy transform is injective: a source is determined by its field. When the source is quantized into
+positive integer atoms, unit point charges at a finite set
+1
+
+{zk }, i.e. σ ds = ∑k δzk , the field is exactly a logarithmic
+derivative,
+
+evaluation hard. The difficulty belongs to the analysis,
+not to any particular discretization of it.
+Boundary-integral methods turn this reduction into a
+1
+P′ (x)
+numerical method. For the equations of potential theory,
+=
+,
+P(x) = ∏(x − zk ),
+Cσ (x) = ∑
+P(x)
+k
+k x − zk
+acoustics, electromagnetics, and viscous flow (Laplace,
+Helmholtz, Stokes) the field in the interior is written
+and the polynomial P is the unique primitive (up to scale)
+as a layer potential: an integral over the boundary of
+whose divisor is the charge measure, div P = ∑k δzk . Two
+the equation’s fundamental solution against an unknown
+derivatives of the same logarithm thus run the entire paper:
+density. This representation is the reason the methods
+′
+the first, P /P = ∂x log P, is the Cauchy field; the second,
+are used. It lowers the dimension of the problem by
+the branch-free Hessian −∂x2 log |P|, is the inverse-square
+one, builds the correct decay and radiation conditions at
+chord operator Q that governs how that field is sampled.
+infinity into the kernel rather than into a truncated volume
+The potential (1), its near-boundary evaluation, and the
+mesh, and, once the density on the boundary is known,
+operator that controls both are three readings of log |P|:
+delivers the solution at any point of the domain by a single
+the logarithm carries a branch, but its Hessian does not,
+quadrature. Evaluating that quadrature is the inner loop
+which is why the operator that survives is real, singleof every such solver: it is called whenever the field is
+valued, and forced.
+wanted somewhere.
+Beneath the computation is a question of analysis.
+The representation is at its most accurate far from the
+A boundary value problem for an elliptic operator (the
+boundary
+and at its worst near it, and near the boundary is
+Laplacian, to fix ideas) reduces to its boundary through
+precisely
+where
+the answer is usually needed. The force
+a single object. The harmonic extension of boundbetween two nearly touching particles, the field inside a
+ary
+data g on Γ = ∂ Ω minimizes the Dirichlet energy
+R
+thin gap, the drag on densely packed bodies, and the trace
+2
+Ω |∇u|R , and the minimum is a quadratic form in g
+of the solution required to impose the boundary condition
+alone, Ω |∇u|2 = ⟨ΛΓ g, g⟩, where ΛΓ : g 7→ ∂ν u|Γ is the
+in the first place all live within a node spacing of the
+Dirichlet-to-Neumann (Steklov) operator. Everything the
+curve. There the fundamental solution develops a sharp
+interior problem knows about the boundary is carried
+peak at the boundary point closest to the target, and a
+by ΛΓ : a first-order, self-adjoint, nonnegative pseudodsmooth quadrature rule, which silently assumes its inteifferential operator on Γ with principal symbol |ξ |, to
+grand is resolved by the spacing of its nodes, loses most
+leading order the square root of the boundary Laplacian,
+of its digits without warning. The defining advantage of
+ΛΓ ∼ (−∆Γ )1/2 .
+the method, reduce to the boundary and then evaluate
+The energy it carries is a fractional one. The quadratic
+anywhere, fails in the one regime that applications care
+form of ΛΓ is equivalent to the H 1/2 (Γ) seminorm, and
+about most. This is the near-singular, or close-evaluation,
+on a curve in the plane that seminorm has the Gagliardo
+barrier, and for four decades it has set the accuracy attain(Aronszajn–Slobodeckij) double-integral form
+able by boundary-element and Nyström solvers across all
+ZZ
+2
+of these fields.
+|g(x) − g(y)|
+⟨ΛΓ g, g⟩ ≍ ∥g∥2Ḣ 1/2 (Γ) ≍
+ds(x) ds(y).
+2
+With the primitive (1) fixed, we turn to what any n|x − y|
+Γ×Γ
+(2)
+sample rule can achieve.
+The kernel is the inverse square of the chord, |x − y|−2 ,
+The natural rule, the n-point periodic trapezoidal rule,
+and it is not chosen: it is forced by the fractional order
+has error En (x) = I(x) − In (x) whose classical analys = 12 and the boundary dimension d = 1 through the
+sis [24] reads
+universal Gagliardo exponent d + 2s = 2. The operator
+built on this kernel is the subject of this paper; the iden|En (x)| ≍ e−2πnδ /L
+in the regime nδ ≫ 1.
+(3)
+tification Q = πΛΓ + K0 (§4), exact up to a zeroth-order
+remainder K0 ∈ Ψ0 (Γ), says that the inverse-square chord
+This is sharp and spectrally convergent when the target
+operator is the boundary’s fractional energy read as an
+is well separated. As x → Γ, however, δ → 0: at nδ ∼ 1
+1
+−2
+2
+operator, its discrete form 2 ∑i, j |zi − z j | (gi − g j ) is
+the node spacing L/n matches δ , the kernel log |x − y|
+exactly the seminorm (2), with the constant in its kernel
+is near-singular at the closest node, and the rule loses
+(Q1 = 0). The singularity at coincidence is therefore
+digits at a rate the bound (3) no longer names. This is the
+−2
+1/2
+intrinsic: the same |x − y| that defines H
+is what
+near-singular (after differentiation, hypersingular) regime,
+makes the operator hypersingular and its near-boundary
+and it is the principal obstruction to spectrally accurate
+2
+
+boundary-integral computation near the boundary [23, 21,
+9, 3].
+
+conformal pullback of equispaced nodes; the trapezoidal rule is suboptimal off the curve (one remark);
+
+The question is optimality, not a better rule. The
+distinction from classical quadrature theory is not one
+of degree. Gauss and Gauss–Legendre optimize node
+placement against a fixed, well-behaved integrand; the
+smoothness is given, and the question is how to spend n
+samples. The near-singular regime is the opposite situation: the integrand is not fixed but degenerates with the
+target, the difficulty concentrates at a single point, and no
+node distribution on the interval can reach it. The right
+question is therefore not “which rule beats the trapezoidal
+rule next,” but what is the smallest error any n-sample
+rule can guarantee, and which operator on the curve realizes it. Phrased this way the problem is one of optimal
+recovery: fix a smoothness class F of densities, and seek
+the minimax error
+
+(C6) the corner extension: the same residue calculus produces a vertex channel in which a
+Mellin/Kondrat’ev exponent fixes the order and a
+Hurwitz-zeta weight the coefficient, recovering the
+BGK endpoint constant as the crack case (§8); and
+benchmarks across non-circular geometries (§9).
+
+1.1. A taxonomy of boundary-quadrature error
+“Quadrature error” on a boundary is not one phenomenon
+but five, with distinct sources and scalings. The operator
+organizes them: each is a feature of Q or its discretization,
+and the paper treats them in turn. Table 1 is the map.
+Table 1. Five kinds of boundary-quadrature error, their source,
+leading scaling, and where each is settled. The first is the nearsingular barrier of this paper; the rest are the channels into
+which it decomposes or the operator features that control it.
+
+n
+
+κn (Γ, x; F ) := w inf
+sup I(x) − ∑ wk σ (sk ) , (4)
+,...,w
+n
+1
+s1 ,...,sn σ ∈F
+
+k=1
+
+the worst-case error of the best linear rule. The object that
+controls κn is not a node distribution but an operator on
+Γ, and it is that operator we construct and prove optimal.
+Main results. This paper gives the operator and settles
+both optimality questions it raises. In order of the sections
+below:
+(C1) the inverse-square operator Q whose kernel is
+forced as the Hessian of the log-discriminant, with
+exact integer spectrum λm (Qn ) = m(n − m)/2 on S1
+and an O(n log n) functional calculus (§3);
+
+type
+
+source
+
+scaling
+
+nearsingular
+
+target near a
+smooth analytic
+boundary; kernel
+peak at the closest
+node
+
+e− 2 (log ρ+δΦ ) 6
+(conformal)
+
+discretization finite-n mesh sam/ aliasing
+pling of the trace
+
+(C3) the universal pullback transporting the closed-form
+S1 calculus to any analytic Jordan curve by one conformal coordinate change, closed-form for conics
+(§5);
+(C4) operator optimality (§6): among admissible
+Euclidean-covariant chord-graph discretizations of
+the boundary DtN operator, Q is the unique one
+with zero principal-symbol defect, so its kernel is
+forced by the optimality criterion itself;
+
+n
+
+1
+n M(ρ, β )
+
+7
+
+(local
+channel)
+
+log |x − y| selfinteraction
+at
+coincidence
+
+integrable;
+closedform
+modal sum
+
+7.5
+
+hypersingular |x − y|−2 diagonal
+of Q itself
+
+O(n)
+vs
+O(n3 ) conditioning
+
+7
+
+corner / vertex
+
+hλ ,
+λ = ℓπ/α
+(algebraic)
+
+8
+
+weak (log)
+on-curve
+
+(C2) the identification Q = πΛΓ + K0 , K0 ∈ Ψ0 (Γ), placing Q as the Dirichlet-to-Neumann operator on any
+C3 curve (§4);
+
+§
+
+geometric singularity at a nonsmooth point
+
+The near-singular error is the headline because it is the
+one the classical theory cannot name; the discretization
+and weak-singular errors are the two channels into which
+it splits at the mesh scale; the hypersingular entry is the
+same operator read as a boundary-element matrix; and
+the corner entry is the algebraic degradation that the same
+residue calculus controls. Reading down the table is
+reading the paper.
+
+(C5) minimax-optimal quadrature (§6): the spectral Qrule attains the minimax error (4) on analytic Jordan curves, κn ≍ C(Γ) n−1 e−(n/2)(log ρ+δΦ (x)) , on the
+3
+
+2. Prior work and the meaning of optimality
+
+geometry across its branch points, so it resists the adjoint
+and automatic-differentiation passes that shape optimization and learned boundary-value solvers increasingly rely
+on; and the per-target case logic diverges across the SIMD
+lanes of a GPU, forfeiting the throughput that uniform
+fixed-width work delivers. The Q-rule has the opposite
+structure: a single fixed linear map, a Fourier transform, a
+diagonal multiply by the closed-form symbol, an inverse
+transform, together with the closed-form local profile
+M(ρ, β ), with no per-target tuning and no branches. The
+evaluated potential is therefore a smooth function of the
+node positions and the target, differentiable for adjoint
+and optimization use and identical across every lane. That
+this branch-free operator is also the forced, optimal discretization of the boundary Dirichlet-to-Neumann map
+(Theorem 6.2) is the point: the differentiable object and
+the optimal object are the same one.
+
+Two literatures meet in this paper: the applied tradition
+of near-singular quadrature rules, and the approximationtheoretic notion of an optimal rule. We review both,
+because the contribution is to connect them, to exhibit
+an operator whose rule is provably optimal in the second
+sense.
+2.1. Near-singular quadrature: four families of rules
+Near-singular evaluation has driven four decades of
+method development, and the present work stands in the
+same relation to all four families.
+On-curve specialized quadratures. Kress logarithmic
+splitting and the Kapur–Rokhlin and Alpert corrected
+rules [11] attain high order on Γ but degrade off it, because the analytic splitting of the singularity does not
+extend to a nearby exterior target.
+Local corrections and coordinate maps. Beale–Lai [5]
+and the Telles and Hayami transformations regularize
+the peaked integrand at fixed algebraic order; they are
+adequate for mild nearness but not for the δ /h → 0 limit,
+where the algebraic order caps the accuracy.
+Complex-analytic close evaluation. Helsing–Ojala [9],
+Barnett’s compensated rule [3], and singularity swapping [2] reach near-machine precision at any distance
+in two dimensions by exploiting the Cauchy/Schwarz
+structure of the planar kernel, at the price of machinery
+specific to that setting and, for tensor kernels, delicate
+cancellation.
+Expansion- and source-based methods. Quadrature by
+expansion [10, 1], density interpolation [18], and quadrature by fundamental solutions [4] separate the singularity
+through an auxiliary representation, with sharp a posteriori control |EQBX (x)| ≤ CΓ τ(c, x) p+1 [1]; the expansion
+order or source placement must be tuned per target, and
+cost grows as targets approach.
+Each of these discretizes the integral and, in resolving
+one regime, exposes the next. None isolates an intrinsic
+object on the curve whose spectrum controls the error,
+and none is accompanied by a proof that it attains the best
+possible rate.
+There is a further structural difference, and on modern
+hardware it is not a minor one. Each of these families
+resolves the near-singular regime through local, datadependent control flow: an expansion order and center
+chosen per target, a singularity swap selected by configuration, a panel split or coordinate map switched on by a
+proximity test. That branching is what makes the methods accurate, but it carries two costs. The rule becomes a
+piecewise object, non-differentiable in the target and the
+
+2.2. Optimal recovery: what “optimal” means here
+The benchmark for optimality is supplied by approximation theory, not by comparison with the previous rule. For
+a fixed smoothness class F the minimax error (4) is, up
+to the choice of admissible information, a Gel’fand width
+of the layer-potential functional restricted to F [20]; the
+theory of n-widths identifies the worst-case error of the
+best n-point rule with a width of the unit ball of F under
+the functional, and characterizes the rules that attain it.
+For analytic classes the relevant geometry is potentialtheoretic: the optimal nodes are the Fekete points of Γ for
+the exterior equilibrium measure, and the attainable rate
+is governed by the conformal modulus [22]. The general
+framework of optimal recovery and information-based
+complexity [17] fixes the precise sense in which a rule
+can be called best: it minimizes the radius of information
+over the class.
+This minimax criterion has a concrete few-point ancestor. Birkhoff and Gulati [19] fixed the optimality of a
+compact discretization of the Laplace source problem not
+by comparison with existing stencils but by the lowestdegree harmonic polynomial no stencil of a given node
+budget can reproduce: the extremal Re z4 that every fivepoint stencil annihilates pins O(h2 ) as the best attainable
+order, and Re z8 does the same for nine points at O(h4 ).
+That is the logic the lower bound of §6.2 runs: an explicit
+fooling function in the orthogonal complement of the sampled data, certifying that no admissible rule of the given
+budget can do better, transposed from finite-difference
+stencils to near-singular boundary quadrature. We take it
+as the methodological precedent for the optimality criterion adopted here, the extremal-function counterpart of
+4
+
+diagonalize the boundary operator. The Q-rule diagonalizes the Dirichlet-to-Neumann operator itself, so the same
+O(n log n) functional calculus delivers the layer potential,
+the boundary-integral solve Qu = f , and the hypersingular operator at O(n) conditioning, none of which Gauss
+provides. Gauss optimizes where to sample; the Q-rule
+changes what is evaluated.
+The contribution is to show that one operator closes
+the gap. Its kernel is forced as the log-discriminant Hessian (7), not chosen to cancel a singularity; to a bounded
+zeroth-order term it is the Dirichlet-to-Neumann operator [15, 23], so as a hypersingular discretization it is O(n)conditioned with no Maué regularization [14] against
+O(n3 ) for Galerkin assembly; and on S1 its integer spectrum diagonalizes the entire functional calculus into two
+FFTs, with the singular part of any analytic Jordan curve
+reducing to that same transform. Two optimality theorems
+then follow (§6): the operator is the unique admissible
+discretization of DtN, and the rule it generates attains
+the Gel’fand-width minimax rate. QBX, Helsing–Ojala,
+and their successors attain the rate on one side of the
+crossover; we identify the operator that is the rate, on
+both.
+
+the n-width benchmark above.
+Against this benchmark, the periodic trapezoidal rule
+is the classical near-miss. On analytic densities, away
+from the boundary, it attains the optimal exponential rate
+up to a universal constant [24, 7]; this is the content of
+the exponentially convergent trapezoidal rule. But the
+optimal rate off the curve is governed by the conformal
+distance from target to boundary, while the trapezoidal
+exponent 2πnδ /L sees only the Euclidean distance, and
+the two diverge as δ → 0. The gap is exactly the suboptimality we make precise in §6.
+2.3. Why not Gauss–Legendre?
+Gauss–Legendre is the natural challenger: it is the classically optimal rule for the interval problem, and panelbased Gauss–Legendre is the workhorse of boundaryelement practice. It is worth saying precisely why it is
+the wrong optimum here, because the comparison is what
+makes the present rule’s optimality meaningful.
+Gauss–Legendre with n nodes is exact on polynomials
+of degree ≤ 2n − 1, and on an integrand analytic inside a
+Bernstein ellipse of parameter R > 1 it converges at rate
+O(R−2n ) [7]. This is optimal when the integrand is fixed
+and its analyticity ellipse is fixed. The near-singular layer
+potential is neither. Three structural facts separate the
+two, and the benchmark of §9 (Table 2, Gauss column)
+confirms each:
+(1) The Bernstein ellipse pinches at the target. For a
+target at Euclidean distance δ , the parametrized integrand
+t 7→ log |x − γ(t)| has its nearest complex singularity at
+distance ≍ δ off the real axis, so its Bernstein parameter
+is R = 1 + O(δ ) and the Gauss rate R−2n → 1 collapses as
+δ → 0. The Q-rule never parametrizes the singular kernel:
+it diagonalizes the operator and evaluates the closed-form
+modal sum (49), so no ellipse pinch occurs and the rate is
+n
+the conformal exponent e− 2 (log ρ+δΦ (x)) , which degrades
+smoothly and remains optimal (Theorem 6.4). Numerically, at n = 4096 both Gauss–Legendre and the trapezoidal rule saturate near 1.7 × 10−4 as δ ↓ 10−6 , while
+the Q-rule holds machine precision (Table 2).
+(2) Target-adaptive versus global exponent. The Gauss
+exponent 2 log R is a single number fixed by the worst
+global singularity; the Q-exponent log ρ + δΦ (x) carries
+the target’s own conformal depth δΦ (x). For matched
+analyticity, away from the boundary the two rates agree
+to leading order, we lose nothing where Gauss is good,
+but the Q-rate is uniformly no worse and strictly better
+as the target approaches.
+(3) A number versus an operator. Gauss returns a
+value via the Legendre three-term recurrence; it does not
+
+3. The operator behind the breakdown
+3.1. The kernel is forced, not chosen
+The operator we study is
+f (s) − f (t)
+dt
+|γ(s)
+− γ(t)|2
+Γ
+
+Z
+
+(Q f )(s) := p.v.
+
+1/2
+
+on H0
+
+(Γ).
+
+(5)
+It is not introduced ad hoc. Consider the log-discriminant
+log |∆(z)| = ∑ log |zi − z j |,
+i< j
+
+∆(z) = ∏(zi − z j ), (6)
+i< j
+
+the unique additive resolution of the canonical configuration discriminant ∆ (the logarithm being the unique continuous homomorphism (R>0 , ·) → (R, +)). The mixed
+second derivative of a single term is local:
+∂zi ∂z j log |zi − z j |2 = −
+
+1
+,
+|zi − z j |2
+
+i ̸= j,
+
+(7)
+
+so the inverse-square coupling is the second derivative of
+− log |z − w|.
+Proposition 3.1 (Log-discriminant Hessian). Let
+z1 , . . . , zn ∈ C be pairwise distinct. The real Hessian of
+(6) on the unitary orbit zk 7→ eiθk at fixed moduli equals
+−2Qn , where
+(
+−|zi − z j |−2 ,
+i ̸= j,
+(Qn )i j =
+(8)
+−2
+∑k̸=i |zi − zk | , i = j.
+5
+
+In particular the kernel |z − w|−2 of Qn is forced by (7).
+
+The d = 0 term equals limθ →0 sin2 (mθ /2)/ sin2 (θ /2) =
+2
+m2 , so ∑n−1
+Substituting
+d=1 = nm − m = m(n − m).
+into (10) gives λm (Qn ) = m(n − m)/2 exactly, for every n ≥ 2 and 0 ≤ m ≤ n − 1. The remaining assertions are immediate: λ0 = 0 with eigenvector 1, λ1 =
+(n − 1)/2, maxm λm = λ⌊n/2⌋ ≤ n2 /8, and cond(Qn |1⊥ ) =
+λ⌊n/2⌋ /λ1 ≤ n2 /(4(n − 1)).
+
+The matrix Qn is a weighted graph Laplacian on the
+complete graph Kn with edge weights wi j = |zi − z j |−2 ,
+so it admits a Cauchy–Gram factorization Qn = B⊤ B giving Qn ⪰ 0, ker Qn = span{1}, and the algebraic null-flux
+identity Qn 1 = 0 for every configuration. In one phrase,
+Q is a complex boundary Laplacian: a Laplacian (positive semidefinite, annihilating constants) whose weights
+are the complex chord kernel of points in C, the logdiscriminant Hessian, and which, to a bounded order-zero
+remainder, is the Dirichlet-to-Neumann boundary operator πΛΓ of the enclosed domain, the order-one square
+root of the boundary Laplace–Beltrami operator (Theorem 4.5). Graph Laplacian, complex-analytic Hessian,
+and boundary DtN operator are three faces of the one
+object.
+
+The integer spectrum (9) gives a closed-form functional calculus. For any ϕ : R≥0 → C defined on
+spec(Qn ),
+
+ϕ(Qn ) = F ∗ diag ϕ(λm ) F,
+
+(11)
+
+with F the unitary DFT; one application costs two FFTs,
+O(n log n). Specializing ϕ(λ ) = λ −α , e−tλ , (z − λ )−1
+yields fractional inverses, heat kernels, and resolvents
+in closed form, with exact conservation ϕ(Qn )1 = ϕ(0)1
+(Algorithm 1). As an aside not used below, the continuum
+heat semigroup e−2µ|D| is trace-class on S1 with Tr =
+2/(e2µ − 1), and its regularized Fredholm determinant
+closes as a Dedekind η 2 carrying the modular self-duality
+µ ↔ π 2 /µ, a spectral-determinant structure developed
+separately from the quadrature program here. That heat
+trace
+√ is a Jacobi theta function whose inversion θ (1/t) =
+t θ (t) under Poisson summation is the self-duality, the
+lattice duality that, on an elliptic-curve quotient, promotes
+2
+Tr e−tQ to a completed Eisenstein series.
+
+3.2. Closed-form spectrum and FFT calculus
+On equispaced nodes the structure collapses to a closed
+form.
+Theorem 3.2 (Spectrum on the regular n-gon). For zk =
+e2πik/n , k = 0, . . . , n − 1, the matrix Qn of (8) is circulant
+and diagonalized by the discrete Fourier transform with
+eigenvalues
+m(n − m)
+,
+m = 0, 1, . . . , n − 1. (9)
+2
+The kernel is span{1}, the spectral gap is λ1 = (n − 1)/2,
+and cond(Qn |1⊥ ) ≤ n2 /(4(n − 1)) = O(n).
+λm (Qn ) =
+
+Algorithm 1 Apply ϕ(Qn ) to v (O(n log n)).
+
+Proof. The chord weights |zi − z j |−2 = 4 sin2 (π(i −
+−1
+j)/n)
+depend only on (i− j) mod n, so Qn is circulant
+and the unitary DFT Fmk = n−1/2 e−2πimk/n diagonalizes it.
+The eigenvalue at mode m is the difference between the diagonal entry and the mode-m symbol of the off-diagonal
+weights:
+
+1. v̂ ← Fv (forward FFT).
+2. For m = 0, . . . , n − 1: λm ← m(n − m)/2, ŵm ←
+ϕ(λm )v̂m (set ŵ0 ← 0 for the pseudoinverse).
+3. w ← F ∗ ŵ (inverse FFT).
+
+1 − cos(2πmd/n) 1 n−1 sin2 (πmd/n)
+= ∑
+,
+2 d=1 sin2 (πd/n)
+4 sin2 (πd/n)
+d=1
+(10)
+2
+using 1 − cos(2πmd/n) = 2 sin (πmd/n). The summand
+is the squared Dirichlet kernel: with θ = 2πd/n,
+n−1
+
+λm (Qn ) = ∑
+
+4. Dirichlet-to-Neumann identification
+On a general curve Q loses its circulant form but keeps
+its symbolic identity. We establish it rigorously: Q is a
+classical pseudodifferential operator of order one whose
+principal symbol is exactly π times that of the Dirichletto-Neumann operator. Three ingredients are needed, a
+local separation of the chord kernel, the symbol of the flat
+chord model, and the curvature expansion of the chord
+on a C3 curve.
+
+m−1
+m−1
+2
+sin2 (πmd/n)
+i jθ
+=
+=
+e
+∑
+∑ e2πi( j−k)d/n .
+sin2 (πd/n)
+j=0
+j,k=0
+
+Summing over the full cycle d = 0, . . . , n−1 and applying
+2πi( j−k)d/n = n 1
+the orthogonality ∑n−1
+j≡k (n) leaves, for
+d=0 e
+0 ≤ j, k ≤ m − 1 ≤ n − 1, only the m diagonal terms j = k:
+
+Lemma 4.1 (Tangent-graph decomposition). Let h ∈
+C3 ([−a, a]) with h(0) = h′ (0) = 0 and ∥h∥C3 ≤ M, and
+γh (s) = (s, h(s)). There exist a0 = a0 (M) ∈ (0, a] and
+
+sin2 (πmd/n)
+= nm.
+∑ 2
+d=0 sin (πd/n)
+n−1
+
+6
+
+using 1 − cos mα = 2 sin2 (mα/2). The Dirichlet keri( j−(m−1)/2)α is a
+nel sin(mα/2)/ sin(α/2) = ∑m−1
+j=0 e
+sum
+of m unit-modulus characters, so by Parseval
+R 2π
+2
+2
+0 sin (mα/2)/ sin (α/2) dα = 2πm, whence λm =
+πm = π|m|. Since ΛS1 = (−∆S1 )1/2 has eigenvalue |m|,
+the identity QS1 = πΛS1 holds exactly.
+
+σ ∈ C1 ([−a0 , a0 ]2 ) with ∥σ ∥C1 ≤ C(M) such that for
+s,t ∈ [−a0 , a0 ],
+log |γh (s) − γh (t)| = log |s − t| + σ (s,t),
+
+σ (s, s) = 0.
+
+Proof. Write D(s,t) = (h(s) − h(t))/(s − t) Rfor s ̸= t.
+By the divided-difference identity D(s,t) = 01 h′ ((1 −
+λ )t + λ s) dλ , D extends to a C2 function with D(s, s) =
+h′ (s), and |D| ≤ ∥h′′ ∥∞ a0 on [−a0 , a0 ]2 since h′ (0) =
+0. Then |γh (s) − γh (t)|2 = (s − t)2 (1 + D(s,t)2 ), so
+e (s,t) := 21 log(1 + D(s,t)2 ) ∈ C2 ⊂ C1 with ∥σe ∥C1 ≤
+σ
+C(M). Its diagonal value is 12 log(1 + h′ (s)2 ), a onevariable C2 function; subtracting it gives σ (s,t) :=
+e (s,t) − 21 log(1 + h′ (s)2 ) with σ (s, s) = 0, σ ∈ C1 ,
+σ
+∥σ ∥C1 ≤ C(M). Taking half the logarithm of the
+chord factorization yields log |γh (s) − γh (t)| = log |s −t| +
+1
+′
+2
+2 log(1 + h (s) ) + σ (s,t); the displayed identity follows
+after renaming the one-variable term, which is smooth
+and contributes only a bounded multiplication at the operator level.
+
+Lemma 4.4 (Chord expansion). Let Γ be C3 , arclengthparametrized, with curvature κ ∈ C1 . For s,t in a fixed
+chart with τ = t − s small,
+1 κ(s)2
+1
+=
++
++ r(s,t),
+|γ(s) − γ(t)|2 τ 2
+12
+
+with r ∈ C0 and r(s,t) = O(|τ|). The off-diagonal kernel
+|γ(s) − γ(t)|−2 is C1 for |τ| bounded below.
+Proof. The Frenet expansion γ(s + τ) − γ(s) = τT +
+τ2
+τ3
+′
+2
+4
+2 κN + 6 (κ N − κ T ) + O(τ ) gives |γ(s + τ) −
+
+2
+2
+3
+γ(s)|2 = τ 2 1 − κ(s)
+12 τ + O(τ ) , whence (12) by geometric inversion. Away from the diagonal the chord is
+bounded below and γ ∈ C3 , so the kernel is C1 there.
+
+Lemma 4.2 (Flat-modelR symbol). The principal-value
+operator Q0 f (s) = p.v. R ( f (s) − f (t))(s − t)−2 dt on R
+is the Fourier multiplier with symbol π|ξ |; that is, Q0 =
+π(−∂s2 )1/2 = π|D|.
+
+Theorem 4.5 (Dirichlet-to-Neumann identification). Let
+Γ be a C3 closed planar curve of length L with curvature
+κ ∈ C1 . Then Q defined by (5) is a classical, self-adjoint,
+nonnegative pseudodifferential operator of order one on
+Γ with principal symbol
+
+Proof. Test on the character eξ (s) = eiξ s . With τ = t − s,
+1 − eiξ τ
+Q0 eξ (s) = eiξ s p.v.
+dτ
+τ2
+R
+Z
+h Z 1 − cos ξ τ
+sin ξ τ i
+dτ
+−
+i
+p.v.
+dτ .
+= eiξ s
+2
+τ2
+R
+R τ
+Z
+
+σ1 (Q)(s, ξ ) = π|ξ |.
+
+Q = πΛΓ + K0 ,
+
+Proof. On S1 the squared chord is |eiθ − eiφ |2 =
+1
+2α
+4 sin2 θ −φ
+2 , so the kernel is 4 csc 2 with α = θ − φ . The
+imθ
+eigenvalue on e is
+1 − cos mα
+
+0
+
+1
+=
+2
+
+Z 2π
+0
+
+K0 ∈ Ψ0 (Γ),
+
+(14)
+
+where ΛΓ is the interior Dirichlet-to-Neumann operator
+of the enclosed domain (normalized so ΛS1 = (−∆S1 )1/2 ,
+symbol |ξ |). The remainder K0 is self-adjoint of order zero, with real principal symbol determined by the
+curvature and vanishing when κ is constant; in particular K0 = 0 and Q = π(−∆S1 )1/2 on S1 . Moreover
+K0 is relatively compact with respect to πΛΓ , so Q
+and πΛΓ share essential spectrum and Weyl asymptotics
+λk (Q) = (2π 2 /L)k + O(1).
+
+Lemma 4.3 (Exact symbol on S1 ). On the
+unit cirR
+cle the continuum operator QS1 f (θ ) = p.v. 02π ( f (θ ) −
+
+f (φ )) 14 csc2 θ −φ
+dφ is the Fourier multiplier with
+2
+eigenvalues π|m| on eimθ . Thus QS1 = π(−∆S1 )1/2 =
+πΛS1 exactly, with no zeroth-order remainder.
+
+Z 2π
+
+(13)
+
+Consequently
+
+The imaginary integrand is odd, so its principal
+value
+vanishes; the real integral is the classical value
+R
+(1
+−
+cos ξ τ)τ −2 dτ = π|ξ | (integrate by parts to
+R R
+|ξ | R sin(|ξ |τ)/τ dτ = π|ξ |). Hence Q0 eξ = π|ξ | eξ ,
+which is the symbol of π|D|.
+
+λm =
+
+(12)
+
+Proof. Step 1: Q ∈ Ψ1 with symbol π|ξ |. Fix a tangentgraph chart (Lemma 4.1); by the chord expansion (12)
+the Schwartz kernel of Q splits as |γ(s) − γ(t)|−2 =
+τ −2 +b(s,t), where b = κ(s)2 /12+r is bounded with r =
+O(|τ|). The τ −2 part is the flat model Q0 of Lemma 4.2,
+a classical Ψ1 operator with symbol π|ξ |; localized to the
+chart by a cutoff it remains Ψ1 with the same principal
+
+2α
+4 csc 2 dα
+
+1
+
+sin2 (mα/2)
+dα,
+sin2 (α/2)
+7
+
+Consequently Q is the boundary-integral object the
+near-singular error has been missing: it lives on the curve,
+equals (up to π and a relatively compact order-zero remainder) the Dirichlet-to-Neumann operator, and reduces
+to a circulant matrix with closed-form spectrum on S1 .
+
+symbol, the cutoff contributing only Ψ−∞ . The difference
+operator generated by the bounded remainder b,
+Z
+
+Z
+
+f 7→ p.v. ( f (s) − f (t)) b(s,t) dt = f (s)
+−
+
+b(s,t) dt
+
+Z
+
+b(s,t) f (t) dt,
+
+5. Universality: pullback to the circle
+Section 3 gave the closed-form spectrum and the
+O(n log n) calculus on the circle; Theorem 4.5 showed
+the operator is the Dirichlet-to-Neumann operator on any
+C3 curve. We now make the computational consequence
+explicit: the entire apparatus transports from S1 to an arbitrary analytic Jordan curve by a single coordinate change,
+so the circulant functional calculus of Section 3 remains
+the only numerical primitive the method ever invokes.
+
+is a sum of a multiplication operator and an integral operator with bounded kernel, hence bounded on L2 and
+of order ≤ 0; the factor r = O(|τ|) improves its order.
+Off-diagonal contributions are C1 (Lemma 4.4), hence
+smoothing. Gluing the charts by the partition of unity of
+Lemma 4.1 and absorbing the finitely many off-diagonal
+cross terms (which have disjoint supports and therefore
+smooth kernels) yields Q ∈ Ψ1 (Γ) with σ1 (Q) = π|ξ |,
+which is (13). Self-adjointness and nonnegativity are inherited from the symmetric
+kernel and the Cauchy–Gram
+1 RR
+form ⟨ f , Q f ⟩ = 2 ( f (s) − f (t))2 |γ(s) − γ(t)|−2 .
+Step 2: the DtN principal symbol. For a bounded C3
+domain the interior Dirichlet-to-Neumann operator ΛΓ is
+a classical self-adjoint Ψ1 operator with principal symbol
+|ξ |; this is the standard factorization of the Laplacian near
+the boundary via the Calderón projector [15, 23]. On S1 ,
+ΛS1 = |D| exactly.
+Step 3: the difference is order zero. By Steps 1–2,
+σ1 (Q) = π|ξ | = σ1 (πΛΓ ), so K0 := Q −πΛΓ has vanishing order-one symbol, i.e. K0 ∈ Ψ0 (Γ). It is self-adjoint
+as a difference of self-adjoint operators.
+Step 4: curvature dependence and the circle. The
+order-zero symbol of K0 collects the subprincipal contributions of both terms: from Q the constant κ(s)2 /12
+of (12), and from πΛΓ the curvature term of the Calderón
+projector. It is a real, self-adjoint Ψ0 symbol depending
+on Γ only through κ. We do not assert a closed form for it;
+what is established exactly is the constant-curvature case.
+When κ is constant Γ is a circle, and Lemma 4.3 gives
+the operator identity QS1 = πΛS1 with every lower-order
+term vanishing, not merely the principal symbols; hence
+K0 = 0 on S1 as an operator, and by scaling on any circle.
+This exact identity is consistent with the rescaled discrete
+spectrum 2n λm (Qn ) → π|m| of Proposition 5.1.
+Step 5: relative compactness and Weyl law. Since
+ord(K0 ) = 0 < 1 = ord(πΛΓ ), the operator K0 (πΛΓ +
+i)−1 ∈ Ψ−1 (Γ) is compact on L2 (Γ) (negative order on
+a compact manifold, by Rellich), so K0 is a relatively
+compact perturbation of πΛΓ ; Weyl’s theorem gives
+σess (Q) = σess (πΛΓ ). As K0 is bounded and self-adjoint,
+the min–max principle yields |λk (Q) − πλk (ΛΓ )| ≤ ∥K0 ∥
+for all k, and the classical DtN Weyl law λk (ΛΓ ) ∼
+(2π/L)k propagates to λk (Q) = (2π 2 /L)k + O(1).
+
+5.1. Arclength sampling is the correct discretization
+Two samplings of a curve produce different spectral
+content for the chord Hessian, and only one is consistent with the continuum operator. Fixed-angle sampling
+θ j = 2π j/n in some base parametrization gives a matrix
+whose spectrum is non-smooth in the curve parameters: at
+a shape transition the lowest eigenvalue can split linearly,
+producing a cusp. Arclength-uniform sampling s j = jL/n,
+z j = γ(s j ), gives the discretization consistent with QΓ .
+The consistency is exact on the circle and quantitative in
+general.
+Proposition 5.1 (Exact spectral consistency on S1 ). On
+equispaced nodes of the unit circle, the rescaled discrete
+operator 2n Qn acts diagonally in the Fourier basis with
+m2
+,
+n
+(15)
+where |m| is the Fourier symbol of |D| = (−∆S1 )1/2 .
+Consequently, on the band-limited subspace PM =
+span{eimθ : |m| ≤ M},
+
+
+1 − |m|
+n ,
+
+2
+n λm (Qn ) = |m|
+
+2
+n Qn − |D|
+
+
+
+PM
+
+2
+n λm (Qn ) − |m|
+
+≤
+
+=
+
+M2
+−−−→ 0,
+n n→∞
+
+and 2n Qn → |D| = π1 QS1 in the strong operator topology
+with the explicit mode-wise rate m2 /n.
+Proof. By Theorem 3.2, λm (Qn ) = m(n − m)/2 for 0 ≤
+m ≤ n − 1; the reflection λm = λn−m extends this to |m| in
+the symmetric range. Hence 2n λm = 1n m(n − m) = |m|(1 −
+|m|/n), and the deviation from the limit symbol |m| is
+exactly m2 /n. The operator-norm bound on PM is the
+supremum of these deviations over |m| ≤ M, and QS1 =
+π|D| by Theorem 4.5 (K0 = 0 on S1 ).
+8
+
+5.2. Conic curves: closed-form pullback
+
+The convergence (15) is not asymptotic folklore but
+an identity: every finite-n eigenvalue is known in closed
+form, and the error is the exact quadratic correction m2 /n.
+For a general C3 curve the same conclusion holds at the
+level of quadratic forms, with an explicit Riemann-sum
+rate.
+
+For conics the Riemann map is not transcendental but
+a single matrix square root. Let the conic be x⊤ Hx = k
+(centered, H symmetric positive-definite for an ellipse).
+Proposition 5.3 (Closed-form conic pullback). For an
+ellipse {x : (x − c)⊤ H(x − c) = k} with H symmetric
+positive-definite and k > 0, the map
+√
+Ψ : S1 → Γ,
+Ψ(u) = c + k H −1/2 u,
+(18)
+
+Proposition 5.2 (Quadratic-form convergence on C3
+3 and u ∈ C 2 (Γ). The continuum chord
+curves). Let Γ be C
+RR
+energy EΓ [u] = 12 Γ×Γ (u(s) − u(t))2 |γ(s) − γ(t)|−2 ds dt
+is well defined, and the arclength-sampled discrete energy
+(n)
+
+EΓ [u] =
+
+(ui − u j )2
+L2
+,
+∑
+2
+n i< j |zi − z j |2
+
+is a real-analytic diffeomorphism with inverse Ψ−1 (x) =
+k−1/2 H 1/2 (x − c). The pulled-back operator is a selfadjoint classical Ψ1 (S1 ) operator
+
+ui = u(si ), si = iL/n,
+
+Ψ∗ QΓ = Ma QS1 + K0conic ,
+
+(16)
+satisfies
+(n)
+
+EΓ [u] − EΓ [u] ≤ C(∥γ∥C3 ) ∥u∥C2 2
+
+(log n)2
+.
+n2
+
+K0conic ∈ Ψ0 (S1 ), (19)
+
+where Ma is multiplication by the real-analytic positive
+function
+−1/2 −1/2
+a(u) = u′⊤ H −1 u′
+k
+,
+u′ = u′ (ϕ) ⊥ u,
+(20)
+∗
+the principal symbol being σ1 (Ψ QΓ )(u, ξ ) = π a(u)|ξ |.
+The multiplier a is constant exactly when
+p H = λ I is a
+scalar matrix
+p (the circle of radius R = k/λ ), in which
+case a ≡ λ /k = 1/R and Ψ∗ QΓ = R−1 QS1 is exactly
+circulant.
+
+(17)
+
+Proof. Write F(s,t) = (u(s) − u(t))2 /|γ(s) − γ(t)|2 . By
+the
+divided-difference identity u(s) − u(t) = (s −
+R
+t) 01 u′ ((1−λ )t +λ s) dλ and the chord expansion |γ(s)−
+γ(t)|2 = (s − t)2 (1 + O(|s − t|2 )) valid for C3 arclength
+parametrizations, the apparent diagonal singularity is removable: F extends to a function on Γ × Γ that is C1
+across the diagonal, with F(s, s)RR= u′ (s)2 and ∥F∥C1 ≤
+C(∥γ∥C3 )∥u∥C2 2 . Thus EΓ [u] = 21 F is a convergent in-
+
+Proof. H −1/2 is a well-defined positive-definite matrix, so Ψ is an affine isomorphism of R2 restricted to S1 ; for u ∈ S1 , (Ψ(u) − c)⊤ H(Ψ(u) − c) =
+k u⊤ H −1/2 HH −1/2 u = k|u|2 = k, so Ψ(S1 ) = Γ and Ψ is
+a real-analytic diffeomorphism with the stated inverse.
+Classical pseudodifferential operators of order one are
+invariant under C∞ diffeomorphism, with the principal
+symbol transforming by the cotangent pullback; since
+QΓ ∈ Ψ1 (Γ) with σ1 = π|ξ | (Theorem 4.5), Ψ∗ QΓ ∈
+Ψ1 (S1 ). To read its principal symbol, parametrize u =
+u(ϕ) = (cos ϕ, sin ϕ) and compute the chord under Ψ:
+
+(n)
+
+tegral of a periodic C1 integrand, and EΓ [u] is its twodimensional trapezoidal sum on the arclength grid minus
+the (removable) diagonal, which the sampling omits. The
+Euler–Maclaurin error of the periodic trapezoidal rule for
+a C1 integrand with a single C1 but not C2 diagonal ridge
+is O(∥F∥C1 (log n)2 /n2 ), the logarithmic factor accounting for the diagonal ridge; this gives (17).
+Arclength sampling is the correct discretization because it respects the intrinsic Riemannian geometry of
+Γ rather than the extrinsic Euclidean embedding; fixedangle sampling discretizes a parametrization-dependent
+kernel and loses both (15) and (17).
+For an analytic Jordan curve the arclength samples
+coincide, up to a C∞ -bounded reparametrization, with the
+conformal pullback of equispaced nodes: if Φ : Γ → S1
+is the exterior Riemann map and θ j = 2π j/n, then
+Φ−1 (eiθ j ) are the arclength-uniform samples. Every spectral and computational identity for Qn on S1 thus transports to QΓ by applying Φ as a coordinate change, with
+the curve entering only through the conformal collar (Figure 1).
+
+|Ψ(u(ϕ)) − Ψ(u(ψ))|2 = k ∥u(ϕ) − u(ψ)∥2H −1
+= k (ϕ − ψ)2 ∥u′ (ϕ)∥2H −1
+× (1 + O(ϕ − ψ)),
+while the arclength
+pulls back as ds =
+√ ′⊤ element
+′
+−1
+′
+1/2
+|Ψ (ψ)| dψ = k (u H u ) dψ. Hence the pulledback kernel has diagonal singularity
+1
+|Ψ′ (ψ)|
+1
+√
+=
++ O(1),
+2
+2
+|Ψ(u(ϕ)) − Ψ(u(ψ))|
+(ϕ − ψ)
+k ∥u′ ∥H −1
+so by Lemma 4.2 the principal part is πa(u)|D| with a
+as in (20), and the bounded remainder is Ψ0 , giving (19).
+9
+
+Φ : Γ → S1
+exterior Riemann map
+s j 7→ θ j = 2π j/n
+QΓ 7−→ π|D|
+
+S1 , θ j = 2π j/n
+
+Γ, s j = jL/n
+
+Figure 1. The universal pullback. Left: an analytic Jordan curve Γ with arclength-uniform samples s j = jL/n 7→ z j = γ(s j ).
+Right: the unit circle with equispaced samples θ j = 2π j/n. The exterior Riemann map Φ carries arclength samples to equispaced
+samples and QΓ to π|D| modulo the zeroth-order remainder K0 of Theorem 4.5. Every S1 identity for Qn , closed-form spectrum,
+FFT calculus, error decomposition, transports to Γ through this single coordinate change.
+
+The factor ∥u′ ∥2H −1 is constant in ϕ iff H −1 (hence H) is a
+p
+p
+scalar matrix λ I; then a ≡ λ /k = 1/R with R = k/λ ,
+and Ψ∗ QΓ = R−1 QS1 is exactly circulant.
+
+Jordan curve, so the curvature of the boundary enters only
+through bounded, well-conditioned corrections, a consequence of diagonalization, not of any implementation
+choice.
+
+The map Ψ is exact in closed form (Figure 2): no Beltrami or Schwarz–Christoffel solve is required, only the
+matrix square root H −1/2 . For the circle the calculus is exactly the circulant QS1 of Section 3; for a general ellipse
+the eccentricity enters as the positive analytic multiplier
+a(u), so Ψ∗ QΓ is the FFT-diagonal principal part π|D|
+modulated by a physical-space-diagonal Ma plus an orderzero remainder, a variable-coefficient first-order operator
+built from the same two diagonal primitives. Hyperbolas
+and parabolas follow with Lorentzian or null-form square
+roots.
+
+5.4. The scale–phase decomposition: every target is a
+character
+The pullback carries the curve to S1 ; a companion decomposition carries every target to a character on it, which
+is the structural source of the δ -uniform evaluation of
+§7.5. Write an exterior target in log-polar coordinates
+z = reiθ = eρ+iθ , ρ = log r > 0. The operator QS1 = π|D|
+generates the radial dilation flow: the exterior harmonic
+extension of a boundary character eikθ is e−|k|ρ eikθ , so
+scale acts diagonally as Tρ = e−ρ|D| and phase as rotation, both in the one Fourier basis. Dilation itself is
+diagonalized by the Mellin characters riτ = eiτρ : raising
+the scale to the imaginary power turns r 7→ λ r into multiplication by the pure phase λ iτ , so a target is a pair of
+phases (riτ , eiθ ), a character on which the calculus of Q
+is pure multiplication.
+The consequence (Figure 3) is decisive: any target,
+at any distance, is a character, evaluated by multiplying
+the boundary Fourier data by the diagonal symbol z−|k|
+(one FFT, O(n log n)), the distance δ = r −1 entering only
+through the benign scalar e−|k|ρ . There is no near-singular
+kernel to sample, the scale that makes the classical integrand peak is here a phase, so accuracy is flat in δ , which
+is the operator explanation of the exact primitive (49).
+
+5.3. Computational structure
+The pullback reduces the apparatus to two diagonal primitives. Curve setup is O(n) for arclength tabulation and
+O(n log n) for the reparametrization onto equispaced conformal nodes; the curve-specific data are precomputed
+once. On the circle the operator is the circulant QS1 , and
+every function (Q −α , the heat propagator e−tQ , the resolvent (z − Q)−1 , the spectral projectors) is the closed-form
+functional calculus (11): two length-n Fourier transforms
+and one diagonal scaling, O(n log n), with no dense operator assembled and no factorization formed.
+On a general analytic Jordan curve the pulled-back
+operator is the same FFT-diagonal principal part π|D|,
+modulated by a physical-space-diagonal multiplier Ma
+(the conic case, Proposition 5.3) and an order-zero remainder K0 . The principal part carries the singular, illconditioned content and is diagonalized by the one fixed
+transform; the remainder is bounded and relatively compact (Theorem 4.5), so it neither changes the conditioning
+nor requires a separate solver. The structural point is
+not the running time but the reduction: the closed-form
+spectrum makes the singular part of Q a function of a
+single transform, the same transform for every analytic
+
+6. Optimal quadrature
+This is the flagship of the paper. We prove two optimality
+statements. The first is at the level of the operator: among
+all admissible discretizations of the boundary Dirichletto-Neumann operator, the complex Laplacian Q is the
+unique one with no leading defect, so its kernel is forced
+by optimality and not merely convenient. The second is
+at the level of the rule: the spectral Q-rule attains the
+10
+
+u2
+x2
+
+u3
+u1
+
+x3
+
+c
+
+inverse-square-root pullback
+u4
+
+x1
+
+√
+xi = c + k H −1/2 ui
+x5
+
+x4
+
+u5
+
+ui ∈ S1
+
+x⊤ Hx = k
+
+Figure 2. Conic reconstruction by the closed-form pullback (18). Five angles on S1 are carried through the inverse square root of
+the conic Hessian to five√vertices on a tilted ellipse, exact to machine precision; the center c comes from the linear part of the conic
+equation and the radius k from the constant. The map Ψ needs only the matrix square root H −1/2 ; the pulled-back operator is the
+circulant QS1 modulated by the analytic multiplier a(u) of (20), exactly circulant for the circle.
+
+ρ = log r
+
+z = reiθ
+Rθ
+
+eiθ
+θ
+
+(ρ, θ )
+
+log
+Tρ
+
+= e−ρ|D|
+
+z 7→ ρ + iθ
+
+S1
+
+ρ = log r
+
+S1 (ρ = 0)Mellin riτ = eiτρ
+
+physical exterior
+
+Figure 3. The scale–phase decomposition. The conformal logarithm z 7→ log z = ρ + iθ carries the exterior of the unit disk
+(left; concentric circles are scale levels ρ = log r, rays phase levels θ ) to the half-cylinder R≥0 × S1 (right): phase runs around
+the cylinder, scale along its axis. The boundary character eiθ on S1 (ρ = 0) is carried to the target (ρ, θ ) by the diagonal scale
+flow Tρ = e−ρ|D| generated by QS1 = π|D|, while rotation Rθ moves it around. Dilation is diagonalized by the Mellin character
+riτ = eiτρ , a pure phase, so every target is a character on which the calculus of Q is multiplication, the distance entering only
+through the scalar e−|k|ρ .
+
+minimax error (4) on analytic Jordan curves, i.e. no nsample linear rule can do asymptotically better. Together
+they justify the title: the complex Laplacian is the operator
+behind optimal quadrature.
+
+samples is a classical order-one boundary pseudodifferential operator. These are exactly the structural properties
+of a Dirichlet-to-Neumann discretization: positivity, constant nullspace, Euclidean covariance, and the order-one
+scaling of ΛΓ .
+
+6.1. The kernel is forced by optimality
+
+Lemma 6.1 (The inverse-square weight is forced). Under
+assumptions (iii)–(iv) the only admissible off-diagonal
+weight law is wi j = c |zi − z j |−2 for a constant c > 0;
+assumption (ii) then fixes the diagonal by row-sum completion. In particular An = c Qn .
+
+We first show that the inverse-square law is not a modeling
+choice but the only admissible one, and that Q is the
+unique admissible discretization whose principal symbol
+matches the boundary DtN operator exactly.
+Let An (Γ) be the class of n-point symmetric graphLaplacian discretizations
+(An u)i = ∑ wi j (ui − u j ),
+
+ui = u(zi ),
+
+Proof. By (iii) wi j = F(r), r = |zi −z j |. By (iv), F(λ r) =
+λ −2 F(r) for all λ > 0, so F(r) = F(1) r−2 ; positivity
+gives c := F(1) > 0. The diagonal is forced by An 1 =
+0.
+
+(21)
+
+j̸=i
+
+satisfying: (i) wi j = w ji ≥ 0; (ii) An 1 = 0; (iii) Euclidean
+invariance, wi j = F(|zi − z j |) depends only on chord
+length; (iv) scale covariance of degree −2, z 7→ az sends
+wi j 7→ |a|−2 wi j ; and (v) the continuum limit on arclength
+
+To state the optimality criterion, recall (Theorem 4.5)
+that the boundary DtN operator πΛΓ is a classical orderone operator with principal symbol π|ξ |. For an admissi11
+
+ble An with continuum principal limit AΓ ∈ Ψ1 (Γ), define
+its order-one DtN defect
+
+Setup. Let Γ be an analytic Jordan curve with exterior
+Riemann map Φ : R2 \ Ω → {|w| > 1}, analytic in a collar
+{1 ≤ |w| < ρΓ }. Pulling back by Φ (§5) and working in
+∗
+d1 (AΓ ) := sup σ1 (AΓ )(s, ξ )−π|ξ | , S Γ = {|ξ | = 1}. the circle variable θ , identify densities with their bound(s,ξ )∈S∗ Γ
+ary traces σ̃ (θ ) = ∑k∈Z ck eikθ . For 1 < ρ ≤ ρΓ the Hardy
+(22)
+collar class Fρ is the mean-zero space (the monopole c0
+is integrated exactly and set aside) with inner product
+Theorem 6.2 (Operator optimality). Among admissible
+Euclidean-covariant graph-Laplacian discretizations of
+⟨ f , g⟩ρ := ∑ ck ( f ) ck (g) ρ 2|k| ,
+∥ f ∥2ρ = ∑ |ck |2 ρ 2|k| ,
+k̸=0
+k̸=0
+the boundary DtN operator, the complex Laplacian QΓ
+(25)
+(normalized by the flat model) is the unique one with
+the
+norm
+finite
+exactly
+when
+σ̃
+extends
+analytically
+to
+the
+vanishing order-one defect,
+collar of conformal width log ρ with square-integrable
+trace at radius ρ; an orthonormal basis is ek := ρ −|k| eikθ .
+d1 (QΓ ) = 0.
+(23)
+For a target x ∈ R2 \ Ω write its conformal depth δΦ (x) =
+log |Φ(x)| = log |wx |, wx = Φ(x). By (49) the circle layerMoreover, if AΓ ∈ Ψ1 (Γ) is admissible with d1 (AΓ ) > 0,
+potential functional is, on Fρ ,
+then there are high-frequency wave packets uh concenck
+trated near a point (s0 , ξ0 ) ∈ S∗ Γ for which
+I(σ̃ ; wx ) = −π ∑
+|wx |−|k| eik arg wx ,
+(26)
+|k|
+k̸=0
+⟨uh , (AΓ − πΛΓ )uh ⟩
+≥ c d1 (AΓ ) + o(1),
+h ↓ 0.
+a bounded linear functional whose Riesz representer gx ∈
+∥uh ∥2H 1/2
+Fρ has coordinates (in the basis ek )
+(24)
+No admissible discretization can have smaller worst-case
+principal DtN error than QΓ .
+
+π
+(ρ|wx |)−|k| .
+|k|
+(27)
+The proof rests on the standard reduction of minimax
+error to a Hilbert-space distance, which we state and
+prove for completeness.
+⟨σ̃ , gx ⟩ρ = I(σ̃ ; wx ),
+
+Proof. By Lemma 6.1 the only admissible weight law
+is the inverse-square chord kernel, so every admissible
+An equals c Qn , and its continuum limit is c QΓ . The normalization
+c is fixed by matching the flat half-line model
+R
+p.v. R ( f (s) − f (t))(s −t)−2 dt = π|D| f (s) (Lemma 4.2),
+which forces c = 1. By Theorem 4.5, σ1 (QΓ ) = π|ξ |,
+hence (23). For any admissible AΓ with d1 (AΓ ) > 0 there
+is (s0 , ξ0 ) where the principal symbols differ by d1 ; standard semiclassical wave packets localized at (s0 , ξ0 ) test
+the principal symbol and give (24). Thus QΓ is the unique
+admissible object eliminating the leading DtN defect.
+
+|⟨ek , gx ⟩ρ | =
+
+Lemma 6.3 (Radius of information). Fix nodes s1 , . . . , sn
+and let N σ̃ = (σ̃ (s1 ), . . . , σ̃ (sn )). For any reconstruction
+map A : Cn → C (linear or not), the worst-case error over
+the unit ball of Fρ obeys
+
+sup I(σ̃ ; wx ) − A(N σ̃ ) ≥ rn := distρ gx , Sn , (28)
+∥σ̃ ∥ρ ≤1
+
+where Sn = span{r1 , . . . , rn } and r j ∈ Fρ is the Riesz
+representer of point evaluation at s j . Equality holds for
+the optimal linear rule.
+
+The claim is geometric, not a statement that no dense
+spectral matrix can approximate |D| better on a fixed
+band: among discretizations that are intrinsic, Euclideancovariant, positive, and nullspace-preserving, Q is forced
+and eliminates the order-one defect. This is why the
+kernel of §3 could not have been anything else.
+
+Proof. Each point evaluation σ̃ 7→ σ̃ (s j ) = ⟨σ̃ , r j ⟩ρ is
+bounded on Fρ (the basis values ek (s j ) = ρ −|k| eiks j are
+square-summable), so r j exists and ker N = Sn⊥ . Take any
+σ̃∗ ∈ Sn⊥ with ∥σ̃∗ ∥ρ ≤ 1: then N(±σ̃∗ ) = 0 are identical
+data, while I(±σ̃∗ ; wx ) = ±I(σ̃∗ ; wx ), so for the single output a = A(0), max |I σ̃∗ − a|, |−I σ̃∗ − a| ≥ |I(σ̃∗ ; wx )|.
+Taking the supremum over such σ̃∗ , the left side of (28) is
+≥ sup{|⟨σ̃∗ , gx ⟩ρ | : σ̃∗ ∈ Sn⊥ , ∥σ̃∗ ∥ρ ≤ 1} = ∥PSn⊥ gx ∥ρ =
+distρ (gx , Sn ). The optimal linear rule attains this distance,
+giving equality.
+
+6.2. The spectral rule is minimax-optimal
+We now prove rigorously that the rule generated by Q
+attains the minimax error (4): no n-sample rule, linear or
+not, can do asymptotically better, and the Q-rule matches
+the bound.
+12
+
+Theorem 6.4 (Minimax-optimal quadrature). Let
+and the residual width equals the ℓ2 tail of ℓ̃ over the surthe information be exact point sampling, Nn σ̃ =
+vivors, in particular at least any one surviving coordinate.
+(σ̃ (s1 ), . . . , σ̃ (sn )), with nodes s j ∈ S1 allowed to depend
+Taking k = ⌈n/2⌉ + 1,
+on (Γ, ρ, x, n) but not on σ̃ , and let the recovery map
+π
+A : Cn → C be arbitrary (linear or not). For a target
+q−(⌈n/2⌉+1) ≍ n−1 q−n/2 .
+κn ≥ d n ≥ |ℓ̃⌈n/2⌉+1 | =
+⌈n/2⌉
++
+1
+x at conformal depth δΦ (x) < log ρ, write q := ρ|wx | =
+(32)
+elog ρ+δΦ (x) > 1. Then the minimax error (4) over Fρ (Γ)
+This
+is
+unconditional
+and
+constant-explicit:
+no
+configuobeys the two-sided estimate
+ration of n point samples, and indeed no n continuous
+π
+ρ+δΦmeasurements
+(x))
+−(⌈n/2⌉+1)
+−1 − n2 (log
+linear
+whatever, resolve the layer potential
+,
+q
+≤ κn (Γ, x; Fρ ) ≤ C(Γ, ρ, q) n e
+⌈n/2⌉ + 1
+faster than n−1 q−n/2 . It settles the one structural objec(29)
+n
+tion available to the construction, whether the Fourier-tail
+so that κn ≍ n−1 e− 2 (log ρ+δΦ (x)) . The lower bound is fully
+width is also the width for arbitrary point samples, in the
+explicit and purely analytic: it holds for arbitrary linear
+affirmative, since point samples are a restriction of linear
+information (a fortiori for point samples), independent
+information and inherit (32).
+of the node configuration and of the target phase. The
+(ii) An explicit point-sample fooling density realizes
+upper-bound constant C(Γ, ρ, q) depends only on (Γ, ρ)
+the rate. The abstract floor is matched by an explicit
+and a lower bound for q − 1, never on n or σ̃ , and the
+density orthogonal to the actual evaluation representers,
+upper bound is attained by the spectral Q-rule on the
+which also exhibits the sharp dependence on the target
+conformal pullback of n equispaced nodes of S1 .
+phase. Since the representers rs j carry no k = 0 mode, a
+Proof. Write q := ρ|wx | = elog ρ+δΦ (x) > 1.
+mean-zero h lies in Sn⊥ exactly when it vanishes at every
+Lower bound (any rule). By Lemma 6.3 the minimax
+node, h(s j ) = 0 (for mean-zero h, ⟨h, rs j ⟩ρ = h(s j )). Let
+error equals the radius of information
+Wn be the space of mean-zero trigonometric polynomials
+
+
+of degree
+≤ ⌈n/2⌉ + 1 vanishing at s1 , . . . , sn ; the n nodal
+κn = inf rn = inf distρ gx , Sn = inf sup |I(h; wx )| : ∥h∥
+ρ ≤ 1, h(s j ) = 0 ∀ j ,
+s1 ,...,sn
+s1 ,...,sn
+s1 ,...,sn
+conditions and the mean-zero condition leave dim Wn ≥ 2,
+(30)
+and Wn ⊂ Sn⊥ , so
+the Gel’fand n-width of the layer-potential functional over
+Fρ : the largest value the functional takes on a unit-norm
+rn = distρ (gx , Sn ) ≥ ∥PWn gx ∥ρ = sup{ |I(h; wx )| : h ∈ Wn , ∥h∥ρ ≤ 1 }
+density that the n point samples annihilate. This is a sam(33)
+pling width: the distance is to the evaluation-representer
+The space Wn is generated by the nodal polynomial
+span Sn = span{rs j } fixed by the node geometry, not to a
+θ −s
+ω(θ ) = ∏nj=1 sin 2 j , which vanishes precisely at the
+free n-dimensional subspace (whose infimal distance to
+nodes, together with its admissible degree-one multiples.
+gx is zero, as it may contain gx ). It is a genuine statement
+The decisive structural fact is that ω has configurationabout how well n point evaluations resolve gx .
+independent extreme modes. Writing u = eiθ , ζ j = eis j ,
+We give two lower bounds: an unconditional one that
+one has ω = A u−n/2 ∏ j (u − ζ j ) with |A| = 2−n , so the
+forces the rate from linear information alone, and an
+Fourier coefficient at |k| = ⌈n/2⌉ − l is 2−n (−1)l el (ζ )
+explicit point-sample fooling density that realizes it.
+in modulus, with el the elementary symmetric func(i) The rate is forced already by arbitrary linear intions of the ζ j . The hyperbolic (log1mexp) identity
+formation. A point evaluation is one continuous linear
+(θ −s j )+iη 2
+sin
+= 21 (cosh η − cos(θ − s j )), η = log ρ,
+2
+measurement, so the sampling kernels Sn⊥ form a subfamthen gives the norm in closed form,
+ily of the codimension-n subspaces of Fρ ; enlarging the
+infimum in (30) to all such subspaces can only lower it,
+h
+n
+i
+φ −s
+whence
+∥ω∥2ρ = 4−n ∑ |el (ζ )|2 ρ |n−2l| = 2n Eφ ∏ j sin2 2 j +sinh2 η2 ,
+κn ≥ d n (I) :=
+
+inf
+
+codim L=n
+
+sup{ |I(h; wx )| : h ∈ L, ∥h∥ρ ≤ 1 },
+
+(31)
+the genuine Gel’fand n-width of the functional over arbitrary linear information. In the unit-ball coordinates
+uk = ck ρ |k| one has I = ∑k̸=0 ℓ̃k uk with |ℓ̃k | = π|k|−1 q−|k|
+by (27); the optimal n measurements annihilate the n coordinates of largest weight, the modes 0 < |k| ≤ ⌈n/2⌉,
+13
+
+l=0
+
+(34)
+the right-hand expectation taken over φ uniform, an inφ −s
+tegral against the arcsine measure p j = sin2 2 j . Since
+|e0 | = |en | = 1 for every configuration, the two extreme
+terms l ∈√{0, n} contribute 2 · 4−n ρ n unconditionally, so
+∥ω∥ρ ≥ 2 2−n ρ n/2 with the amplitude independent of
+the nodes. The layer-potential functional pairs these
+
+extreme modes against gx through the representer coπ −|k|
+ordinate (27) at |k| = ⌈n/2⌉, of size |k|
+q
+≍ n−1 q−n/2 .
+For the equispaced pullback the pairing is exact: there
+ω ∝ sin nθ
+2 is the pure extreme mode, and (27) gives the
+closed form
+
+truncation tail and an aliasing term:
+
+∑
+
+ck
+−|k| ik arg wx
+e
+|k| |wx |
+
+|k|>n/2
+
+∑
+0<|k|<n/2
+
+√
+|⟨gx , ω⟩ρ | 2 2 π −n/2
+=
+q
+sin 2n arg wx ,
+∥ω∥ρ
+n
+
+≤ ∥σ̃ ∥ρ
+
+
+
+∑
+
+1 −2|k|
+q
+k2
+
+1/2
+
+≤ C∥σ̃ ∥ρ n−1
+
+|k|>n/2
+|wx |−|k|
+|k|
+
+∑ |ck+mn | ≤ ∥σ̃ ∥ρ C n−1 q−n/2 ,
+
+(37)
+
+m̸=0
+
+the first by Cauchy–Schwarz against the Hardy
+weight (25), the second because each alias ck+mn carries
+weight ρ −|k+mn| ≤ ρ −n/2 for |k| < n/2 and |wx |−|k| ≤ 1,
+summed geometrically. Adding the correction error gives
+
+(35)
+
+recovering the rate (32) with an explicit constant at every target except the n node-aligned phases arg wx ∈ 2π
+n Z,
+where this one mode degenerates. This is an artifact of the
+single fooling mode, not of κn , which (32) already floors
+unconditionally. For targets away from the aligned phases
+the explicit construction itself gives the rate with an analytic constant: for any fixed β ∈ (0, π) and any phase at
+angular distance ≥ β /n from 2π
+n Z, the elementary bound
+| sint| ≥ π2 dist(t, πZ) applied to (35) yields
+
+InQ (σ̃ ; wx ) − I(σ̃ ; wx ) ≤ C(Γ) ∥σ̃ ∥ρ n−1 e− 2 (log ρ+δΦ (x)) .
+(38)
+The lower and upper bounds coincide in order, which
+is (29); the Q-rule attains it. (By the Saff–Totik theory [22] the equispaced pullback is asymptotically the
+Fekete configuration of Γ for the exterior equilibrium
+measure, so the rule samples at the asymptotically optimal
+nodes; this identification is not needed for the rate.)
+n
+
+Remark 6.5 (Phase-uniform constant; numerically certified). The rate in Theorem 6.4 is fully analytic through
+the Gel’fand floor (32), and the explicit equispaced construction (36) realizes it for every target phase outside
+the n node-aligned directions 2π
+n Z. A single constant
+−1
+−n/2
+c(q) > 0 with κn ≥ c(q) n q
+uniform over all node
+configurations and all phases requires the low-degree window {ei jθ ω}| j|≤m , m = O(log(1/ε)/ log q), sized by the
+geometric pairing energy ∥gx ∥2ρ = 2π 2 Li2 (q−2 ) so that
+the band misses the aligned phases. We have no closed
+form for this c(q); we certify it numerically by evaluating ∥PWn gx ∥ρ = (b∗ G−1 b)1/2 for n ≤ 24 over adversarial
+node sets (equispaced, random, single- and two-cluster)
+at the worst phase, the infimum always falling at the equispaced configuration, with c(q) degrading as q → 1.
+None of this enters the proof of the rate.
+
+√
+√
+2 2 π −n/2
+2 2 β −n/2
+equi
+n
+rn =
+q
+sin 2 arg wx ≥
+q
+,
+n
+n
+(36)
+realizing the floor (32) in order by an explicit pointsample-orthogonal density, with no numerics. A constant
+uniform over every configuration and every phase needs
+the low-degree window {ei jθ ω}| j|≤m and is the one quantity we certify numerically, not used in the proof of the
+rate; see Remark 6.5. The mechanism, an extremal mode
+that vanishes at every sample point yet pairs nontrivially
+against the interior target, is the analytic-class counterpart of the classical few-point impossibility arguments of
+Birkhoff and Gulati [19], who established the sharpness
+of compact difference stencils by exhibiting extremal harmonic polynomials (Re z4 for the five-point and Re z8 for
+the nine-point Laplacian stencil) that vanish at the stencil
+nodes but not at its centre.
+
+Remark 6.6 (The trapezoidal rule is suboptimal off the
+curve). On the analytic class Fρ the periodic trapezoidal
+rule attains the exponential rate (29) only where Euclidean and conformal distance agree. Off the curve its
+exponent 2πnδ /L is governed by the Euclidean depth δ
+rather than the conformal depth δΦ (x); the two diverge
+as δ → 0, so on a curve of non-constant exterior conformal modulus the trapezoidal exponent is strictly below
+1
+2 (log ρ + δΦ (x)) and the rule is minimax-suboptimal at
+near-boundary targets. The comparison is for the analytic class treated here; we do not assert a polynomial Ck
+gap, which would need a separate Jackson-type estimate
+outside the scope of this theorem.
+
+Upper bound (the Q-rule attains it). Split the
+kernel as log |x − y| = log |wx − eiθ | + log |G(wx , eiθ )|,
+with G(w, z) = (Φ(w) − Φ(z))/(w − z) analytic and nonvanishing on {|w|, |z| ≥ 1} by the Schwarz lemma. The
+correction θ 7→ log |G| extends analytically to the strip of
+half-width log ρΓ ≥ log ρ, so the periodic trapezoidal rule
+integrates it with error O(ρΓ−n ) = O(q−n ), dominated by
+the main term. The first summand is the circle layer potential, which the Q-rule evaluates by the closed form (49)
+(n)
+using the discrete Fourier coefficients ck = ∑ j≡k (n) c j
+of the n samples for |k| < n/2. Its error splits into a
+14
+
+Remark 6.7 (The collar core degenerates into the inverse-square operator). The n-width machinery of Theorem 6.4 and the operator Q meet in the thin-collar limit.
+On equispaced nodes the representer Gram is circulant,
+Gi j = ⟨ri , r j ⟩ρ = Pt (si − s j ) with Pt the Poisson kernel and
+t = ρ −2 ; its off-diagonal core is |1 − t ei(si −s j ) |−2 . As the
+collar thins, t = ρ −2 → 1, this core converges pointwise
+to
+1
+|1 − ei(si −s j ) |2
+
+=
+
+1
+s −s
+
+4 sin2 i 2 j
+
+where s0 is the closest boundary point (Lemma 7.1 below).
+It diverges exactly where the singularity becomes dangerous, but it carries no mesh information, so no global multiplicative law of the form |En (x)| ≍ Q(x)−1/2 e−2πnδ /L
+can hold as a√two-sided bound (its n-independent factor
+Q(x)−1/2 ≍ δ cannot bound a finite-n error from below
+while the exponential bounds it from above). The governing finite-n parameter is instead the mesh-resolution
+ratio
+δ
+nδ
+L
+ρ := =
+,
+h := .
+(40)
+h
+L
+n
+
+= |zi − z j |−2 = − (Q)i j ,
+
+Lemma 7.1 (Q-equivalence to 1/δ ). Let Γ be C3 with
+reach c > 0 and σ ∈ C2 with σ0 = minΓ |σ | > 0, σ∞ =
+∥σ ∥L∞ . There is δ0 > 0 such that for δ ∈ (0, δ0 ),
+πσ0 /(2δ ) ≤ Q(x) ≤ 2πσ∞ /δ .
+
+the inverse-square chord kernel of Theorem 4.5. So the
+representer geometry of the lower bound degenerates,
+precisely in the regime ρ → 1 where the fooling window
+must widen, into the Dirichlet-to-Neumann operator Q =
+πΛΓ + K0 that governs the rest of the paper. This is a
+limit of the off-diagonal kernel, not a finite inversion of G:
+n
+the inverse Gram is circulant with eigenvalues n (t1−t
+k +t n−k ) ,
+unrelated to the spectrum k(n − k)/2 of Q. The inversesquare structure enters through the t → 1 boundary, and
+through the single-layer/DtN duality of §4 (where Q =
+πΛΓ + K0 is the inverse of the single layer up to order
+zero), not by inverting the representer Gram.
+
+7.2. The universal local profile
+The local channel is governed by an explicit profile computed from the tangent-line model of the singularity by
+Poisson summation.
+Lemma 7.2 (Universal local profile). Let gδ (s) =
+1
+2
+2
+2 log(s + δ ) be the tangent-line kernel on R/LZ. For
+the n-point trapezoidal rule at nodes s j = jL/n, with
+ρ = δ /h and grid phase β ∈ [0, 1) of the closest point,
+
+The mechanism behind the attainment in Theorem 6.4
+is that the Q-rule evaluates a series rather than sampling
+a near-singular kernel: the closed-form circle term is the
+exact Fourier representation (49) of §7.5, whose only error is truncation at mode ±n/2, O(ρ −n/2 ) independently
+of δ . The near-singularity is absorbed entirely into the
+closed-form modal sum, so accuracy does not degrade as
+the target approaches the curve, the uniform-in-δ behavior observed throughout §9.
+
+1 n−1
+1
+∑ gδ (s j − s0 ) − L
+n j=0
+
+(42)
+
+Proof. Work in the period L and write h = L/n. The Lperiodization of the tangent-line kernel has the absolutely
+convergent Fourier series
+ 2πms 
+1
+gδ (s) = 12 log(s2 +δ 2 ) = c0 − ∑ e−2πmδ /L cos
+,
+L
+m≥1 m
+(43)
+1 RL
+where c0 = L 0 gδ is the mean; the coefficients gbδ (m) =
+1 −2π|m|δ /L
+(m ̸= 0) are the principal-value Fourier
+− 2|m|
+e
+
+7.1. The point-coercivity functional
+The natural continuum measurement of near-singularity
+is the point-coercivity functional of Q,
+|σ (y)|
+π|σ (s0 )|
+ds(y) ∼
+2
+δ
+Γ |x − y|
+
+1
+M(ρ, β ),
+n
+(41)
+
+
+Asymptotically:
+M(ρ, β ) = −e−2πρ cos(2πβ ) +
+O(e−4πρ ) for ρ ≫ 1 (resolved); M is bounded for
+ρ = O(1) (near-singular); M(0, β ) = log(2| sin πβ |) for
+β ̸= 0.
+
+The optimality theorems of §6 characterize the best attainable rate; this section dissects what the classical trapezoidal rule actually does at the mesh scale, both to explain
+its saturation and because the corner analysis of §8 is built
+on the same decomposition. The trapezoidal error is not a
+single decaying quantity but a sum of three independent
+channels.
+
+Z
+
+0
+
+gδ (s − s0 ) ds =
+
+M(ρ, β ) := Re log 1 − e−2πρ+2πiβ
+1
+= − ∑ e−2πmρ cos(2πmβ ).
+m≥1 m
+
+7. Anatomy of the near-singular error
+
+Q(x) :=
+
+Z L
+
+transform of 12 log(s2 + δ 2 ), and the bound |gbδ (m)| ≤
+1 −2π|m|δ /L
+makes the series absolutely convergent for
+2|m| e
+δ > 0, so termwise sampling is justified. The discrete
+Poisson summation formula for an absolutely summable
+
+(δ → 0), (39)
+15
+
+b
+Fourier series states 1n ∑n−1
+j=0 f (s j ) = ∑k∈nZ f (k). Subtracting the k = 0 term (the mean c0 ) and evaluating at the
+shifted argument s − s0 leaves only the aliasing frequencies k = nk′ , k′ ̸= 0:
+
+model. By the Frenet expansion |x − γ(s)|2 = (s − s0 )2 +
+δ 2 + δ κ0 (s − s0 )2 + O((s − s0 )3 ) and the C2 regularity
+of σ , r ∈ C2 (Γ) with ∥r∥C2 ≤ C(∥γ∥C3 , ∥σ ∥C2 )(h(1 +
+| log h|) + δ ), the | log h| arising from the integrable logarithmic kernel at the resolution scale. The trapezoidal
+1 n−1
+2 −2πnk′ δ /L  2πnk′ s0  error of a C2 periodic integrand is bounded by ∥r∥C2 /n =
+e
+cos
+,
+∑ gδ (s j −s0 )−c0 = − ∑
+′
+n j=0
+L
+∥r∥C2 h/L, giving |Rn | ≤ Crem (h2 (1 + | log h|) + hδ ).
+k′ ≥1 nk
+
+where pairing ±nk′ produced the cosine. Now nδ /L = ρ
+and ns0 /L = β (the grid phase), so the right side is
+′
+− 1n ∑k′ ≥1 k1′ e−2πk ρ · 2 cos(2πk′ β ). By the Mercator sek
+ries ∑k≥1 rk cos(kφ ) = − Re log(1 − reiφ ), |r| < 1, this
+equals 1n Re log(1 − e−2πρ+2πiβ ), which is (41)–(42). The
+asymptotics follow from the same expansion: for ρ ≫ 1
+the k′ = 1 term dominates, giving −e−2πρ cos(2πβ ) +
+O(e−4πρ ); at ρ = 0, β ̸= 0, Re log(1 − e2πiβ ) = log |1 −
+e2πiβ | = log(2| sin πβ |).
+
+The three channels respond to independent mechanisms: the bulk channel to the analytic collar of σ , the
+local channel to the mesh ratio ρ, the remainder to curvature. Their interaction is a logarithmic maximum, not a
+product. Define the barriers
+Bbulk = n log ρcoll ,
+
+Bloc = − log |σ (sn 0 )| |M(ρ, β )| ,
+
+7.3. Bridge decomposition and tropical envelope
+
+Corollary 7.4 (Tropical envelope). Under Theorem 7.3,
+when no two channels coincide in leading order,
+
+Theorem 7.3 (Quadrature bridge decomposition). Let Γ
+be C3 , σ ∈ C2 with analytic collar radius ρcoll > 1, and
+x ∈ R2 \ Γ with δ ∈ (0, δ0 ). Then
+En (x) = Enbulk (x) + Enloc (x) + Rn (x),
+
+(45)
+
+
+Brem = − log Crem (h2 (1 + | log h|) + hδ ) .
+
+− log |En (x)| = min{Bbulk , Bloc , Brem } + O(1).
+
+(44)
+
+(46)
+
+In the resolved regime ρ ≫ 1 the bulk barrier is smallest and − log |En | ≈ n log ρcoll (the Trefethen–Weideman
+rate); in the near-singular regime ρ = O(1) the local
+barrier is smallest and − log |En | ≈ log n − log |σ (s0 )| −
+log |M(ρ, β )| (algebraic 1/n saturation).
+
+with the local channel exact, Enloc (x) = σ (sn 0 ) M(ρ, β ), the
+−n
+bulk channel bounded by |Enbulk (x)| ≤ Cbulk ρcoll
+, and the
+remainder by |Rn (x)| ≤ Crem (h2 (1 + | log h|) + hδ ).
+Proof. Let s0 be the closest boundary point and split the
+integrand f (s) = σ (γ(s))|γ ′ (s)| log |x−γ(s)| as f = f loc +
+f sm , where f loc (s) = σ (s0 ) gδ (s − s0 ) is the tangent-line
+model with gδ = 21 log( · 2 + δ 2 ) from Lemma 7.2, and
+f sm = f − f loc . Since the trapezoidal error is linear in the
+integrand, En = En [ f loc ] + En [ f sm ], and we bound each
+term.
+Local channel. By Lemma 7.2 applied with amplitude
+σ (s0 ), En [ f loc ] = σ (sn 0 ) M(ρ, β ) exactly; this is Enloc .
+Bulk channel. Decompose f sm = f bulk + r where f bulk
+collects the analytic part of σ ◦ γ away from s0 . By
+hypothesis σ ◦ γ extends holomorphically to the strip
+|Im s| < (L/2π) log ρcoll , so its Fourier coefficients sat−|k|
+isfy |σbk | ≤ Cσ ρcoll . The trapezoidal rule on S1 aliases
+only modes |k| ≥ n/2 (its node-sum annihilates every
+Fourier mode 0 < |k| < n that is not a multiple of n), so
+bk | ≤ C ∑|k|≥n/2 ρ −|k| ≤ Cbulk ρ −n ,
+|Enbulk | ≤ ∑|k|≥n/2 |σbk | |K
+coll
+coll
+bk | are bounded
+the geometric tail; the kernel coefficients |K
+uniformly in δ , so the constant is δ -independent.
+Remainder. The residual r = f sm − f bulk is the curvature/amplitude correction f − f loc to the tangent-line
+
+The tropical envelope is the structural answer the classical literature lacked. The exponential e−2πnδ /L of (3)
+is the bulk channel; the near-singular saturation is the
+local channel; and they never multiply. A practical nearsingular corollary holds where one channel dominates:
+in the regime nδ ≤ L/(4π) with β away from the nodealigned locus,
+|En (x)| ≍ Q(x)−1/2 e−2πnδ /L ,
+
+(47)
+
+but only there. Equation (47) is a regime-restricted reading of the anatomy, not a global law (cf. Remark 6.6 and
+the discussion following (39)).
+7.4. The defect-projection mechanism
+The local channel admits a clean lower bound through a
+Fourier-mode identity that also explains the experiments
+of §9.5. A linear n-sample rule An [σ ] = ∑i ci σ (si ) has
+a zero-mass defect measure µA := ∑i ci δsi − (Cα /L) ds
+with Cα = ∑i ci , annihilating constants by construction.
+bA (k) = ∑i ci e−2πiksi /L , k ̸= 0.
+Its Fourier coefficients are µ
+16
+
+Proposition 7.5 (Defect-projection identity). For a trace
+u = a0 + ∑k̸=0 ak e2πiks/L absolutely convergent on the analytic strip, the quadrature error pairs against u as
+En [u] = −
+
+1
+bA (−k).
+ak µ
+Cα k̸∑
+=0
+
+8. Corners: the Mellin–Kondrat’ev vertex channel
+The preceding structure is S1 -specific where a corner
+breaks it: the bridge decomposition (Theorem 7.3) assumes an analytic collar ρcoll > 1 and the identification
+Q = πΛΓ + K0 assumes Γ ∈ C3 , and at a vertex both fail.
+What does not fail is the rest: away from the finitely
+many vertices the curve is smooth, the circulant calculus runs arcwise, and the error a vertex injects is itself
+a computable defect field, governed by the same Poisson/Mellin calculus that produced the smooth profile M
+(Lemma 7.2). We treat the corner as a fourth channel
+of the bridge, not a breakdown of it. Throughout Γ is
+closed, piecewise C3 , with vertices vq of interior angle
+αq ∈ (0, 2π); the baseline Bh is the arcwise Q-calculus,
+and the construction below is an after-solver correction
+supported in O(1)-node neighbourhoods of the vertices.
+
+(48)
+
+bA (−k) = 0 for every k
+In particular En [u] = 0 exactly if µ
+in the active set {k ̸= 0 : ak ̸= 0} of u.
+bA (−k) = −1 for
+For the unit-weight trapezoidal rule µ
+k ∈ nZ \ {0} and 0 otherwise, so (48) specializes to the
+classical aliasing formula and the rule already realizes the
+optimal mode-annihilation on |k| < n. The local-channel
+amplitude |σ (s0 )| |M(ρ, β )|/n is exactly the projected defect of the tangent-line model, giving the lower bound
+|En (x)| ≥ σ0 m0 /n − |Enbulk | − |Rn | away from the cancellation locus. So the local channel is the projected defect
+of the trace space, and annihilating the active modes of
+a density removes it, exposing the next Fourier barrier,
+verified in §9.5.
+
+8.1. Two Mellin factors: geometry and quadrature
+The near-vertex error factors into a geometric part, the
+singular exponent of the field, a pole of the radial Mellin
+symbol of the cone, moving with the angle, and an
+arithmetic part, the trapezoidal defect that exponent carries, independent of the angle except through the exponent. The correction
+is their product. The BGK value
+√
+β = −ζ ( 12 )/ 2π ≈ 0.5826 is exactly the arithmetic factor at the crack exponent, with no geometric content of
+its own (Corollary 8.6).
+
+7.5. Why the spectral primitive is uniform in δ
+On the unit circle the layer potential has the exact Fourier
+representation
+σ̂k −|k| ik arg z
+z e
++ 2π σ̂0 log |z|,
+k̸=0 |k|
+
+I(z) = −π ∑
+
+|z| > 1,
+
+√
+√(49)
+evaluated by Algorithm 1 with ϕ(λ ) = −πz− 2λ / 2λ .
+The only error is truncation at mode ±n/2, O(2−n/2 )
+for analytic densities independent of δ : the primitive
+evaluates the series (49) rather than sampling the nearsingular kernel, so its accuracy does not degrade as the
+target approaches.
+
+Geometric factor (Kondrat’ev). We import the first
+factor.
+Proposition 8.1 (Singular density expansion; Kondrat’ev [12], Grisvard [8]). Let σ be the single-layer
+density of a Dirichlet or Neumann harmonic field on the
+domain bounded by Γ. In a vertex-centred radial coordinate r along Γ, for any Λ > 0,
+
+7.6. BEM consistency
+As a hypersingular discretization the operator is competitive structurally, not only as a quadrature primitive.
+
+σ (r, θ ) = σreg (r, θ ) +
+
+Theorem 7.6 (RCL–BEM consistency). For Γ ∈ C3 the
+classical Hadamard hypersingular operator W and Q satisfy W − Q ∈ Ψ0 (Γ). The discretization WiRCL
+:= (Qn )i j ,
+j
+assembled from pairwise distances alone with no quadrature or regularization, satisfies W RCL ⪰ 0 with kernel
+span{1}, the exact null-flux identity W RCL 1 = 0, condition number cond(W RCL |1⊥ ) = O(n) on equispaced
+nodes, and the Weyl law λk = (2π/L)k + O(1).
+
+∑ cqℓ rλ −1 ψqℓ (θ ) + RΛ ,
+qℓ
+
+ℓ: λqℓ <Λ
+
+∥RΛ ∥ ≲ rΛ−1 ,
+(50)
+where the exponents λqℓ > 0 are the roots in 0 < Re λ < Λ
+of the angle-dependent Mellin symbol of the wedge of
+opening αq , and ψqℓ the angular eigenfunctions. For the
+Dirichlet Laplacian λqℓ = ℓπ/αq ; for a crack αq = 2π
+these are the half-integers ℓ/2.
+
+The O(n) conditioning is a direct consequence of the
+integer spectrum: cond = λ⌊n/2⌋ /λ1 = O(n), three orders
+better than the O(n3 ) of Maué-regularized Galerkin assembly [14].
+
+We use only this: near each vertex σ lies, up to a
+higher-regularity remainder, in a finite, explicitly indexed
+span of monomials rλqℓ −1 , the corner substitute for the
+17
+
+ζ (1 − λ , β ); multiplying by the smooth amplitude φ (0)
+and restoring the h-scaling gives (53), the smooth
+Bernoulli terms entering at O(h). Two-sidedness is
+additive by linearity of the trapezoidal error in the integrand, the same linearity used in the bridge proof.
+Verified numerically: the h−λ -normalised defect converges to ζ ( 12 ) = −1.4603545 at λ = 21 and to ζ ( 23 ) =
+−2.4475807 at λ = 31 (eight digits), with the phase tracking ζ (1 − λ , β ).
+
+analytic-collar hypothesis, a Mellin expansion where a
+Taylor/Fourier one is unavailable.
+The angle-dependent Mellin symbol of Proposition 8.1
+is itself explicit, and identifying it converts the corner
+operator from an abstraction into a closed form.
+Proposition 8.2 (The corner symbol is a wedge Mellin
+matrix). At a vertex of opening angle α the scalar
+Dirichlet-to-Neumann symbol |ξ | of the smooth boundary
+is replaced by a 2 × 2 matrix coupling the two incident
+faces: in the Mellin frequency τ along r = et ,
+
+
+τ
+cosh ατ
+−1
+α
+,
+(51)
+Λc (τ) =
+−1
+cosh ατ
+sinh ατ
+
+Remark 8.4 (Confluent log case). A target near the vertex
+makes the kernel contribute an extra log |s|, confluent
+with the algebraic factor; the defect then carries ∂λ [ζ (1 −
+λ , β )hλ ], i.e. a ζ ′ (1 − λ , β ) and a log h rung, the corner
+analogue of the | log h| term in the smooth remainder, and
+the boundary with the open near-vertex off-curve problem
+(Remark 8.16).
+
+diagonalized by the symmetric and antisymmetric face
+combinations with eigen-channels
+µ+ (τ) = τ tanh ατ
+2
+
+(symmetric),
+
+µ− (τ) = τ coth ατ
+2
+
+(antisymmetric).
+
+(52)
+
+8.2. The vertex channel of the bridge
+The analytic-collar hypothesis is replaced by the finite
+Mellin expansion (50); everything else mirrors Theorem 7.3.
+
+The poles of µ± are exactly the Kondrat’ev exponents: the
+symmetric channel carries the odd multiples (2k−1)π/α,
+the antisymmetric channel the even multiples 2kπ/α, together exhausting {ℓπ/α}ℓ≥1 . The off-diagonal −1 is the
+irreducible face coupling; the diagonal channels are the
+wedge analogue of the scalar |ξ |, recovered as α → π
+where µ± → |τ| to principal order and their O(1) difference is the order-zero remainder K0 of (14).
+
+Theorem 8.5 (Vertex bridge decomposition). Let Γ be
+piecewise C3 with vertices vq of angles αq , and let σ
+admit (50) with separated exponents. Then for a target
+off Γ,
+En (x) = Enbulk (x) + Enloc (x) + Envtx (x) + Rn (x),
+
+with Enbulk , Enloc the smooth channels (now arcwise), Rn
+the smooth remainder, and the vertex channel, to leading
+order,
+
+Arithmetic factor (Navot). The second factor is the
+trapezoidal defect of such a monomial, the algebraicexponent analogue of the smooth local profile.
+Lemma 8.3 (Vertex profile). Let h = L/n, and let the
+nearest node sit at grid phase β ∈ [0, 1) from vq along an
+incident arc. For a one-sided model f (s) = φ (s) |s|λ −1 ,
+φ ∈ C∞ , λ ∈ (0, 1) ∪ (1, 2), the n-point trapezoidal rule
+(singular node punctured) has leading defect
+1
+1
+f (s j ) −
+∑
+n j
+L
+
+Z
+
+Q
+
+Envtx (x) = ∑
+
+∑ cqℓ Ψqℓ Z(λqℓ ; βq+ , βq− ) hλ +O hΛ ,
+qℓ
+
+
+
+q=1 ℓ: λqℓ <Λ
+
+(56)
+where Ψqℓ is the (bounded) angular pairing of ψqℓ against
+the kernel at x.
+
+
+f = φ (0) ζ (1 − λ , β ) hλ + O hλ +1 ,
+
+Proof sketch. Split σ = σreg + ∑ cqℓ rλqℓ −1 ψqℓ + RΛ by
+Proposition 8.1 and use linearity of En . The regular
+part is smooth and produces Enbulk + Enloc + Rn exactly
+as in Theorem 7.3. Each singular monomial produces, by
+Lemma 8.3 applied at vq with exponent λqℓ and the two
+incident grid phases, the term cqℓ Ψqℓ Z(λqℓ ; βq+ , βq− )hλqℓ .
+The truncation RΛ contributes O(hΛ ) by the same Navot
+bound applied at exponent Λ.
+
+(53)
+with ζ (·, β ) the Hurwitz zeta function. Summing the two
+arcs at vq (phases βq+ , βq− ) gives the two-sided profile
+Z(λ ; βq+ , βq− ) := ζ (1 − λ , βq+ ) + ζ (1 − λ , βq− ).
+
+(55)
+
+(54)
+
+Proof sketch. This is Navot’s extension of Euler–
+Maclaurin to an algebraic branch point [16]: the regularised difference between the shifted power sum
+∑ j≥0 ( j + β )λ −1 and its integral is the Hurwitz value
+
+Corollary 8.6 (BGK is the crack rung). For a crack
+αq = 2π, λqℓ = ℓ/2 and the vertex channel runs over the
+18
+
+sym. (+, +): µ+ = τ tanh ατ
+2
+α
+
+antisym. (+, −): µ− = τ coth ατ
+2
+poles ⇒ exponents λ = ℓπ/α
+
+(sym. odd ℓ, antisym. even ℓ)
+corner of angle α
+
+α = 2π: λ = ℓ/2
+λ
+3
+5
+2
+
+ζ (− 32 )
+
+2
+3
+2
+
+ζ (− 12 )
+
+1
+
+τ
+cosh ατ −1 
+−1 cosh ατ
+sinh ατ
+−1 = face coupling
+
+Λαc (τ) =
+
+1
+2
+
+ζ ( 21 )
+BGK ladder regular
+
+Figure 4. The corner symbol and its two channels (Proposition 8.2). Left: a vertex of opening angle α; the Dirichlet-to-Neumann
+symbol is the wedge Mellin matrix Λαc (τ), whose off-diagonal −1 is the irreducible coupling of the two incident faces. Centre:
+it diagonalizes into a symmetric channel µ+ = τ tanh(ατ/2) (faces in phase) and an antisymmetric channel µ− = τ coth(ατ/2)
+(out of phase); their poles are the Kondrat’ev exponents ℓπ/α, split by parity. Right: at the crack α = 2π the symmetric channel
+carries the half-integers 12 , 32 , 25 , the BGK ladder ζ ( 21 ), ζ (− 12 ), ζ (− 32 ) of Corollary 8.6, while the antisymmetric channel carries
+the regular integers.
+
+where ( 12 )k = 21 · 32 · · · 2k−1
+2 is the rising factorial, so the
+3 5
+weights 2, 1, 4 , 8 , · · · = 2( 21 )k /k! are exactly the Taylor
+−1/2 . The head
+coefficients of the BGK barrier tilt (1 − u)√
+is again the BGK constant β = −ζ ( 12 )/ 2π. Identity
+(58) was verified against the exact finite sums to 12 digits
+through k = 4 (out to n = 2.56 × 104 , 50-digit arithmetic),
+
+and the half-shifted syndrome 12 Yn (s) − Y0 (s) → ζ (s)
+across the strip. Thus the crack rungs of Corollary 8.6
+(local, at orders hℓ−1/2 ) and the spectral-trace rungs (58)
+(global, at orders n−ℓ ) are two faces of one arithmetic: the
+negative half-integer values of ζ are the endpoint defect
+of sampling the Q-spectrum on the cyclotomic circle
+Z/nZ.
+
+half-integer ladder; its leading rungs carry the weights
+ζ ( 12 ) = −1.4603545,
+
+ζ (− 12 ) = −0.2078862,
+
+ζ (− 23 ) = −0.0254852, . . . ,
+
+(57)
+
+at orders h1/2 , h3/2 , h5/2 . The
+√ leading rung is the BGK
+constant [6]: β = −ζ ( 12 )/ 2π is (53) at λ = 12 with a
+node on the vertex. For a general angle the half-integers
+deform to ℓπ/αq and the weights to ζ (1 − ℓπ/αq , β ); e.g.
+a re-entrant L-corner α = 3π/2 has leading exponent
+λ = 2/3 and weight ζ ( 13 ) = −0.9733602.
+Remark 8.7 (The crack ladder is the global spectral defect of Q, with closed-form weights). The same halfinteger ζ -ladder has a second, independent source in the
+global spectrum of Q, which pins the rung coefficients
+in closed form. Write the normalized spectral sum and its
+continuum bulk
+
+Thus the BGK ζ -ladder is not an analogy to the corner expansion: it is the corner channel at α = 2π. More
+precisely, by Proposition 8.2 the crack’s half-integer exponents {(2k−1)/2} are the poles of the symmetric (tanh)
+channel, so the singular crack rungs ζ ( 12 ), ζ (− 12 ), . . . are
+−s n−1 
+−s
+n−1 
+the quadrature defects of that one channel, the antisym1−s
+Yn (s) = ∑ 2n λm
+= ∑ m(n−m)
+,
+Y
+(s)
+=
+n
+B(1−s,
+0
+metric1−s),
+(coth) channel carrying the regular integer pown
+m=1
+m=1
+ers. The endpoint constant supplies the defect weight but
+never the exponent; a generic corner needs the Kondrat’ev
+with λm = m(n − m)/2 the exact eigenvalues of Qn (Theexponent to fix which Hurwitz value applies. The smooth
+orem 3.2) and B the Beta function. The defect Yn − Y0
+profile M and the corner profile Z(λ ; β + , β − ) are the
+is the analytic continuation of the spectral zeta of Qn ;
+same Poisson/Mellin computation with a smooth versus
+Euler–Maclaurin at the two endpoints m → 0, n gives, at
+1
+an algebraic summand.
+the crack value s = , the closed-form ladder
+2
+
+Remark 8.8 (The discrete-to-continuum DtN adjustment
+1
+1
+5
+
+2
+(
+)
+ζ
+(−
+)
+ζ (− 3 ) 5 ζ (−
+3
+k
+The2 )crack
+2
+Yn ( 12 )−Y0 ( 21 ) = ∑ 2 ζ 12 −k n−k = 2ζ ( 21 )+
++ is one2 2ladder).
++
++· · ·rung
+, sits in a single transcenden3
+n
+4tal n
+ladder 8
+carriedn by the spectrum. Rescaling the eigenvalk≥0 k!
+(58)
+ues to the continuum symbol, 2n λm = |m|(1 − |m|/n), so
+19
+
+2
+2
+n λm − |m| = −m /n exactly; the operator’s spectral zeta
+n−1 2
+sum Sn (s) = ∑k=1 ( n λk )−s = ∑k (k(n − k)/n)−s splits, un-
+
+is the sampling/BGK ladder ζ (m + 21 ), the discrete-tocontinuum DtN adjustment to all orders, ζ ( 12 ) at the
+lead; read at the even integers s = 2m, where the counterterm has a pole, the residues are the geometry ladder
+2ζ (2m) ∈ π 2m Q, the Bernoulli/Sobolev corrections. The
+orthogonality of Remark 8.9 is then exactly that a boundary value and a pole residue of the same Tn never coincide.
+
+der one Beta counter-term B(a, b) = Γ(a)Γ(b)/Γ(a + b),
+as
+Tn (s) := Sn (s) − n1−s B(1 − s, 1 − s) −→ 2ζ (s), (59)
+on s ∈ C \ {1}, by an Euler–Maclaurin bulk/boundary
+split: the two reflection-paired edges (λk = λn−k ) each
+emit one Hurwitz endpoint defect ζ (s), the interior is a
+Riemann sum for B. Read along the half-integers s =
+m + 21 , Tn returns the BGK series ζ (m + 12 ), the discreteto-continuum adjustment of the DtN operator, of which
+Corollary 8.6 is the leading s = 21 rung; read at the even
+integers s = 2m, where the counter-term is polar, it returns
+2ζ (2m) ∈ π 2m Q as residues, the Bernoulli/Sobolev corrections of the polygonal discretization. The half-integer
+(sampling) and even-integer (geometry) sectors of Remark 8.9 are thus the two ways of reading the one dial
+−s.
+
+Remark 8.11 (A fourth tropical barrier). In the tropical
+envelope of Corollary 7.4 the vertex channel adds the
+barrier Bvtx = λmin log(1/h) + O(1), λmin = minq,ℓ λqℓ . It
+is algebraic in 1/h, hence asymptotically smaller than the
+smooth bulk barrier n log ρcoll : near a re-entrant corner
+(λmin < 1) the vertex channel dominates and caps global
+accuracy at O(hλmin ) until corrected, the precise, quantitative form of the classical statement that re-entrant corners
+destroy spectral convergence.
+8.3. Restored-order convergence
+The barrier of Remark 8.11 is exactly what the vertex
+correction removes. Subtracting the rungs below a chosen
+order lifts the convergence rate from the corner-limited
+λmin to the regularity of what remains.
+
+Remark 8.9 (What the sampling defect can and cannot
+supply). One may ask whether the BGK ladder alone,
+applied to Qn , already delivers the corner Dirichlet-toNeumann operator. It does not, for a structural reason.
+The BGK weights are a sampling defect: they refine
+Qn toward its own continuum limit π|∂ | as h → 0. A
+corner does not perturb that limit by a sampling artifact,
+it changes the continuum operator itself, the symbol of
+ΛΓ ceasing to be |ξ | and the Steklov spectrum clustering
+near π/2α, a geometry effect (local chord and curvature
+data) generated by a different mechanism and sharing
+no rung with the half-integer sampling family. What
+the sampling sector does supply is exactly what nearsingular evaluation needs: the trapezoidal defect of the
+singular density (Theorem 8.5), in which geometry fixes
+the exponent λqℓ and the weight ζ (1 − λqℓ , β ) converts
+it to a correction. The corner DtN operator is a separate
+object, now explicit as the wedge matrix (51), and what
+a sampling correction cannot supply is its off-diagonal
+face coupling, the diagonal channels µ± being the wedge
+analogue of |ξ |; that coupling is not required for the
+quadrature problem here.
+
+Theorem 8.12 (Corner convergence; restored order). Let
+Γ be piecewise C3 with vertices vq of angles αq , let σ
+admit the Kondrat’ev expansion (50) with regular part
+σreg ∈ H s (Γ), s > 1, and let the vertex channel Envtx be
+formed from the exponents λqℓ < Λ with their amplitudes
+extracted. Then the corrected near-singular error Encorr :=
+En − Envtx satisfies, for a target at distance δ > 0,
+
+
+Encorr (x) ≤ CΓ n− min(s,Λ) + Enloc (x) ,
+(60)
+with CΓ independent of δ and Enloc the smooth local channel (the δ -uniform M saturation). The algebraic order
+in n is thus min(s, Λ), against the uncorrected order
+λmin = minq π/αq , which is < 1 at a re-entrant corner.
+Correcting the leading m rungs at each vertex raises the
+order from λq,1 to λq,m+1 ; admitting all exponents below
+Λ restores it to that of the regular part, recovering, term
+by term, the rate the smooth analysis of Theorem 7.3
+delivers on a corner-free curve.
+
+Remark 8.10 (One dial for both ladders). The two sectors share a single generator. Writing 2n λk = k(n − k)/n
+for the rescaled DtN spectrum, the spectral sum Sn (s) =
+∑k ( 2n λk )−s minus one Beta counter-term obeys
+
+Proof. By linearity of the trapezoidal error, split σ =
+σreg + ∑λqℓ <Λ cqℓ rλqℓ −1 ψqℓ + RΛ as in (50). The subtracted channel Envtx removes the middle sum to leading order (Lemma 8.3, Theorem 8.5). The truncation
+RΛ = O(rΛ−1 ) at each vertex has trapezoidal defect
+O(n−Λ ) by Lemma 8.3 at exponent Λ. The regular
+part σreg ∈ H s enters through the bulk and remainder
+
+Tn (s) := Sn (s) − n1−s B(1 − s, 1 − s) −→ 2ζ (s),
+on s ∈ C \ {1}, with leading rescaling defect 2n λm − |m| =
+−m2 /n. Read along the half-integer line s = m + 12 , this
+20
+
+channels of Theorem 7.3: its bulk channel is the periodic aliasing sum ∑ j̸=0 fbjn , bounded by Cn−s ∥σreg ∥H s for
+s > 1 since | fbk | ≤ ∥σreg ∥H s |k|−s , and its local channel
+is the δ -uniform Enloc . Summing the three contributions
+gives (60).
+
+fractional in u unless α/π is rational with small denominator (the crack’s α/π = 2 keeps both ladders smooth),
+and the non-uniform nodes break the global FFT, so the
+chart belongs in the O(1)-node corner stencil, upgrading the local correction from defect subtraction to direct
+high-order integration at the same cost, the global solve
+staying uniform.
+
+This closes the smoothness assumption as a convergence statement: corners no longer cap the order, which
+is set by the correction level Λ and the Sobolev regularity
+of the regular density. Open are the optimality of the rate
+and the near-vertex off-curve regime of Remark 8.4.
+
+Remark 8.15 (Three readings of the inverse square root).
+The weight (p(1 − p))−1/2 is, at once, the arcsine spectral
+2
+measure of Qn (λm = n2 p(1 − p)), the Gauss–Chebyshev
+weight whose chart annihilates the edge singularity (61),
+and the Jacobian of the branch-angle chart. The crack is
+their fixed point: its geometry exponent π/α = 12 equals
+the operator’s intrinsic arcsine exponent, the coincidence
+that seats ζ ( 12 ) at the leading rung, so there the chart that
+flattens the geometry diagonalizes the operator, which is
+why the crack is the one corner the fast calculus resolves
+without loss.
+
+8.4. The arcsine chart and the slit
+The vertex channel subtracts the singularity on the uniform grid; an alternative is to remove it by re-charting. For
+one opening angle this is strictly better, because the chart
+that flattens the singularity is the one that diagonalizes
+the operator.
+Proposition 8.13 (Slit: the arcsine chart is spectral and
+transform-preserving). Let Γ be the segment [−1, 1] (a slit,
+the crack α = 2π), and let the single-layer density carry
+its canonical edge behaviour σ (x) = ρ(x)(1 − x2 )−1/2
+with ρ analytic, the α = 2π Kondrat’ev ladder {ℓ/2}.
+Under the arcsine (Chebyshev/Joukowski) chart x = cos θ
+the edge weight cancels the Jacobian dx = − sin θ dθ ,
+σ (x) dx = −ρ(cos θ ) dθ ,
+
+8.5. Deterministic amplitude extraction and cost
+The exponents λqℓ and profiles ψqℓ are computed from αq
+before any solve. The amplitudes cqℓ are then extracted,
+not fit: projecting Bh σ near vq against the known ψqℓ
+over a graded radial stencil recovers them by a small
+least-squares solve (ridge calibration is available only
+as an amortisation fallback, since the coefficients are
+computable). The corrected reconstruction is ubh = Bh σ −
+Envtx , at cost O(Q m s) for Q corners, m exponents, and
+an s = O(1) stencil, negligible against the arcwise FFT
+solve.
+
+(61)
+
+so the integrand is a smooth 2π-periodic even function
+of θ . Equispaced trapezoidal quadrature in θ then (i)
+converges at the spectral rate for analytic data [24] and
+(ii) is a discrete cosine transform, evaluated in O(n log n)
+by FFT [7]. The slit is handled with no loss of the fast
+transform, and the Schwarz–Christoffel direction of Remark 8.16 holds, as a theorem, in the crack case.
+
+Remark 8.16 (What is proved, assumed, and
+open). Proved/classical: the singular expansion (50)
+(Kondrat’ev–Grisvard), the endpoint defect (53) (Navot,
+here re-verified), their assembly (55) under the linearity
+used for the smooth bridge, and the restored-order convergence bound (60). Assumed: piecewise C3 arcs and
+simple, separated corner exponents (coincident exponents
+merge rungs and introduce log factors, as in Remark 8.4),
+and a regular density in H s , s > 1. Open: the optimality
+of (60), a minimax lower bound at the same order, and
+the near-vertex off-curve evaluation, where the confluent
+log/ζ ′ regime of Remark 8.4 meets the moving target and
+which remains hard in the wider literature. The distinction
+of Remark 8.9 is the governing one: the exponents used
+here are those of the density (Proposition 8.1) and the
+correction lives in the sampling sector, whereas the identification Q = πΛΓ + K0 through a corner is carried by the
+explicit wedge symbol (51), whose two channels µ± have
+the Steklov-corner clustering near π/2α [13]; what no
+
+Proof. With x = cos θ , dx = −(1 − x2 )1/2 dθ , giving (61).
+The higher rungs rℓ/2−1 at a tip are the Chebyshev structures (1 − x2 )−1/2 Tk (x), mapping to the modes cos kθ ;
+with analytic ρ the integrand is smooth even periodic.
+For an off-arc target the kernel is analytic in θ except at
+the complex preimage of x0 , contributing the bulk and
+local channels of Theorem 7.3 unchanged. The periodic
+trapezoidal rule on a smooth periodic integrand is spectral,
+and on a cosine basis it is the DCT.
+Remark 8.14 (Graded chart for a general wedge). For a
+vertex of angle α ̸= 2π the local chart r = uα/π sends the
+ladder {ℓπ/α} to integer powers uℓ−1 , smoothing the singular part (r = u1/λ turns the plain O(hλ ) edge rate into
+the base-rule order). But the regular density σreg (uα/π ) is
+21
+
+9.4. Validation on non-circular curves
+
+sampling correction supplies is its off-diagonal coupling,
+and the full coupled-channel quadrature defect remains
+open. The conjecture that the Schwarz–Christoffel pullback absorbs the vertex factors | · |α/π−1 into a diagonalin-FFT weight, retaining near-FFT speed through the
+corner, is a theorem in the crack case (Proposition 8.13:
+the arcsine chart is a DCT) and a direction for general
+angles, where the chart no longer matches the uniform
+transform.
+
+The bridge decomposition holds on any C3
+curve.
+We measure the trapezoidal-rule error at n = 4096 on a perturbed ellipse γ1 (t) =
+(1.5 cost + 0.1 cos 3t, sint + 0.1 sin 3t) and a smoothed
+cardioid γ2 (t) = ((1 + 0.3 cost) cost, (1 + 0.3 cost) sint),
+density σ (t) = cos 2t + 12 sint, reference in 50-digit
+mpmath. Figure 5 shows why the difficulty is intrinsic to
+the boundary: the point-coercivity field
+R
+Q(x) = Γ |x − y|−2 ds spikes on Γ regardless of shape,
+and the conformal-pullback nodes (cyan) cluster where
+the field is sharpest. Table 5 confirms the pattern across
+geometries: fp64 floor for nδ ≫ 1, sharp rise at nδ ≈ 1,
+and a δ -independent saturation tracking Q(x)−1/2 up to a
+curve-specific prefactor.
+
+9. Benchmarks
+All experiments use a single-thread fp64 reference implementation; exact reference values are computed in
+50-digit mpmath.
+9.1. Near-singular accuracy: the central comparison
+We evaluate I(z) = S1 cos θ log |z − eiθ | dθ at z = (1 +
+δ )ei·0.7 , δ ∈ [10−6 , 10−1 ], n = 4096, against the closed
+form −π cos(0.7)/(1 + δ ), at equal per-evaluation cost.
+Table 2 compares the periodic trapezoidal rule, global
+Gauss–Legendre, and the spectral Q-primitive. Both
+classical rules track the nδ ∼ 1 crossover and saturate
+near 1.7–2.6 × 10−4 , the Bernstein-ellipse pinch of §2.3,
+which a higher-order rule cannot escape, while the spectral primitive holds the fp64 floor uniformly in δ .
+R
+
+[ shape_difficulty ]
+(local figure placeholder)
+
+9.2. Gulati-operator conditioning and conservation
+Figure 5. The near-singular difficulty is a property of the
+boundary, not the rule. Heatmap of log10 Q(x), Q(x) =
+R
+−2
+Γ |x−y| ds(y), for the two benchmark curves, with the white
+boundary and 40 conformal-pullback nodes (cyan). The field
+diverges as the target approaches Γ from either side, the mechanism the Q-rule absorbs into a closed-form modal sum.
+
+Table 3 compares cond(W RCL |1⊥ ) against a reference
+Maué-regularized Galerkin assembly on a perturbed
+ellipse, confirming Theorem 7.6: the Gulati operator
+achieves the O(n) scaling and exact null-flux at machine
+epsilon, while Maué grows as O(n3 ) and carries a flux
+error ∼ 10−7 .
+
+9.5. Defect cancellation removes the local channel
+9.3. The local profile is exact; the tropical envelope
+holds
+
+Proposition 7.5 predicts that a single-mode density
+σk0 (θ ) = eik0 θ with |k0 | < n/2 has its leading local channel annihilated by the trapezoidal defect, so the surviving
+error is the first alias at |k| = n − |k0 |, decaying at the
+analytic-collar bulk rate rather than the mesh-resolution
+local rate. Table 6 confirms this at δ = 0.1, θ0 = 0:
+the measured error tracks the predicted alias amplitude
+(1 + δ )−(n−k0 ) /(2(n − k0 )), while the “local rate” column
+|M|/n, what the error would be without cancellation, is
+orders of magnitude larger. As k0 → n/2 the alias rate approaches the minimax-optimal e−(n/2) log(1+δ ) /n. This is
+the operational realization of the defect-projection mechanism: the surviving Fourier barrier is the quadrature
+invariant.
+
+Two checks validate the bridge decomposition directly.
+First, on S1 with constant density the trapezoidal error
+is exactly En = 1n M(ρcirc , βcirc ); in 50-digit arithmetic
+across n ∈ {16, . . . , 256}, δ ∈ {0.05, . . . , 0.5} the direct
+error matches the closed-form profile to a maximum relative error of 2.5 × 10−26 (the truncation floor for the
+exponentially small predicted values), spanning ten orders of magnitude in En . Second, for the analytic
+√ density
+σ (θ ) = 1/(1 − 0.5 cos θ ) (collar ρcoll = 2 + 3), Table 4
+confirms the tropical envelope (46): the local barrier dominates and − log |En | matches Bloc to O(1), the residual
+being the next-order e−4πρ term in the M expansion.
+22
+
+Table 2. Near-singular evaluation, n = 4096. The trapezoidal rule and global Gauss–Legendre both degrade at the crossover
+nδ ∼ 1 and saturate near the boundary (the Bernstein pinch, §2.3); the spectral primitive is δ -uniform at the fp64 floor.
+δ
+
+nδ
+
+10−1
+10−2
+10−3
+10−4
+10−5
+10−6
+
+409.60
+40.96
+4.10
+0.41
+0.04
+0.004
+
+trapezoidal
+
+Gauss–Legendre
+
+spectral-Q
+
+0
+
+1.9 × 10−14
+9.3 × 10−16
+1.5 × 10−7
+9.0 × 10−5
+1.6 × 10−4
+1.7 × 10−4
+
+2.0 × 10−16
+1.9 × 10−16
+1.9 × 10−16
+1.9 × 10−16
+1.9 × 10−16
+1.0 × 10−17
+
+1.9 × 10−16
+3.9 × 10−6
+1.8 × 10−4
+2.5 × 10−4
+2.6 × 10−4
+
+Table 3. Conditioning and conservation. Gulati: O(n) scaling, exact null-flux. Maué: O(n3 ) scaling, flux error ∼ 10−7 .
+n
+
+cond(Gulati)
+
+cond(Maué)
+
+∥W RCL 1∥∞
+
+∥W Maué 1∥∞
+
+32
+64
+128
+256
+512
+
+8.3
+16.3
+32.3
+64.3
+128.3
+
+1.2 × 103
+9.8 × 103
+7.9 × 104
+6.3 × 105
+5.1 × 106
+
+4.4 × 10−17
+2.2 × 10−16
+4.4 × 10−16
+8.9 × 10−16
+1.8 × 10−15
+
+,
+3.7 × 10−8
+1.5 × 10−7
+6.1 × 10−7
+,
+
+9.6. Application: Riemann quadrature from delta
+quotes and the discrete-monitoring channel
+
+barrier interval; the zero-fit BGK/zeta prediction is the
+continuously monitored price on the inward-shifted band
+
+The corner/crack channel of §8 is not only a quadrature
+phenomenon; its leading
+√ rung, the half-order endpoint
+constant β = −ζ ( 12 )/ 2π of Corollary 8.6, is a predictive object in a setting where the boundary is a barrier
+and the density is a transition kernel. We give the numerical evidence first; it uses only standard SDE quantities
+(Brownian motion, hitting times, survival probabilities,
+discounted payoffs), and the comparison is between path
+enumeration and the direct application of the killed transition operator.
+
+√
+√ 
+VbM = V∞ Le−β σ ∆ , Ue+β σ ∆ ,
+
+ζ (1/2)
+T
+β =− √
+, ∆= M
+,
+2π
+(62)
+disc
+no parameter estimated from VM . For the base contract
+(S, K, T, r, σ , L,U) = (100, 100, 0.5, 0.05, 0.30, 80, 130)
+the continuous unshifted price is V∞ = 2.77379812;
+the discrete targets are computed by Gauss–Legendre
+transition-kernel products (changing 220 → 700 nodes
+moves them by < 3.1 × 10−5 ). Table 7 shows the zeta
+predictor tracking the discrete price with the error reduction
+√ growing from 3.5× to 34.7× as ∆ = T /M → 0, the
+∆ boundary-layer scaling of the crack rung.
+
+The branch-free delta surface. Quotes arrive as deltas,
+not prices. Reading z = −d1 as a signed delta coordinate
+and pulling the implied-volatility surface back through
+it gives a smooth surface on which total variance is the
+branch-free object, the same branch-free Hessian structure as Q, here in the quote geometry rather than the
+chord geometry. Figure 6 shows a surface fit from real
+delta quotes (left) and the corresponding total variance
+on the branch-free delta surface (right); the fit interpolates the quotes and is monotone in tenor, the no-arbitrage
+condition.
+
+Held-out synthetic and real-market tests. On two
+barrier holdouts, a tight band [85, 120] and a wide band
+[70, 150], over the same seven monitoring frequencies
+(21 held-out rows), the uncorrected continuous price has
+mean absolute error 0.6061 and the zeta predictor 0.1062,
+a 5.71× reduction; RMSE falls from 0.7060 to 0.1585,
+a 4.45× reduction. The same mechanism runs on real
+paths without option marks: 4,319 Coinbase BTC–USD
+one-minute candles (May 2026),
+√ rolling 240-minute windows, barriers S0 exp{±mσ 240}, m ∈ {1, 1.25, 1.5, 2},
+coarse monitoring every 5/15/30/60 minutes, and the
+inward zeta-shifted band as predictor. Across 16 configurations and 396 windows each, the zeta shift reduces
+mean survival-rate error from 0.1244 to 0.0508 (2.45×),
+
+The zeta correction is predictive. For M equally
+spaced monitoring dates the deterministic target is the
+operator product VMdisc = e−rT (K∆M g)(0), with K∆ the unconstrained lognormal transition kernel on the double23
+
+Table 4. Tropical envelope on S1 , σ (θ ) = 1/(1 − 0.5 cos θ ), node-aligned θ0 = 0. In every row Bloc < Bbulk , so the local channel
+dominates and − log |En | tracks Bloc to within |gap| < 0.4.
+n
+
+δ
+
+ρcirc
+
+Bbulk
+
+Bloc
+
+− log |En |
+
+32
+32
+32
+64
+64
+128
+128
+256
+
+0.05
+0.20
+0.50
+0.05
+0.20
+0.05
+0.20
+0.05
+
+0.248
+0.929
+2.065
+0.497
+1.857
+0.994
+3.714
+1.988
+
+42.14
+42.14
+42.14
+84.29
+84.29
+168.57
+168.57
+337.14
+
+4.218
+8.605
+15.747
+6.566
+15.134
+10.403
+27.496
+17.342
+
+4.215
+8.582
+15.645
+6.564
+15.114
+10.401
+27.478
+17.341
+
+Table 5. Trapezoidal-rule error on non-circular curves, n = 4096. The near-singular crossover nδ ≈ 1 matches S1 ; the small-δ
+saturation tracks the Q(x)−1/2 prefactor up to a curve-specific constant.
+perturbed ellipse
+
+smoothed cardioid
+
+δ
+
+Q(x)−1/2
+
+rel. err
+
+Q(x)−1/2
+
+rel. err
+
+10−1
+
+2.55 × 10−1
+
+< 10−15
+
+3.28 × 10−1
+
+10−2
+
+8.02 × 10−2
+
+1.6 × 10−5
+
+1.07 × 10−1
+
+10−3
+10−4
+10−5
+10−6
+
+2.97 × 10−2
+2.75 × 10−2
+2.75 × 10−2
+2.75 × 10−2
+
+4.4 × 10−4
+8.5 × 10−5
+7.7 × 10−5
+7.7 × 10−5
+
+3.77 × 10−2
+3.48 × 10−2
+3.48 × 10−2
+3.48 × 10−2
+
+< 10−15
+8.5 × 10−5
+2.0 × 10−3
+1.3 × 10−3
+1.2 × 10−3
+1.2 × 10−3
+
+10. The spectrum as a shape fingerprint
+
+Brier error to 0.0729 (1.71×), and false-survival bias to
+0.0619 (2.01×): coarse monitoring misses boundary hits,
+and the zeta boundary layer predicts the direction and
+scale of the miss. The crack rung of the corner channel is
+thus the same constant whether the boundary is a polygon
+vertex or a knock-out barrier.
+
+10.1. Real spectrum: the integer ladder deforms with
+the shape
+The closed-form spectrum λm (Qn ) = m(n − m)/2 (Theorem 3.2) is exact only on the regular n-gon, where the
+rescaled eigenvalues 2n λm → |m| recover the circle symbol. On any other curve the same construction (arclengthsample Γ, form Qn from pairwise chords) returns a spectrum that deforms from this ladder in a shape-specific way,
+so the spectrum fingerprints the geometry: the projective
+eigenvalue ratios encode the shape class, the absolute
+scale its size, and (λ1 , D2 λ1 ) can in principle reconstruct
+Γ. Figure 7 shows four curves at n = 80: the circle sits
+on the exact ladder, the ellipse compresses it, the flower
+and square spread it by their symmetry.
+
+9.7. Cost and conservation
+The FFT calculus realizes the predicted O(n log n) scaling: per-application wall time for v 7→ Qn v is stable
+in t/(n log2 n) across four decades of n (e.g. 0.83 ms
+at n = 214 , 130 ms at n = 220 ). The boundary solve
+Qn u = f on 1⊥ via ϕ(λ ) = λ −1 has spectral-domain error exactly zero (each Fourier coefficient divided by an
+exact eigenvalue) and physical-domain residual at FFT
+round-off (∼ 4×10−19 at n = 220 , 200 ms). The conservation ∥Qn 1∥∞ = 0 is exact, not machine epsilon, reflecting
+λ0 = 0 in exact arithmetic. A dense Cholesky factorization at n = 220 would require ∼ 8.8 TB and O(n3 ) ∼ 1018
+flops; the matrix is never formed.
+
+10.2. The holomorphic diagonal: a rigidity selecting
+the pentagon
+The operator of this paper is the Hermitian inversesquare diagonal (Qn )ii = ∑ j̸=i |ri − r j |−2 . Its holomorphic (signed) counterpart, the same kernel before the
+(i)
+modulus σ2 = ∑ j̸=i (ri − r j )−2 , carries a rigidity that singles out one shape; it plays no role in the quadrature
+analysis above and we record it only as a coda on the
+24
+
+Table 6. Defect cancellation by Fourier-mode annihilation, σk0 = eik0 θ , δ = 0.1, θ0 = 0. The trapezoidal defect annihilates mode
+k0 ; the surviving error sits at the first alias |k| = n − k0 at the bulk rate, far below the local rate |M|/n that would apply without
+cancellation.
+n
+32
+32
+64
+64
+64
+128
+128
+128
+
+k0
+
+|En [σk0 ]|
+
+predicted alias
+
+local rate |M|/n
+
+1
+15
+1
+16
+31
+1
+32
+63
+
+1.53 × 10−3
+
+8.40 × 10−4
+
+6.04 × 10−3
+
+5.82 × 10−3
+
+3.53 × 10−5
+1.11 × 10−4
+6.53 × 10−4
+3.95 × 10−8
+5.54 × 10−7
+1.57 × 10−5
+
+1.96 × 10−5
+1.07 × 10−4
+6.52 × 10−4
+2.18 × 10−8
+5.53 × 10−7
+1.57 × 10−5
+
+1.52 × 10−3
+1.52 × 10−3
+3.51 × 10−5
+3.51 × 10−5
+3.51 × 10−5
+3.93 × 10−8
+3.93 × 10−8
+3.93 × 10−8
+
+Table 7. The half-order (ζ (1/2)) crack rung as a discrete-monitoring predictor. VMdisc is the operator-product double-barrier price
+at M monitoring dates; V∞ = 2.77379812 is the continuous price; VbM is the zero-fit zeta predictor (62). The uncorrected error
+|V∞ −VMdisc | is reduced to |VbM −VMdisc | with the displayed factor.
+M
+
+VMdisc
+
+|V∞ −VMdisc |
+
+VbM
+
+|VbM −VMdisc |
+
+error reduction
+
+4
+8
+12
+26
+52
+126
+252
+
+4.23306773
+3.89820139
+3.72485480
+3.45131811
+3.26624027
+3.09732867
+3.00516506
+
+1.45926961
+1.12440327
+0.95105668
+0.67751999
+0.49244216
+0.32353055
+0.23136694
+
+4.64953060
+4.10961045
+3.86637993
+3.51669047
+3.29884084
+3.11072271
+3.01183708
+
+0.41646287
+0.21140906
+0.14152513
+0.06537236
+0.03260057
+0.01339404
+0.00667203
+
+3.50×
+5.32×
+6.72×
+10.36×
+15.11×
+24.15×
+34.68×
+
+forced log-discriminant Hessian of §4. On the regular
+2
+n-gon the two diagonals are (Qn )ii = n 12−1 ri−2 > 0 and
+
+In the language of §4, the pentagon is the unique fivenode configuration on which the holomorphic chord operator is row-harmonic, every diagonal entry vanishing,
+whereas the Hermitian (Qn )ii = (n2 − 1)/12 that drives
+the quadrature calculus never does. The one forced kernel
+produces both the near-singular bridge and, on its signed
+diagonal, a finite rigidity selecting n = 5.
+
+(i)
+
+σ2 = − (n−1)(n−5)
+ri−2 : the Hermitian one strictly posi12
+tive, the holomorphic one passing through zero at a single
+n.
+Proposition 10.1 (Pentagonal rigidity). Among regular
+(i)
+n-gons (n ≥ 2) the holomorphic diagonal σ2 vanishes
+at every node only for n = 5; and five distinct points
+(i)
+r1 , . . . , r5 ∈ C satisfy σ2 = 0 at every node if and only if
+they form a regular pentagon, up to a complex similarity.
+
+10.3. From the integer ladder to a complex spectrum
+The real fingerprint of §10 has a continuum counterpart
+that makes the discrete-to-continuous limit explicit. Map
+the circle by the Joukowski coordinate w 7→ 12 (w + w−1 ):
+the image of |w| = eµ is the ellipse of semi-axes cosh µ :
+sinh µ, with Dirichlet-to-Neumann operator diagonal in
+the elliptic harmonics,
+
+Proof sketch. With P = ∏i (z − ri ) the master relation
+(i)
+gives, at a simple root, σ2 = −H[P](ri )/(12P′ (ri )2 ),
+where H[P] = 4P′ P′′′ − 3(P′′ )2 . The coefficient of z2n−4
+in H[P] is n2 (n − 1)(n − 5), so at n = 5 the leading term
+cancels and deg H[P] drops below the five nodes (to ≤ 4);
+a degree ≤ 4 polynomial vanishing at five distinct points
+is identically zero. Identical vanishing of H[P], the Hessian covariant of the quartic g = P′ , forces, by the perfectpower theorem, g = 5(z − b)4 , hence P = (z − b)5 +C: a
+(i)
+regular pentagon. The n-gon value is σ2 = −(P′ /P)′ (1)
+on the cyclotomic P = (zn − 1)/(z − 1).
+
+(c)
+
+(s)
+
+(c) (s)
+
+λn λn = n2 .
+(63)
+As µ → 0 both channels return the circle value n, so the
+integer ladder is the µ = 0 limit; for µ > 0 they split symmetrically about it, cosine modes below and sine modes
+above, with the product pinned at n2 . The discrete Q on
+arclength-sampled nodes reproduces this splitting, so the
+ellipse fingerprint is the integer ladder pulled apart by
+λn = n tanh(nµ),
+
+25
+
+λn = n coth(nµ),
+
+Figure 6. Riemann quadrature from delta quotes. Left: an implied-volatility surface pulled back from real delta quotes through
+the signed delta coordinate z = −d1 . Right: the total variance on the branch-free delta surface; total variance is the branch-free
+invariant, monotone in tenor (the calendar no-arbitrage condition). Black dots are the delta quotes.
+
+become
+(c)
+
+λn = i n tan(nν),
+
+(s)
+
+λn = −i n cot(nν),
+
+(64)
+
+genuinely complex: pure imaginary, with resonances
+where tan, cot blow up. The regular polygons sit at
+the pure-phase locus and keep the integer spectrum
+m(n − m)/2, while the complex spectrum is the analytic
+continuation of those same eigenvalues across the discriminant switch, real on hyperbolic shapes and complex
+on rotational ones. The values reproduce directly: assemble Q from the pairwise chords of a sampled curve and
+diagonalize; for the rotational family the eigenvalues are
+the {i n tan(nν)} of (64).
+
+[ spectrum_shapes ]
+(local figure placeholder)
+
+Figure 7. Sorted spectrum of the discrete operator Qn (n = 80)
+for four curves, rescaled by 2/n to the continuum normalization.
+The circle lands on the exact integer ladder λm = m(n − m)/2;
+the ellipse, three-petal flower, and square deform it distinctly.
+The spectrum is a shape fingerprint.
+
+11. Transcendental–rational separation and certified
+evaluation
+The spectral primitive of §5.3 evaluates the layer potential
+as a finite modal series whose coefficients are holonomic
+(P-recursive) rationals. This has a consequence for the
+arithmetic of the evaluation, not only its rate. Writing the
+computed value (a near-singular quadrature value, or a
+period such as π) as
+
+the conformal modulus.
+The golden ellipse µ = 2 log ϕ,
+√
+of semi-axes 3 : 5 with sech µ = 23 , is the self-similar
+point where the involution ρ 7→ − log(1 − e−ρ ) has its
+fixed point, and serves as the canonical worked example.
+Remark 10.2 (The complex spectrum is the rotational
+continuation). Formula (63) is real because µ is real (a
+genuine ellipse, the hyperbolic ∆ > 0 branch of the conic
+discriminant). Continued to the rotational regime µ =
+iν, the inert ∆ < 0 branch, the same modal eigenvalues
+
+Π=
+
+T
+,
+D
+
+D ∈ Q exact,
+
+T = n=O(1) transcendental evaluatio
+(65)
+the transcendental content sits entirely in T , a fixed,
+target-independent number of high-precision radical or
+26
+
+By the spectral theorem detF (I − uTµ ) = ∏ j (1 − uσ j )
+over eigenvalues with multiplicity, giving ∏n≥1 (1 −
+ue−2µn )2 , and inverting gives the product. Expanding
+− log(1 − x) = ∑k xk /k on each factor and summing
+∑n≥1 e−2µkn = (e2µk − 1)−1 gives the logarithm.
+
+special-function evaluations, while everything that grows
+with the demanded accuracy D sits in the exact rational
+D.
+This separation is what makes the error certifiable in
+advance. Let D(M) be the depth-M rational truncation and
+Tb the front-end computed in b-bit float. If D(M) is formed
+b = Tb/D(M) obeys
+exactly, the computed Π
+b −Π ≤
+Π
+
+Π DD(M) − 1
+| {z }
+
+εtr (M)=O(2−(M+1)n )
+
+1
++ D(M)
+Tb − T ,
+| {z }
+
+The product is the partition function of a free boson
+on S1 at inverse temperature µ; the multiplicity two is the
+chiral doubling of left- and right-movers.
+
+(66)
+
+εfe (b)=O(2−b )
+
+Theorem 12.2 (Dedekind eta specialization and S-duality). With q = e−2µ and τ = iµ/π, the regularized dereg
+terminant Dµ := q−1/12 ∏n≥1 (1 − qn )−2 equals η(τ)−2 ,
+where η(τ) = q1/24 ∏n≥1 (1 − qn ) is the Dedekind eta
+function. It inherits the modular laws of η −2 ,
+
+with the cross term exactly zero because D(M) carries no
+rounding. The two terms are independently and a-priori
+bounded, a target accuracy 2−D is met with M = O(D/n)
+and b ≥ D + O(1), and the accuracy-bearing part contributes no error at all. This is the arithmetic counterpart
+of the differentiability of §2: the depth-bearing work
+is exact, fixed-width, and branch-free, the regime parallel hardware rewards. The exact rational D is itself
+a holonomic object, reconstructible from independent
+fixed-width residue channels by the Chinese remainder
+theorem; that realization, and the cross-period batch it
+enables, are developed separately.
+
+reg
+
+Proof. Squaring η = q1/24 ∏(1 − qn ) gives η 2 =
+q1/12 ∏(1 − qn )2 , so q−1/12 ∏(1 − qn )−2 = η −2 . The
+laws follow from η(τ + 1) = eiπ/12 η(τ) and η(−1/τ) =
+√
+−iτ η(τ) applied to η −2 ; with τ = iµ/π the dual
+−1/τ = iπ/µ corresponds to µ ′ = π 2 /µ and (−iτ)−1 =
+π/µ.
+
+The circle operator Q|S1 = π|D| of Theorem 4.5, whose
+discrete avatar is the spectrum λm (Qn ) = m(n − m)/2 of
+Theorem 3.2, carries a modular-form closure that places it
+in the lineage of natural Laplacians on S1 and accounts for
+its recurring contact with the Riemann zeta function. The
+regularized Fredholm determinant of the scale semigroup
+closes in terms of the Dedekind eta function and inherits
+its modular S-duality as a spectral self-duality µ ↔ π 2 /µ.
+The content is self-contained: it uses only the spectrum
+of
+q π|D| on the mean-zero subspace. Throughout, |D| =
+
+Theorem 12.3 (Small-scale asymptotic). As µ → 0+ ,
+π2
+π
+2
+reg
+log Dµ =
+− log + O(e−π /µ ), the leading coeffi6µ
+µ
+cient π 2 /6 = π 2 B2 governed by the second Bernoulli
+number B2 = 1/6, the
+√ subleading term the conformalanomaly factor from −iτ.
+reg
+
+Proof. By Theorem 12.2, log Dµ = −2 log η(τ). Apply η(τ) = (−iτ)−1/2 η(−1/τ) at τ = iµ/π: the
+2
+dual nome q′ = e2πi(−1/τ) = e−2π /µ is exponen1
+tially small, so log η(−1/τ) = 24
+log q′ + ∑n≥1 log(1 −
+2
+q′n ) = −π 2 /(12µ) + O(e−2π /µ ). Hence log η(τ) =
+2
+− 12 log(µ/π)−π 2 /(12µ)+O(e−2π /µ ), and multiplying
+by −2 gives the claim.
+
+−∂θ2 acts on L02 (S1 ) with eigenvalue |m| on eimθ , m ̸= 0,
+each nonzero magnitude of multiplicity two, and the scale
+semigroup is Tµ := e−2µ|D| = e−2µQ/π .
+
+Theorem 12.1 (Trace formula and Fredholm determinant). For every µ > 0 and |u| < 1, Tµ is trace class on
+L02 (S1 ), with Tr(Tµ ) = 2 ∑m≥1 e−2µm = 2/(e2µ − 1), and
+the Fredholm determinant has the product representation
+−1
+
+= ∏ 1−u e−2µn
+n≥1
+
+−2
+
+,
+
+reg
+
+τ 7→ −1/τ : Dπ 2 /µ =
+
+the second a spectral S-duality exchanging the scale µ
+with π 2 /µ, fixed point µ = π.
+
+12. Heat-trace closure: the Dedekind eta determinant
+and modular S-duality
+
+Dµ (u) := detF I −uTµ
+
+reg
+
+τ 7→ τ +1 : Dµ 7→ e−iπ/6 Dµ ,
+
+The quadratic-form identity tying the chord kernel
+itself to π|D| is the continuum integral analogue of
+λm (Qn ) = m(n − m)/2.
+
+uk
+1
+Proposition
+(Parseval–Hadamard identity). For evlog Dµ (u) =
+2 ∑ 12.4
+.
+2µk
+k e f ∈−
+k≥1
+ery
+mean-zero
+H11/2 (S1 ),
+
+Proof. The eigenvalues of Tµ on L02 are {e−2µm }m≥1 ,
+each of multiplicity two; the trace is the geometric sum.
+
+1
+2
+27
+
+( f (θ ) − f (θ ′ ))2
+dθ dθ ′ = π ⟨ f , |D| f ⟩L2 (S1 ) ,
+′
+|eiθ − eiθ |2
+S1 ×S1
+
+ZZ
+
+π reg
+Dµ ,
+µ
+
+the integrand everywhere finite (it tends to f ′ (θ ′ )2 on
+the diagonal). The constant π is exactly the factor in
+Q|S1 = π|D| of Theorem 4.5.
+
+universal diagonal part plus a lower-order geometric correction, the exact analogue of the planar Qz = π|D| +Cz .
+(The discrete inverse-cube chord energy converges to
+this operator; the eigenvalue ratio q2 /q1 → 2 is con′
+Proof. Write f = ∑m̸=0 fˆm eimθ and use |eiθ − eiθ |2 =
+firmed numerically on Fibonacci
+nodes, distinguishing
+p
+4 sin2 (φ /2), φ = θ − θ ′ . Integrating the squared difthe DtN scaling qℓ = ℓ from ℓ(ℓ + 1). The transmission
+ference over the midpoint kills all but the antidiagonal
+variant,
+the finite-part double-normal Newtonian operm′ = −m terms,
+−1 −1
+ator W = (Λ−1
+− + Λ+ ) , is diagonal with eigenvalue
+Z 2π
+ℓ(ℓ + 1)/(2ℓ
++ 1); the construction below applies to ei2
+2
+2 mφ
+f (θ ′ +φ )− f (θ ′ ) dθ ′ = 2π ∑ | fˆm |2 |eimφ −1|2 = 8π ∑
+| fˆthrough
+.ℓ = 2 eigenvalue q .)
+m | sin 2
+ther
+its
+2
+0
+m̸=0
+
+m̸=0
+
+Definition 13.1 (Conic coordinates and trinomial invariants). A centered ellipsoid ΣH = {x : x⊤ Hx = 1} is written H = e−2ρ O e−2S O⊤ with scale ρ ∈ R, orientation
+O ∈ SO(3), and traceless log-shape S = S⊤ , tr S = 0, so
+the semiaxes are ai = eρ+µi for µi the eigenvalues of S.
+The shape is the characteristic polynomial of S, the depressed cubic
+
+Dividing by 4 sin2 (φ /2),
+integrating in φ , and using the
+Rπ
+Fejér-kernel integral −π sin2 (mφ /2)/ sin2 (φ /2) dφ =
+2π|m| gives 2π 2 ∑m̸=0 |m| | fˆm |2 ,
+which equals
+2
+ˆ
+π⟨ f , |D| f ⟩ = π · 2π ∑m̸=0 |m|| fm | .
+Remark 12.5 (The four zeta connections). The closure
+adds two windows to the operator’s contact with ζ . The
+discrete spectrum λm (Qn ) = m(n − m)/2 (Theorem 3.2)
+is one; the Fredholm determinant η(τ)−2 and its modular
+S-duality (Theorem 12.2) are two more. The remaining window, the Mellin symbol πζ cot(πζ ) − 1 of the
+local half-line model, generating the Euler values ζ (2k)
+through the cotangent expansion, and the associated spectral renormalization Tn (s) → 2ζ (s), is developed in companion work on the inverse-square operator. Each is a
+coordinate projection of one fact: Q is the multiplicativecharacter generator on the scale axis whose Mellin dual
+is the Riemann zeta function.
+
+χS (t) = t 3 −I2t −I3 ,
+
+3
+
+0, 1, 2, give I2 = r2 , I3 = 32r√3 cos 3ψ and discriminant
+4I23 − 27I32 = 4r6 sin2 3ψ: the vertex r = 0 is the sphere,
+the boundary sin 3ψ = 0 the spheroid locus, the interior
+the triaxial locus. Volume fixes scale, V = 4π
+3 a1 a2 a3 =
+4π 3ρ
+e
+.
+3
+Theorem 13.2 (Infinitesimal conic recovery). Let
+XS (ω) = eS ω on S2 with S ∈ Sym0 (3), and let ηṠ (ω) =
+ω ⊤ Ṡ ω be the normal velocity of the variation Ṡ ∈
+Sym0 (3) at S = 0. Then:
+1. ηṠ is a pure ℓ = 2 spherical harmonic, and Ṡ 7→ ηṠ
+is a linear isomorphism Sym0 (3) → H2 (S2 ) of the
+two five-dimensional spaces;
+
+13. The three-dimensional conic operator
+
+2. the induced Q-metric is a scalar multiple of the
+trace form,
+
+The planar operator Q|S1 = π|D| is the interior Dirichletto-Neumann (DtN) operator on the circle, eigenvalue
+|k| on eikθ . Its three-dimensional analogue replaces the
+inverse-square chord energy on a curve by the inversecube chord energy on a surface Σ ⊂ R3 : for a surface
+(d = 2) the H 1/2 seminorm kernel has exponent d + 1 = 3,
+and the continuum operator is the interior surface DtN
+q
+(3)
+(3)
+QS2 = −∆S2 + 41 − 12 ,
+QS2 Yℓm = ℓYℓm ,
+q
+ℓ(ℓ + 1) + 14 − 12 = ℓ.
+
+(3)
+
+ds2Q (Ṡ) = ηṠ , QS2 ηṠ L2 (S2 ) = q2
+
+8π
+tr(Ṡ2 ),
+15
+
+q2 = 2 (interio
+
+3. hence the metric is positive-definite and isotropic
+on the conic shape space: its Gram in any traceorthonormal basis is q2 8π
+15 I5 (condition number 1),
+so the ℓ = 2 data determine Ṡ, equivalently the trinomial invariants (I2 , I3 ) up to rotation. In the coordinates of Definition 13.1 it is the flat cone metric
+16πq2
+ds2Q =
+(dr2 + r2 dψ 2 ).
+15
+
+Pulling back through
+(3)
+
+I3 = det S = µ1 µ2 µ
+
+with real-root (admissibility) condition the discriminant
+inequality 4I23 ≥ 27I32 . In the trace-zero eigenvalue
+plane the polar coordinates µ j = √2r3 cos(ψ + 2π3 j ), j =
+
+Remark 12.6 (Numerical verification). All three identireg
+ties hold at machine precision. At µ = 0.05, log Dµ and
+π 2 /(6µ) − log(π/µ) agree to 40 digits (the remainder
+2
+e−π /µ ≈ e−197 is below the floor); the eta specialization
+reg
+reg
+and the S-duality Dπ 2 /µ = (π/µ)Dµ hold to comparable
+precision across µ ∈ (0, π].
+
+since
+
+I2 = 21 tr(S2 ) = 12 ∑i µi2 ,
+
+(3)
+
+X : S2 → Σ, the operator splits as QΣ = QS2 + CΣ , the
+28
+
+Proof. (1) The polynomial x 7→ x⊤ Ṡ x is homogeneous of
+degree two with Laplacian 2 tr Ṡ = 0, hence harmonic; its
+restriction to S2 is a pure ℓ = 2 spherical harmonic, with
+no ℓ = 0 part (tr Ṡ = 0) and no ℓ = 1 part (even parity).
+The linear map Ṡ 7→ ω ⊤ Ṡω between the five-dimensional
+Sym0 (3) and H2 (S2 ) is injective (ω ⊤ Ṡω ≡ 0 forces Ṡ =
+0), hence an isomorphism.
+(3)
+(2) As ηṠ ∈ H2 ,
+QS2 ηṠ = q2 ηṠ ,
+so
+R
+2
+⊤
+2
+dsQ (Ṡ) = q2 S2 (ω Ṡω) dω. The quartic moment
+R
+ω ω ω ω dω = 4π
+15 (δi j δkl + δik δ jl + δil δ jk ) gives
+RS2 ⊤i j k2 l
+4π
+2
+(ω Ṡω) dω = 15 (tr Ṡ)2 + 2 tr(Ṡ2 ) = 8π
+15 tr(Ṡ ) on
+the traceless subspace.
+(3) tr(Ṡ2 ) = ∑i µi (Ṡ)2 > 0 for Ṡ ̸= 0, so the form is
+positive-definite; being a scalar multiple of tr(Ṡ2 ) it is
+isotropic, with Gram q2 8π
+15 I5 in any trace-orthonormal
+basis. In the polar coordinates, tr(Ṡ2 ) = ∑ j dµ 2j = 2(dr2 +
+r2 dψ 2 ) (using ∑ j cos2 (ψ + 2π3 j ) = 32 ), giving the flat cone
+metric.
+
+error has a clean three-channel anatomy (§7) that extends to corners (§8) through a vertex channel in which a
+Mellin/Kondrat’ev exponent sets the order and a Hurwitzzeta weight the coefficient, with BGK as the crack case.
+The benchmarks confirm the analysis end to end: δ uniform machine precision where the classical rule holds
+four digits (Table 2), O(n) versus O(n3 ) conditioning
+(Table 3), exactness of the local profile, and the same
+crossover on non-circular geometries (Table 5).
+Generality. The construction is not special to the circle.
+Every result (the forced kernel, the DtN identification,
+both optimality theorems, and the corner extension) holds
+on general piecewise-analytic Jordan curves; the circle is
+the universal coordinate into which the conformal pullback (§5) carries every analytic curve exactly, not a restriction on the geometry. What is literally S1 -specific
+is only the speed: the closed-form integer spectrum and
+the two-FFT functional calculus. On a general curve
+the same calculus is realized through the pullback, and
+on non-equispaced nodes through fast-multipole or H matrix application of Q, at the usual O(n log n) cost.
+
+Remark 13.3 (Global recovery is open). Theorem 13.2 is
+the infinitesimal statement, exact at the sphere. The global
+(3)
+claim, that the ℓ = 2 block of QΣ determines the ellipsoid similarity class away from the sphere, is supported
+numerically but not proved here: linearizing S 7→ (ℓ=2
+block of QS ) at moderate anisotropy on Fibonacci nodes
+(N = 1200) gives five singular values clustered near 2.07
+with condition number 1.025, confirming the full-rank,
+near-isotropic sensitivity that Theorem 13.2 proves infinitesimally; the global injectivity is left open.
+
+Reproducibility. A reference implementation and the
+transcripts producing all tables are available as supplementary material.
+Exact back-end. Finally, because the spectral primitive’s modal coefficients are holonomic rationals, each
+quadrature value separates into an O(1) transcendental
+seed and an exact rational repayment that reconstructs
+from thousands of independent fixed-width finite-field
+channels (§11): the accuracy-bearing arithmetic carries
+zero rounding and an a-priori certificate, on a kernel
+matched to parallel hardware.
+
+14. Conclusion
+The near-singular barrier in layer-potential quadrature is
+removed by a single operator that is, moreover, provably
+optimal. The inverse-square Q has a kernel forced by the
+log-discriminant Hessian (7), an exact integer spectrum
+λm = m(n−m)/2 on S1 with O(n log n) calculus (11), and
+the Dirichlet-to-Neumann identification Q = πΛΓ + K0
+on any C3 curve (14); the universal pullback carries the
+circulant calculus to any analytic Jordan curve through
+bounded corrections. Optimality then holds at both levels: among admissible Euclidean-covariant chord-graph
+discretizations of the boundary DtN operator, Q is the
+unique one with zero principal-symbol defect (Theorem 6.2), and the spectral Q-rule attains the informationtheoretic minimax error κn ≍ C(Γ)n−1 e−(n/2)(log ρ+δΦ (x))
+on analytic Jordan curves (Theorem 6.4), on the conformal image of equispaced nodes; the trapezoidal rule
+attains this only where Euclidean and conformal distance coincide. Underneath the rate, the near-singular
+
+References
+[1] L. af Klinteberg and A.-K. Tornberg, Error estimation for
+quadrature by expansion in layer potential evaluation, Adv.
+Comput. Math. 43 (2017), 195–234.
+[2] L. af Klinteberg and A. H. Barnett, Accurate quadrature of
+nearly singular line integrals in two and three dimensions by
+singularity swapping, BIT Numer. Math. 61 (2021), 83–118.
+[3] A. H. Barnett, Evaluation of layer potentials close to the boundary for the 2D Stokes and Laplace equations, SIAM J. Sci.
+Comput. 37 (2015), B519–B542.
+[4] A. H. Barnett, Quadrature by fundamental solutions: kernelindependent layer potential evaluation for large collections of
+simple objects, Adv. Comput. Math. 48 (2022).
+[5] J. T. Beale and M.-C. Lai, A method for computing nearly
+singular integrals, SIAM J. Numer. Anal. 38 (2001), 1902–
+1925.
+
+29
+
+[6] M. Broadie, P. Glasserman, and S. G. Kou, A continuity correction for discrete barrier options, Math. Finance 7 (1997),
+325–349.
+[7] L. N. Trefethen, Approximation Theory and Approximation
+Practice, SIAM, 2013.
+[8] P. Grisvard, Elliptic Problems in Nonsmooth Domains, Pitman,
+1985.
+[9] J. Helsing and R. Ojala, On the evaluation of layer potentials
+close to their sources, J. Comput. Phys. 227 (2008), 2899–2921.
+[10] A. Klöckner, A. Barnett, L. Greengard, and M. O’Neil, Quadrature by expansion: a new method for the evaluation of layer
+potentials, J. Comput. Phys. 252 (2013), 332–349.
+[11] R. Kress, Linear Integral Equations, 3rd ed., Applied Mathematical Sciences, vol. 82, Springer, 2014.
+[12] V. A. Kondrat’ev, Boundary value problems for elliptic equations in domains with conical or angular points, Trans. Moscow
+Math. Soc. 16 (1967), 227–313.
+[13] M. Levitin, L. Parnovski, I. Polterovich, and D. A. Sher, Sloshing, Steklov and corners: asymptotics of Steklov eigenvalues
+for curvilinear polygons, Proc. Lond. Math. Soc. 125 (2022),
+359–411.
+[14] A. W. Maué, Zur Formulierung eines allgemeinen Beugungsproblems durch eine Integralgleichung, Z. Phys. 126
+(1949), 601–618.
+[15] W. McLean, Strongly Elliptic Systems and Boundary Integral
+Equations, Cambridge University Press, 2000.
+[16] I. Navot, An extension of the Euler–Maclaurin summation formula to functions with a branch singularity, J. Math. Phys. 40
+(1961), 271–276.
+[17] E. Novak and H. Woźniakowski, Tractability of Multivariate
+Problems, Vol. I: Linear Information, EMS Tracts in Mathematics, vol. 6, European Mathematical Society, 2008.
+[18] C. Pérez-Arancibia, L. M. Faria, and C. Turc, Harmonic density
+interpolation methods for high-order evaluation of Laplace
+layer potentials in 2D and 3D, J. Comput. Phys. 376 (2019),
+411–434.
+[19] G. Birkhoff and S. Gulati, Optimal few-point discretizations
+of linear source problems, SIAM J. Numer. Anal. 11 (1974),
+700–728.
+[20] A. Pinkus, n-Widths in Approximation Theory, Ergebnisse der
+Mathematik und ihrer Grenzgebiete, vol. 7, Springer, 1985.
+[21] C. Pozrikidis, Boundary Integral and Singularity Methods for
+Linearized Viscous Flow, Cambridge University Press, 1992.
+[22] E. B. Saff and V. Totik, Logarithmic Potentials with External
+Fields, Grundlehren der mathematischen Wissenschaften, vol.
+316, Springer, 1997.
+[23] S. A. Sauter and C. Schwab, Boundary Element Methods, Springer Series in Computational Mathematics, vol. 39,
+Springer, 2011.
+[24] L. N. Trefethen and J. A. C. Weideman, The exponentially
+convergent trapezoidal rule, SIAM Rev. 56 (2014), 385–458.
+
+30
+
+
