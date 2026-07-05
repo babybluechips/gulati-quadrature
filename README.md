@@ -17,6 +17,15 @@ PYTHONPATH=src python3 scripts/q_engine_ui_backend.py --host 127.0.0.1 --port 87
 Then open `http://127.0.0.1:8790/`. The UI starts blank, keeps drawn shapes as
 boundary-only curves, and only runs the production Q solve after `Solve`.
 
+## Symbol of Observation Certificate
+
+The repository includes an executable audit for `symbol_of_observation (1).pdf`,
+covering complex Spitzer algebra, strobe/zeta transfer, first-zero blindness,
+FFT-Spitzer fluctuation constants, total-variation grading, and the unitary
+sawtooth law. The pedagogical explanation, proof sketches, diagrams, and
+reproduction command are in
+[`outputs/symbol_of_observation/README.md`](outputs/symbol_of_observation/README.md).
+
 ## Package Core
 
 Production-oriented numerical primitives for inverse spectral and Hadamard shape

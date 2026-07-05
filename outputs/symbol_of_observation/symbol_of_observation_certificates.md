@@ -3,7 +3,7 @@
 - source: `symbol_of_observation (1).pdf`
 - sha256: `9ec1b0fc0917de004443564a5ae275b538fcc6a15ed022d43b23ed462b065b49`
 - profile: `full`
-- elapsed: `3.62 s`
+- elapsed: `7.98 s`
 - overall: `PASS`
 
 | Certificate | Status | Key check |
