@@ -57,6 +57,31 @@ PYTHONPATH=src python3 scripts/beta_counterterm_certificate.py \
 Read the proof sketches, diagrams, and audit tables in
 [`outputs/beta_counterterm_certificate/README.md`](outputs/beta_counterterm_certificate/README.md).
 
+## Hardy-Voronoi Flux Certificate
+
+The Gauss-circle flux audit now includes a dedicated Hardy-Voronoi obstruction
+and alias-tower certificate. It verifies that a dyadic block already has
+diagonal RMS size
+
+```text
+RMS(E_Q) ~ X^(1/2) Q^(-1/2) (log Q)^(1/2),
+```
+
+so a full-collar pointwise target of order `X^(1/2)/Q` is below the block's own
+average size. The same script also checks the useful positive structure:
+Gaussian-unit symmetry forces the angular alias coefficient `W(nu,m)` and the
+alias rung `A(m)` to vanish unless `4` divides `m`, so odd angular sample counts
+kill the first three alias levels.
+
+```sh
+PYTHONPATH=src python3 scripts/hardy_voronoi_flux_certificate.py \
+  --out-dir outputs/hardy_voronoi_flux_certificate
+```
+
+Read the derivation, Li-Yang context, exact-count correlation, and alias tables
+in
+[the Hardy-Voronoi certificate](outputs/hardy_voronoi_flux_certificate/README.md).
+
 ## Package Core
 
 Production-oriented numerical primitives for inverse spectral and Hadamard shape
