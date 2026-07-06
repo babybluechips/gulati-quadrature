@@ -1,16 +1,10 @@
-MIT License
+License
 
 Copyright (c) 2026 Rick Gulati
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This repository is made available for academic review, noncommercial research, and reproducibility evaluation only. You may read, run, and modify the code solely for noncommercial research, benchmarking, teaching, and verification of the accompanying paper, provided that you retain this notice and cite the accompanying work. You may not use this software, or any derivative work, for commercial purposes, hosted services, production systems, paid consulting, resale, sublicensing, internal commercial evaluation, product development, or competitive benchmarking without prior written permission.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+No patent license is granted, whether express, implied, by estoppel, exhaustion, or otherwise. All patent rights, including rights to inventions, methods, systems, algorithms, numerical procedures, and implementations embodied in or practiced by this software, are expressly reserved. Commercial, government, defense, infrastructure, financial, or production use requires a separate written license.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,3 +13,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Certain aspects of the certification architecture and production implementation are the subject of pending patent applications. The mathematical method and reference implementation are made available as described in the accompanying repository license.
+
+Certification
+
+This repository may produce reproducibility artifacts, local proofs, or candidate certificates. These outputs are not official certifications unless they are digitally signed by an authorized BlueChips certification key.
+
+The names “BlueChips Certified,” “Certified Quadrature” and related marks are reserved certification marks or trademarks. Use of the open-source software does not grant permission to use those marks, represent an output as officially certified, or imply endorsement by BlueChips.
+
+For official certification, regulated deployment, commercial assurance, warranties, or signed certificates, contact ea@bluechips.com.
