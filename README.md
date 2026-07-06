@@ -26,6 +26,37 @@ sawtooth law. The pedagogical explanation, proof sketches, diagrams, and
 reproduction command are in
 [`outputs/symbol_of_observation/README.md`](outputs/symbol_of_observation/README.md).
 
+## Beta Counterterm Certificate
+
+The beta counterterm bridge is now executable as its own audit. It tests the
+finite-cycle sum
+
+```text
+S_n(s) = sum_{k=1}^{n-1} [k (1-k/n)]^{-s}
+```
+
+against the ledger
+
+```text
+S_n(s) = n^(1-s) B(1-s,1-s)
+       + 2 sum_j (s)_j zeta(s-j) n^(-j)/j!
+       + residual.
+```
+
+The generated README explains why the beta term is the bulk continuum channel,
+why the endpoint rungs are zeta/BGK repayments, and how this is the same
+bookkeeping pattern as subtracting `pi R^2` before studying Gauss-circle error.
+Current runs certify `O(n^-1)`, `O(n^-2)`, and `O(n^-3)` residual decay after
+successive repayments on real and complex test cases.
+
+```sh
+PYTHONPATH=src python3 scripts/beta_counterterm_certificate.py \
+  --out-dir outputs/beta_counterterm_certificate
+```
+
+Read the proof sketches, diagrams, and audit tables in
+[`outputs/beta_counterterm_certificate/README.md`](outputs/beta_counterterm_certificate/README.md).
+
 ## Package Core
 
 Production-oriented numerical primitives for inverse spectral and Hadamard shape

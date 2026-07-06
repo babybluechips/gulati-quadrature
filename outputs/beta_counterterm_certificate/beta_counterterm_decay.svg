@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="540" viewBox="0 0 920 540">
+<rect width="100%" height="100%" fill="#ffffff" />
+<line x1="76" y1="504.51" x2="892" y2="504.51" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="508.51" font-size="12" fill="#555">1e-16</text>
+<line x1="76" y1="471.37" x2="892" y2="471.37" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="475.37" font-size="12" fill="#555">1e-15</text>
+<line x1="76" y1="438.24" x2="892" y2="438.24" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="442.24" font-size="12" fill="#555">1e-14</text>
+<line x1="76" y1="405.10" x2="892" y2="405.10" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="409.10" font-size="12" fill="#555">1e-13</text>
+<line x1="76" y1="371.97" x2="892" y2="371.97" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="375.97" font-size="12" fill="#555">1e-12</text>
+<line x1="76" y1="338.84" x2="892" y2="338.84" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="342.84" font-size="12" fill="#555">1e-11</text>
+<line x1="76" y1="305.70" x2="892" y2="305.70" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="309.70" font-size="12" fill="#555">1e-10</text>
+<line x1="76" y1="272.57" x2="892" y2="272.57" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="276.57" font-size="12" fill="#555">1e-9</text>
+<line x1="76" y1="239.43" x2="892" y2="239.43" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="243.43" font-size="12" fill="#555">1e-8</text>
+<line x1="76" y1="206.30" x2="892" y2="206.30" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="210.30" font-size="12" fill="#555">1e-7</text>
+<line x1="76" y1="173.16" x2="892" y2="173.16" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="177.16" font-size="12" fill="#555">1e-6</text>
+<line x1="76" y1="140.03" x2="892" y2="140.03" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="144.03" font-size="12" fill="#555">1e-5</text>
+<line x1="76" y1="106.90" x2="892" y2="106.90" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="110.90" font-size="12" fill="#555">1e-4</text>
+<line x1="76" y1="73.76" x2="892" y2="73.76" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="77.76" font-size="12" fill="#555">1e-3</text>
+<line x1="76" y1="40.63" x2="892" y2="40.63" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="44.63" font-size="12" fill="#555">1e-2</text>
+<line x1="76" y1="7.49" x2="892" y2="7.49" stroke="#e5e5e5" stroke-width="1" />
+<text x="18" y="11.49" font-size="12" fill="#555">1e-1</text>
+<line x1="76.00" y1="34" x2="76.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="60.00" y="512" font-size="12" fill="#555">128</text>
+<line x1="212.00" y1="34" x2="212.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="196.00" y="512" font-size="12" fill="#555">256</text>
+<line x1="348.00" y1="34" x2="348.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="332.00" y="512" font-size="12" fill="#555">512</text>
+<line x1="484.00" y1="34" x2="484.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="468.00" y="512" font-size="12" fill="#555">1024</text>
+<line x1="620.00" y1="34" x2="620.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="604.00" y="512" font-size="12" fill="#555">2048</text>
+<line x1="756.00" y1="34" x2="756.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="740.00" y="512" font-size="12" fill="#555">4096</text>
+<line x1="892.00" y1="34" x2="892.00" y2="478" stroke="#eeeeee" stroke-width="1" />
+<text x="876.00" y="512" font-size="12" fill="#555">8192</text>
+<rect x="76" y="34" width="816" height="444" fill="none" stroke="#222" stroke-width="1" />
+<polyline points="76.00,66.77 212.00,76.75 348.00,86.73 484.00,96.70 620.00,106.68 756.00,116.65 892.00,126.63" fill="none" stroke="#111111" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" />
+<polyline points="76.00,170.98 212.00,190.91 348.00,210.85 484.00,230.80 620.00,250.74 756.00,270.69 892.00,290.64" fill="none" stroke="#666666" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" />
+<polyline points="76.00,259.11 212.00,289.06 348.00,319.00 484.00,348.93 620.00,378.85 756.00,408.78 892.00,438.70" fill="none" stroke="#aaaaaa" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" />
+<text x="76" y="24" font-size="17" font-family="serif" fill="#111">Beta counterterm exposes endpoint-rung orders for s=1/2</text>
+<text x="380" y="514" font-size="14" font-family="serif" fill="#111">n</text>
+<text x="16" y="302" transform="rotate(-90 16 302)" font-size="14" font-family="serif" fill="#111">absolute residual</text>
+<line x1="664" y1="56" x2="718" y2="56" stroke="#111" stroke-width="2.2" />
+<text x="728" y="61" font-size="13" fill="#111">after beta only: O(n^-1)</text>
+<line x1="664" y1="79" x2="718" y2="79" stroke="#666" stroke-width="2.2" />
+<text x="728" y="84" font-size="13" fill="#111">after first rung: O(n^-2)</text>
+<line x1="664" y1="102" x2="718" y2="102" stroke="#aaa" stroke-width="2.2" />
+<text x="728" y="107" font-size="13" fill="#111">after second rung: O(n^-3)</text>
+</svg>

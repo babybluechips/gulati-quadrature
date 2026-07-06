@@ -103,6 +103,11 @@ or Hurwitz-zeta term. This is exactly why the BGK correction belongs in the Q
 pipeline: it is the translator between a continuum boundary or barrier and a
 discrete monitored grid.
 
+The companion beta-counterterm audit makes the same repayment explicit for the
+finite-cycle sum `S_n(s)`: subtract the beta bulk channel, expose `2*zeta(s)`,
+then repay endpoint rungs with zeta coefficients. See
+[`../beta_counterterm_certificate/README.md`](../beta_counterterm_certificate/README.md).
+
 ```mermaid
 flowchart TB
     S1["continuum object"] --> S2["sampled/strobed object"]
@@ -388,4 +393,3 @@ both path monitoring and boundary quadrature, the hard part is not random
 sampling. The hard part is deterministic endpoint bookkeeping. Once that
 bookkeeping is exposed as a spectral/zeta ledger, the computation becomes a
 matrix-free certificate rather than a mesh or Monte Carlo estimate.
-
