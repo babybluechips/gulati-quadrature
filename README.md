@@ -1,10 +1,115 @@
-# Gulati Q Boundary Quadrature and PDE Engine
+# Gulati Quadrature
 
 Standalone repository for the boundary-only Q quadrature, DtN/PDE, QBX
 comparison, BGK/corner-correction, and shape-optimization work. The code is
 curated from the larger research workspace so this repo contains the
 quadrature/PDE package, tests, examples, benchmark artifacts, reports, and the
 interactive drawing UI without unrelated nested projects or scratch caches.
+
+## Production 3D Surface Pipeline
+
+The public three-dimensional path evaluates the weighted surface graph
+
+```text
+(Q_p f)_i = sum_{j != i} w_j (f_i - f_j) / |X_i - X_j|^p
+```
+
+from surface nodes and weights without constructing a dense distance or
+operator matrix. For a two-dimensional surface in `R^3`, `Q_3/(2*pi)` has the
+local principal normalization `|xi|_g` of the Laplace Dirichlet-to-Neumann
+operator. `Q_2` is retained as the scale-invariant inverse-square discriminant
+operator.
+
+The production backend uses a fair-split pair partition, fixed-order Cartesian
+source jets, a symmetric forward/transpose action, exact near-field repayment,
+and an analytic Gegenbauer tail bound. Its fixed-parameter contract is:
+
+| Stage | Time | Storage |
+|---|---:|---:|
+| Compile | `O(N log^2 N)` | `O(N)` |
+| Apply | `O(N log N)` | `O(N)` |
+| Polyhedral corner repayment | `O(c)` | `O(c)` |
+| QCAD3J encode/decode | `O(V+F)` | `O(V+F)` |
+
+Here `c` is the number of retained Mellin-Kondratiev edge and vertex channels.
+The operator fails closed with `NearLinearContractError` if a compiled work
+budget is exceeded. There is no dense or quadratic production fallback.
+
+```python
+from gulati_quadrature import SurfaceQConfig, build_mesh_engine
+
+vertices = (
+    (1.0, 0.0, 0.0), (-1.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0), (0.0, -1.0, 0.0),
+    (0.0, 0.0, 1.0), (0.0, 0.0, -1.0),
+)
+faces = (
+    (0, 2, 4), (2, 1, 4), (1, 3, 4), (3, 0, 4),
+    (2, 0, 5), (1, 2, 5), (3, 1, 5), (0, 3, 5),
+)
+values = tuple(x + 0.2*y - 0.1*z for x, y, z in vertices)
+
+engine = build_mesh_engine(
+    vertices,
+    faces,
+    config=SurfaceQConfig(kernel_power=3.0),
+)
+result = engine.apply_dtn_principal(values)  # Q_3 / (2*pi)
+
+assert result.ledger.status == "borrowed_repaid"
+assert engine.stats()["quadratic_fallback"] is False
+assert engine.stats()["dense_q_matrix_stored"] is False
+```
+
+The same API accepts arbitrary weighted nodes with `build_surface_engine`.
+Axisymmetric surfaces use `build_spheroid_engine`, `build_torus_engine`,
+`build_radial_profile_engine`, and `build_axisymmetric_conic_engine`; each
+geometry is lowered into the same hard-no-quadratic production backend before
+application. Moving-conic atlases use `build_conic_pencil_engine`.
+Consistently oriented polyhedral meshes use `build_polyhedral_engine`, which
+adds explicit Mellin-Hurwitz edge and vertex channels without mesh refinement.
+
+The lossless `QCAD3J` channel stores ordered IEEE coordinate keys through a
+unit-triangular third-difference transform plus exact triangle connectivity.
+`encode_mesh` and `decode_mesh` are bitwise invertible and store exactly
+`3V + 3F + O(parts)` integers before compression. This geometry archive is
+separate from the non-injective moment hierarchy used for operator application.
+
+### Audited 3D Results
+
+The checked extended campaign contains 16 geometry classes, 32 `p=2/p=3`
+operator cases, and 96 independent field comparisons. It includes smooth
+genus-zero and genus-one surfaces, polyhedra, an open nonorientable strip,
+twisted conic atlases, near-collision and dynamic-range stress cases, and
+airplane, car, and bridge assemblies. Against an isolated streamed discrete
+pair sum, the recorded gates are below `1e-12` on standard cases and below
+`2e-12` on stress cases. These numbers audit the discrete graph application;
+they are not presented as a universal continuum discretization theorem.
+
+The public CAD audit covers five independently sourced models:
+
+- NASA SOFIA aircraft;
+- FreeCAD cement-mixer truck;
+- two NASA Curiosity manufacturing layouts;
+- buildingSMART IFC bridge.
+
+Across 629,706 vertices and 1,261,986 faces, every coordinate bit pattern,
+triangle index, part range, and SHA-256 checksum is recovered exactly. The
+largest tested model avoids a hypothetical 1.12 TB dense pair table.
+
+```sh
+PYTHONPATH=src python3 -m gulati_quadrature.cli surface-demo
+PYTHONPATH=src python3 scripts/production_3d_qjet_extended_validation.py
+PYTHONPATH=src python3 scripts/cad_qjet_invertibility_campaign.py
+```
+
+The formal derivation and executable examples are in
+[`notebooks/production_3d_qjet_method.ipynb`](notebooks/production_3d_qjet_method.ipynb).
+The standalone audited report is
+[`outputs/production_3d_qjet_html/production_3d_qjet_method.html`](outputs/production_3d_qjet_html/production_3d_qjet_method.html).
+The CAD source manifest, licenses, archives, reconstructions, and exactness
+report are under `benchmarks/cad_invertibility/` and
+`outputs/cad_qjet_invertibility/`.
 
 ## Interactive UI
 

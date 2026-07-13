@@ -1,0 +1,7 @@
+family,shape,kernel_power,nodes,compile_ms,apply_ms,reference_ms,relative_error,constant_residual,patch_count,compiled_blocks,compiled_exact_pairs,hard_no_quadratic_contract,quadratic_fallback,stored_dense_matrix
+axisymmetric_golden,cylinder,2.0,384,10.831541992956772,20.09062498109415,48.51341599714942,2.301952456316217e-15,0.0,1,10,240,True,False,False
+axisymmetric_golden,cone,2.0,384,9.886292013106868,20.297333016060293,49.4780000008177,2.203855490420733e-15,0.0,1,10,240,True,False,False
+axisymmetric_golden,sphere_cap,2.0,384,9.90508298855275,20.189125003525987,49.48412501835264,3.3024553887880435e-15,0.0,1,10,240,True,False,False
+axisymmetric_golden,corrugated,2.0,384,9.890625020489097,20.442583016119897,50.154500000644475,6.221518270731045e-14,0.0,1,10,240,True,False,False
+axisymmetric_golden,hourglass,2.0,384,9.752374986419454,20.51837500766851,50.495709001552314,2.0858806332024903e-15,0.0,1,10,240,True,False,False
+axisymmetric_golden,airfoil_meridian,2.0,384,9.84395798877813,20.47991700237617,48.77900000428781,1.7491903247364255e-15,0.0,1,10,240,True,False,False

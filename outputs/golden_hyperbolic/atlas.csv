@@ -1,0 +1,4 @@
+shape,source_nodes,patch_count,total_hyperbolic_length,maximum_patch_span,maximum_qjet_relative_error,maximum_block_budget_fraction,maximum_exact_pair_budget_fraction,maximum_visit_budget_fraction,quadratic_fallback,stored_dense_matrix
+long_geodesic,17,2,3.8496946004768287,1.9248473002384148,4.057536075040802e-16,0.01171875,0.1171875,0.0009765625,False,False
+polynomial_meridian,17,1,1.3569124092504288,1.3569124092504288,9.916609066210727e-16,0.01171875,0.1171875,0.0009765625,False,False
+corrugated_meridian,25,2,1.9588808838773684,1.8814442459154104,1.645515458067037e-14,0.01171875,0.1171875,0.0009765625,False,False

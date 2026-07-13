@@ -1,0 +1,85 @@
+{
+  "normal_form": "|X_i-X_j|^2=2 exp(rho_i+rho_j) (cosh(rho_i-rho_j)-cos(theta_i-theta_j))",
+  "tolerance": 5e-13,
+  "rows": [
+    {
+      "shape": "exact_flat_annulus",
+      "nodes": 192,
+      "sampled_max_relative_residual": 4.3162719029358136e-15,
+      "exhaustive_max_relative_residual": 4.3162719029358136e-15,
+      "exhaustive_rms_relative_residual": 5.107307638611996e-16,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": true,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "straight_cylinder",
+      "nodes": 192,
+      "sampled_max_relative_residual": 1.0,
+      "exhaustive_max_relative_residual": 1.0,
+      "exhaustive_rms_relative_residual": 0.6201492241978427,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "tapered_circular_cone",
+      "nodes": 192,
+      "sampled_max_relative_residual": 0.9483667017913603,
+      "exhaustive_max_relative_residual": 0.9483667017913603,
+      "exhaustive_rms_relative_residual": 0.626302641057046,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "bent_circular_tube",
+      "nodes": 192,
+      "sampled_max_relative_residual": 1.0,
+      "exhaustive_max_relative_residual": 1.0,
+      "exhaustive_rms_relative_residual": 0.7429530888852341,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "twisted_ellipse",
+      "nodes": 192,
+      "sampled_max_relative_residual": 1.0,
+      "exhaustive_max_relative_residual": 1.0,
+      "exhaustive_rms_relative_residual": 0.6995415476306351,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "toroidal_bundle",
+      "nodes": 192,
+      "sampled_max_relative_residual": 1.0,
+      "exhaustive_max_relative_residual": 1.0,
+      "exhaustive_rms_relative_residual": 0.8993253661235945,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "aircraft_bundle",
+      "nodes": 192,
+      "sampled_max_relative_residual": 1.0,
+      "exhaustive_max_relative_residual": 1.0,
+      "exhaustive_rms_relative_residual": 0.7294119357253838,
+      "sampled_pairs": 2352,
+      "exhaustive_pairs": 18336,
+      "accepted": false,
+      "stored_dense_matrix": false
+    }
+  ],
+  "production_rule": "accept exact scale-phase path only when the geometry certificate passes; otherwise compile a geometry residual",
+  "stored_dense_matrix": false
+}

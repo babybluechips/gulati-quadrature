@@ -1,0 +1,11 @@
+family,shape,kernel_power,nodes,triangles,compile_ms,apply_ms,reference_ms,apply_timing_repeats,relative_error,constant_residual,low_rank_blocks,maximum_rank,exact_pair_fraction,certification_kernel_samples,hard_no_quadratic_contract,quadratic_fallback,continuum_corner_certificate,stored_dense_matrix
+refined_polyhedral_graph,tetrahedron,2.0,34,64,161.36595801799558,113.42941600014456,0.3980000037699938,1,3.7821181847310154e-16,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,tetrahedron,3.0,34,64,156.8551660166122,111.59837499144487,0.3885829937644303,1,6.171137804675445e-16,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,cube,2.0,98,192,451.0087920061778,395.6454170111101,3.0711250146850944,1,1.071505595595183e-15,0.0,3,969,0.9936881969282558,0,True,False,False,False
+refined_polyhedral_graph,cube,3.0,98,192,443.3081670140382,393.25287501560524,3.0841669940855354,1,1.0807215480495277e-15,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,concave_dented_cube,2.0,114,224,449.7637920139823,400.7870419882238,4.255540989106521,1,8.253040982584647e-16,0.0,4,969,0.9923924856388759,0,True,False,False,False
+refined_polyhedral_graph,concave_dented_cube,3.0,114,224,441.6105419804808,394.79479199508205,4.167292005149648,1,1.3649271102459509e-15,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,octahedron,2.0,66,128,265.5460420064628,212.60358399013057,1.4258749724831432,1,6.15214924964119e-16,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,octahedron,3.0,66,128,259.75362499593757,216.64583301753737,1.4541250129695982,1,1.0091886834119003e-15,0.0,0,1,1.0,0,True,False,False,False
+refined_polyhedral_graph,wing_body_aircraft,2.0,514,1024,8291.827249980997,5807.64483299572,89.31004200712778,1,1.9706527721751657e-15,0.0,2008,969,0.27555919630463965,0,True,False,False,False
+refined_polyhedral_graph,wing_body_aircraft,3.0,514,1024,8182.688208995387,5669.13145800936,88.45787501195446,1,3.083748680626669e-14,0.0,2155,969,0.3221152752178761,0,True,False,False,False

@@ -1,0 +1,2 @@
+nodes,parameters,solve_ms,iterations,relative_residual,max_center_response,max_log_axis_response,max_rotation_response,max_node_motion_at_step_0_3,initial_area,deformed_area,stored_dense_reduced_hessian
+128,64,196.13250000111293,28,3.1009979576910153e-10,0.11619667977395759,0.012054043701817037,0.0028183603440469483,0.03498166299973288,9.138238630225707,9.12616948045392,False

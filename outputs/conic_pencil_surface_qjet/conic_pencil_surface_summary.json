@@ -1,0 +1,32 @@
+{
+  "complexity_scope": "expected O(N log N) at fixed accuracy and bounded geometry; near-contact can degrade toward O(N^2)",
+  "continuum_tangent_cell_repayment": false,
+  "finest_inverse_cube_speedup_min": 0.9511574105725314,
+  "finest_inverse_square_speedup_min": 1.0068130495089558,
+  "fitted_direct_runtime_exponent": 1.9371595050456718,
+  "fitted_tree_runtime_exponent": 1.5543776630210522,
+  "global_dtn_geometry_correction": false,
+  "max_constant_residual": 0.0,
+  "max_inverse_cube_tree_error": 0.002230192644524153,
+  "max_inverse_square_tree_error": 0.0011812502326656754,
+  "maximum_pencil_curvature": 4.950715237391162,
+  "minimum_pencil_determinant": 2.441406250000001,
+  "quadrature_cases": 18,
+  "representation": "36 conic value/three-jet scalars per slice plus field vectors",
+  "shape_count": 6,
+  "stored_dense_matrix": false,
+  "warp_response": {
+    "deformed_area": 9.12616948045392,
+    "initial_area": 9.138238630225707,
+    "iterations": 28,
+    "max_center_response": 0.11619667977395759,
+    "max_log_axis_response": 0.012054043701817037,
+    "max_node_motion_at_step_0_3": 0.03498166299973288,
+    "max_rotation_response": 0.0028183603440469483,
+    "nodes": 128,
+    "parameters": 64,
+    "relative_residual": 3.1009979576910153e-10,
+    "solve_ms": 196.13250000111293,
+    "stored_dense_reduced_hessian": false
+  }
+}

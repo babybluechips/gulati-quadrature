@@ -1,0 +1,374 @@
+{
+  "campaign": "public CAD sparse-QJet invertibility",
+  "cases": [
+    {
+      "archive_bytes": 647515,
+      "archive_path": "sofia_aircraft.qcad3j",
+      "archive_sha256": "c538dd06d123feee4019f9cd42792a658a886fb21dde91753aa437807f330933",
+      "attribution": "NASA 3D Resources contributors",
+      "bounds_max": [
+        141.09999084472656,
+        152.20999145507812,
+        68.6500015258789
+      ],
+      "bounds_min": [
+        -140.115234375,
+        -145.33999633789062,
+        -25.809999465942383
+      ],
+      "camera": [
+        24.0,
+        18.0
+      ],
+      "compile_ms": 705.0534170120955,
+      "compression_vs_linear_payload": 0.23279914806473787,
+      "corruption_rejected": true,
+      "decode_ms": 233.07641697465442,
+      "decoded_mesh_sha256": "2340c8b3cd6fb0af4ae9278cbac2aed73959225ed34fcf0ad0f7ce306643c8a7",
+      "dense_pair_matrix_bytes_avoided": 16808977952,
+      "deterministic_archive": true,
+      "exact_round_trip": true,
+      "face_count": 92974,
+      "face_mismatches": 0,
+      "format": "binary STL assembly",
+      "key": "sofia_aircraft",
+      "label": "NASA SOFIA aircraft",
+      "license": "NASA assets: free and without copyright; NASA media usage guidelines apply",
+      "linear_integer_count": 416436,
+      "load_ms": 511.01325001218356,
+      "maximum_absolute_error": 0.0,
+      "mesh_sha256": "2340c8b3cd6fb0af4ae9278cbac2aed73959225ed34fcf0ad0f7ce306643c8a7",
+      "no_dense_matrix": true,
+      "no_pair_table": true,
+      "part_count": 7,
+      "part_mismatches": 0,
+      "peak_compile_bytes": 28605441,
+      "reconstruction_path": "sofia_aircraft_reconstructed.ply",
+      "scalar_bits": 32,
+      "source_bytes": 4649288,
+      "source_files": [
+        "Nose_section.stl",
+        "Fuselage_top.stl",
+        "Left_wing.stl",
+        "Right_wing.stl",
+        "Tail_section.stl",
+        "Telescope_cavity_closed.stl",
+        "Instrument.stl"
+      ],
+      "source_sha256": "5da4532cafd023ac9ac96f5c92dcbf04985c028967d7dcc0be3440173f5a3816",
+      "source_url": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/SOFIA",
+      "unique_edge_count": 139268,
+      "vertex_count": 45838,
+      "vertex_mismatches": 0
+    },
+    {
+      "archive_bytes": 117419,
+      "archive_path": "cement_mixer.qcad3j",
+      "archive_sha256": "e28fe6df63fa0e9532348d437d79f4028f7380d76e5f5658d7cfb2eada7cafe9",
+      "attribution": "Martijn Cramer; KU Leuven ACRO",
+      "bounds_max": [
+        52.0,
+        11.0,
+        84.07720184326172
+      ],
+      "bounds_min": [
+        -52.0,
+        -200.46319580078125,
+        -11.496672630310059
+      ],
+      "camera": [
+        -32.0,
+        16.0
+      ],
+      "compile_ms": 147.372000006726,
+      "compression_vs_linear_payload": 0.17734973024244952,
+      "corruption_rejected": true,
+      "decode_ms": 50.72145801386796,
+      "decoded_mesh_sha256": "6e3712bdcd2045f0b8f23b1795cbd867e618f6c54f34ba0a637b260b783845ac",
+      "dense_pair_matrix_bytes_avoided": 909255368,
+      "deterministic_archive": true,
+      "exact_round_trip": true,
+      "face_count": 22256,
+      "face_mismatches": 0,
+      "format": "binary STL",
+      "key": "cement_mixer",
+      "label": "FreeCAD cement mixer truck",
+      "license": "CC BY 3.0",
+      "linear_integer_count": 98751,
+      "load_ms": 120.77420900459401,
+      "maximum_absolute_error": 0.0,
+      "mesh_sha256": "6e3712bdcd2045f0b8f23b1795cbd867e618f6c54f34ba0a637b260b783845ac",
+      "no_dense_matrix": true,
+      "no_pair_table": true,
+      "part_count": 1,
+      "part_mismatches": 0,
+      "peak_compile_bytes": 6418864,
+      "reconstruction_path": "cement_mixer_reconstructed.ply",
+      "scalar_bits": 32,
+      "source_bytes": 1112884,
+      "source_files": [
+        "asm_cement_mixer_truck.stl"
+      ],
+      "source_sha256": "a09fa04cd81554d7599c20fcb988f09b090e111b105aa9f5b13ac806b1a3c417",
+      "source_url": "https://github.com/FreeCAD/FreeCAD-library/tree/master/Generic%20objects/Scale%20Models/Cement%20mixer%20truck",
+      "unique_edge_count": 32878,
+      "vertex_count": 10661,
+      "vertex_mismatches": 0
+    },
+    {
+      "archive_bytes": 3389427,
+      "archive_path": "curiosity_rover.qcad3j",
+      "archive_sha256": "fb4f7f3b11cc3f7669404111b2c9f70ae0305fb2f6d1b750bfd4e00649719485",
+      "attribution": "NASA 3D Resources contributors",
+      "bounds_max": [
+        102.8089370727539,
+        74.67391204833984,
+        59.0
+      ],
+      "bounds_min": [
+        -102.83992004394531,
+        -73.08152770996094,
+        0.0
+      ],
+      "camera": [
+        -32.0,
+        17.0
+      ],
+      "compile_ms": 5304.569750005612,
+      "compression_vs_linear_payload": 0.15078901344357828,
+      "corruption_rejected": true,
+      "decode_ms": 2180.9071660100017,
+      "decoded_mesh_sha256": "897393e349610d134a87c042450ab5613a30043647bcffb40a06cc1ce8db3f1f",
+      "dense_pair_matrix_bytes_avoided": 1121822247200,
+      "deterministic_archive": true,
+      "exact_round_trip": true,
+      "face_count": 749346,
+      "face_mismatches": 0,
+      "format": "four-part detailed binary STL manufacturing layout",
+      "key": "curiosity_rover",
+      "label": "NASA Curiosity manufacturing plates",
+      "license": "NASA assets: free and without copyright; NASA media usage guidelines apply",
+      "linear_integer_count": 3371448,
+      "load_ms": 4534.518458007369,
+      "maximum_absolute_error": 0.0,
+      "mesh_sha256": "897393e349610d134a87c042450ab5613a30043647bcffb40a06cc1ce8db3f1f",
+      "no_dense_matrix": true,
+      "no_pair_table": true,
+      "part_count": 4,
+      "part_mismatches": 0,
+      "peak_compile_bytes": 211059722,
+      "reconstruction_path": "curiosity_rover_reconstructed.ply",
+      "scalar_bits": 32,
+      "source_bytes": 37467636,
+      "source_files": [
+        "1-body.stl",
+        "2-components.stl",
+        "3-pins-and-hubs.stl",
+        "4-wheels.stl"
+      ],
+      "source_sha256": "6414da30ffd6efea3a49cd26d9dc3b4d76bf4eba1ef6b15e57a33344136f32f2",
+      "source_url": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/Curiosity%20Rover%20%28Detailed%29",
+      "unique_edge_count": 1124030,
+      "vertex_count": 374470,
+      "vertex_mismatches": 0
+    },
+    {
+      "archive_bytes": 2032956,
+      "archive_path": "curiosity_assembled.qcad3j",
+      "archive_sha256": "3923daa565249ae1cde4fc85334567dd90bf43dacdba9b017b60e670c17fce11",
+      "attribution": "NASA 3D Resources contributors",
+      "bounds_max": [
+        94.2574462890625,
+        29.55097198486328,
+        32.5
+      ],
+      "bounds_min": [
+        -102.01927185058594,
+        -67.13784790039062,
+        0.0
+      ],
+      "camera": [
+        -34.0,
+        18.0
+      ],
+      "compile_ms": 2706.3307089847513,
+      "compression_vs_linear_payload": 0.17607112977234107,
+      "corruption_rejected": true,
+      "decode_ms": 1103.147165995324,
+      "decoded_mesh_sha256": "cb506aafdd6ea314201ddb26995a492b5ed9388c40a74e5eb0115ae37c4c2113",
+      "dense_pair_matrix_bytes_avoided": 295837396808,
+      "deterministic_archive": true,
+      "exact_round_trip": true,
+      "face_count": 384942,
+      "face_mismatches": 0,
+      "format": "single-file high-resolution binary STL manufacturing layout",
+      "key": "curiosity_assembled",
+      "label": "NASA Curiosity single-file print layout",
+      "license": "NASA assets: free and without copyright; NASA media usage guidelines apply",
+      "linear_integer_count": 1731729,
+      "load_ms": 2342.430749995401,
+      "maximum_absolute_error": 0.0,
+      "mesh_sha256": "cb506aafdd6ea314201ddb26995a492b5ed9388c40a74e5eb0115ae37c4c2113",
+      "no_dense_matrix": true,
+      "no_pair_table": true,
+      "part_count": 1,
+      "part_mismatches": 0,
+      "peak_compile_bytes": 111727777,
+      "reconstruction_path": "curiosity_assembled_reconstructed.ply",
+      "scalar_bits": 32,
+      "source_bytes": 19247184,
+      "source_files": [
+        "Curiosity_200uM.stl"
+      ],
+      "source_sha256": "7c541317419c7066778c0393f38f009247ed6fa42f69281a48459e9b8b20f370",
+      "source_url": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/Curiosity%20Rover%20%28Simplified%29",
+      "unique_edge_count": 577427,
+      "vertex_count": 192301,
+      "vertex_mismatches": 0
+    },
+    {
+      "archive_bytes": 63816,
+      "archive_path": "ifc_bridge.qcad3j",
+      "archive_sha256": "bf6c443a8f5f46d255745450a9c9d8341d6c182e90941df7c96b1a29db2f3a1d",
+      "attribution": "buildingSMART International; model author Jan B.",
+      "bounds_max": [
+        44401.2701892281,
+        56905.25588833698,
+        7774.582119052418
+      ],
+      "bounds_min": [
+        7560.254037853573,
+        24746.848707745357,
+        -3500.0000000205
+      ],
+      "camera": [
+        -38.0,
+        19.0
+      ],
+      "compile_ms": 104.53954097465612,
+      "compression_vs_linear_payload": 0.14065806178586543,
+      "corruption_rejected": true,
+      "decode_ms": 37.85420799977146,
+      "decoded_mesh_sha256": "70495c96512b7ca80b43eacc26e7a52b46760d6c27bf53ee51ab60cd3373b417",
+      "dense_pair_matrix_bytes_avoided": 331376768,
+      "deterministic_archive": true,
+      "exact_round_trip": true,
+      "face_count": 12468,
+      "face_mismatches": 0,
+      "format": "IFC4.3 tessellation with recursive placements",
+      "key": "ifc_bridge",
+      "label": "buildingSMART IFC bridge",
+      "license": "CC BY 4.0",
+      "linear_integer_count": 56712,
+      "load_ms": 1520.9988330025226,
+      "maximum_absolute_error": 0.0,
+      "mesh_sha256": "70495c96512b7ca80b43eacc26e7a52b46760d6c27bf53ee51ab60cd3373b417",
+      "no_dense_matrix": true,
+      "no_pair_table": true,
+      "part_count": 47,
+      "part_mismatches": 0,
+      "peak_compile_bytes": 11111401,
+      "reconstruction_path": "ifc_bridge_reconstructed.ply",
+      "scalar_bits": 64,
+      "source_bytes": 1883289,
+      "source_files": [
+        "Infra-Bridge.ifc"
+      ],
+      "source_sha256": "f451e022c5ad7517d90e3cd7afb83b1c0c467435d2dfb8a6b0f61a648f110c7f",
+      "source_url": "https://github.com/buildingSMART/Sample-Test-Files/blob/main/IFC%204.3.2.0%20%28IFC4X3_ADD2%29/PCERT-Sample-Scene/Infra-Bridge.ifc",
+      "unique_edge_count": 18702,
+      "vertex_count": 6436,
+      "vertex_mismatches": 0
+    }
+  ],
+  "complexity": {
+    "archive_integers": "3V + 3F + O(parts)",
+    "decode_memory": "O(V + F)",
+    "encode_memory": "O(V + F)",
+    "pair_storage": "0",
+    "time": "O(V + F) plus linear-time compression"
+  },
+  "gates": {
+    "all_corruption_rejected": true,
+    "all_deterministic": true,
+    "all_exact_round_trips": true,
+    "all_linear_storage": true,
+    "no_dense_matrix": true,
+    "no_pair_table": true,
+    "passed": true,
+    "peak_memory_below_one_tenth_dense": true,
+    "scaling_archive_subquadratic": true,
+    "scaling_exact_at_every_refinement": true
+  },
+  "model_count": 5,
+  "scaling": {
+    "archive_exponent": 0.9885943511505125,
+    "decode_time_exponent": 0.9685134826641701,
+    "encode_time_exponent": 0.9972725830580288,
+    "rows": [
+      {
+        "archive_bytes": 32037,
+        "decode_ms": 13.125833007507026,
+        "encode_ms": 7.152541977120563,
+        "exact_round_trip": true,
+        "face_count": 4096,
+        "linear_integer_count": 19797,
+        "linear_items": 6599,
+        "vertex_count": 2503
+      },
+      {
+        "archive_bytes": 59919,
+        "decode_ms": 22.549499990418553,
+        "encode_ms": 13.848833012161776,
+        "exact_round_trip": true,
+        "face_count": 8192,
+        "linear_integer_count": 38211,
+        "linear_items": 12737,
+        "vertex_count": 4545
+      },
+      {
+        "archive_bytes": 111488,
+        "decode_ms": 43.79370802780613,
+        "encode_ms": 28.123500000219792,
+        "exact_round_trip": true,
+        "face_count": 16384,
+        "linear_integer_count": 74952,
+        "linear_items": 24984,
+        "vertex_count": 8600
+      },
+      {
+        "archive_bytes": 213299,
+        "decode_ms": 88.9866659999825,
+        "encode_ms": 54.604000004474074,
+        "exact_round_trip": true,
+        "face_count": 32768,
+        "linear_integer_count": 148950,
+        "linear_items": 49650,
+        "vertex_count": 16882
+      },
+      {
+        "archive_bytes": 471672,
+        "decode_ms": 175.35270799999125,
+        "encode_ms": 108.94045900204219,
+        "exact_round_trip": true,
+        "face_count": 65536,
+        "linear_integer_count": 300045,
+        "linear_items": 100015,
+        "vertex_count": 34479
+      },
+      {
+        "archive_bytes": 647528,
+        "decode_ms": 240.79149999306537,
+        "encode_ms": 148.77433300716802,
+        "exact_round_trip": true,
+        "face_count": 92974,
+        "linear_integer_count": 416436,
+        "linear_items": 138812,
+        "vertex_count": 45838
+      }
+    ],
+    "source": "NASA SOFIA aircraft"
+  },
+  "total_faces": 1261986,
+  "total_vertices": 629706
+}

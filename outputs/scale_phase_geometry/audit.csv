@@ -1,0 +1,8 @@
+shape,nodes,sampled_max_relative_residual,exhaustive_max_relative_residual,exhaustive_rms_relative_residual,sampled_pairs,exhaustive_pairs,accepted,stored_dense_matrix
+exact_flat_annulus,192,4.3162719029358136e-15,4.3162719029358136e-15,5.107307638611996e-16,2352,18336,True,False
+straight_cylinder,192,1.0,1.0,0.6201492241978427,2352,18336,False,False
+tapered_circular_cone,192,0.9483667017913603,0.9483667017913603,0.626302641057046,2352,18336,False,False
+bent_circular_tube,192,1.0,1.0,0.7429530888852341,2352,18336,False,False
+twisted_ellipse,192,1.0,1.0,0.6995415476306351,2352,18336,False,False
+toroidal_bundle,192,1.0,1.0,0.8993253661235945,2352,18336,False,False
+aircraft_bundle,192,1.0,1.0,0.7294119357253838,2352,18336,False,False

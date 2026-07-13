@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="520" viewBox="0 0 1020 520">
+<rect width="1020" height="520" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#111;letter-spacing:0}.title{font-size:20px;font-weight:600}.label{font-size:14px}</style>
+<text x="510" y="34" text-anchor="middle" class="title">Golden Joukowski inverse-square action: measured scaling</text>
+<line x1="90" y1="430" x2="930" y2="430" stroke="#111"/>
+<line x1="90" y1="100" x2="90" y2="430" stroke="#111"/>
+<polyline points="90.00,430.00 210.00,397.59 330.00,360.65 450.00,325.60 570.00,288.38 690.00,254.32 810.00,218.82 930.00,183.44" fill="none" stroke="#111" stroke-width="2"/>
+<polyline points="90.00,424.18 210.00,359.77 330.00,294.08 450.00,225.67 570.00,162.81 690.00,100.00" fill="none" stroke="#888" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="750" y="78" class="label">black: static FFT endpoint compiler</text>
+<text x="750" y="98" class="label" fill="#666">grey: direct pair stream</text>
+<text x="510" y="486" text-anchor="middle" class="label">nodes (log scale)</text>
+<text x="25" y="270" text-anchor="middle" class="label" transform="rotate(-90 25 270)">apply time (log scale)</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="500" viewBox="0 0 820 500">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<line x1="85" y1="82.00" x2="792" y2="82.00" stroke="#dddddd"/>
+<text x="73" y="87.00" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">1e-1</text>
+<line x1="85" y1="248.67" x2="792" y2="248.67" stroke="#dddddd"/>
+<text x="73" y="253.67" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">1e-2</text>
+<line x1="85" y1="415.33" x2="792" y2="415.33" stroke="#dddddd"/>
+<text x="73" y="420.33" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">1e-3</text>
+<text x="85.00" y="457" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">8</text>
+<text x="320.67" y="457" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">16</text>
+<text x="556.33" y="457" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">32</text>
+<text x="792.00" y="457" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#333333">64</text>
+<line x1="85" y1="32" x2="85" y2="432" stroke="#111111"/>
+<line x1="85" y1="432" x2="792" y2="432" stroke="#111111"/>
+<polyline points="85.00,-26.32 320.67,24.66 556.33,75.30 792.00,125.80" fill="none" stroke="#777777" stroke-width="2.4" stroke-dasharray="5 4"/>
+<circle cx="85.00" cy="-26.32" r="3.5" fill="#ffffff" stroke="#777777" stroke-width="1.5"/>
+<circle cx="320.67" cy="24.66" r="3.5" fill="#ffffff" stroke="#777777" stroke-width="1.5"/>
+<circle cx="556.33" cy="75.30" r="3.5" fill="#ffffff" stroke="#777777" stroke-width="1.5"/>
+<circle cx="792.00" cy="125.80" r="3.5" fill="#ffffff" stroke="#777777" stroke-width="1.5"/>
+<line x1="103" y1="50" x2="140" y2="50" stroke="#777777" stroke-width="2.4" stroke-dasharray="5 4"/>
+<text x="149" y="55" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#222222">raw principal value</text>
+<polyline points="85.00,10.63 320.67,99.71 556.33,167.92 792.00,224.41" fill="none" stroke="#111111" stroke-width="2.4"/>
+<circle cx="85.00" cy="10.63" r="3.5" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+<circle cx="320.67" cy="99.71" r="3.5" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+<circle cx="556.33" cy="167.92" r="3.5" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+<circle cx="792.00" cy="224.41" r="3.5" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+<line x1="103" y1="74" x2="140" y2="74" stroke="#111111" stroke-width="2.4"/>
+<text x="149" y="79" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#222222">tangent-cell repaid</text>
+<text x="438.50" y="483" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#111111">meridional rings (n_theta = 2 n_s)</text>
+<text x="20" y="250.00" transform="rotate(-90 20 250.00)" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#111111">maximum relative sphere spectral error</text>
+</svg>

@@ -1,0 +1,106 @@
+{
+  "method": "sparse_multivariate_peeled_resultant",
+  "formula": "(Delta N_a-a_i Delta^2 D/20)/Delta D",
+  "support_budget": 100000,
+  "strict_audit_tolerance": 5e-13,
+  "stored_dense_matrix": false,
+  "largest_strict_pass_n": 8,
+  "rows": [
+    {
+      "n": 4,
+      "resultant_ms": 2.8628330037463456,
+      "streamed_direct_ms": 0.004749977961182594,
+      "denominator_support": 122,
+      "theoretical_simplex_support": 165,
+      "total_retained_support": 248,
+      "scalar_polynomial_multiplications": 1479,
+      "peeled_sum_audit_error": 1.3591842040450262e-15,
+      "graph_relative_error": 2.6912621427234606e-16,
+      "passes_strict_audit": true,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 6,
+      "resultant_ms": 15.35412500379607,
+      "streamed_direct_ms": 0.01058299676515162,
+      "denominator_support": 353,
+      "theoretical_simplex_support": 455,
+      "total_retained_support": 815,
+      "scalar_polynomial_multiplications": 11069,
+      "peeled_sum_audit_error": 8.513563576113306e-15,
+      "graph_relative_error": 2.208293777528881e-15,
+      "passes_strict_audit": true,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 8,
+      "resultant_ms": 56.71320797409862,
+      "streamed_direct_ms": 0.020957988454028964,
+      "denominator_support": 827,
+      "theoretical_simplex_support": 969,
+      "total_retained_support": 1977,
+      "scalar_polynomial_multiplications": 52107,
+      "peeled_sum_audit_error": 7.996073728251557e-14,
+      "graph_relative_error": 1.8034035253543794e-14,
+      "passes_strict_audit": true,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 10,
+      "resultant_ms": 153.6400000040885,
+      "streamed_direct_ms": 0.029875023756176233,
+      "denominator_support": 1561,
+      "theoretical_simplex_support": 1771,
+      "total_retained_support": 3879,
+      "scalar_polynomial_multiplications": 180925,
+      "peeled_sum_audit_error": 9.16125325174249e-13,
+      "graph_relative_error": 1.8756165635389705e-13,
+      "passes_strict_audit": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 12,
+      "resultant_ms": 362.01395801617764,
+      "streamed_direct_ms": 0.048124988097697496,
+      "denominator_support": 2622,
+      "theoretical_simplex_support": 2925,
+      "total_retained_support": 6716,
+      "scalar_polynomial_multiplications": 512615,
+      "peeled_sum_audit_error": 3.730830181233435e-12,
+      "graph_relative_error": 9.056172729197747e-13,
+      "passes_strict_audit": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 14,
+      "resultant_ms": 788.7302500021178,
+      "streamed_direct_ms": 0.06783401477150619,
+      "denominator_support": 4078,
+      "theoretical_simplex_support": 4495,
+      "total_retained_support": 10684,
+      "scalar_polynomial_multiplications": 1246513,
+      "peeled_sum_audit_error": 3.329424808093822e-11,
+      "graph_relative_error": 8.681173758275918e-12,
+      "passes_strict_audit": false,
+      "stored_dense_matrix": false
+    },
+    {
+      "n": 16,
+      "resultant_ms": 1509.4120840076357,
+      "streamed_direct_ms": 0.09091600077226758,
+      "denominator_support": 5993,
+      "theoretical_simplex_support": 6545,
+      "total_retained_support": 15975,
+      "scalar_polynomial_multiplications": 2714003,
+      "peeled_sum_audit_error": 1.895771569915245e-10,
+      "graph_relative_error": 9.035124553318411e-11,
+      "passes_strict_audit": false,
+      "stored_dense_matrix": false
+    }
+  ],
+  "fits": {
+    "denominator_support_exponent": 2.825955363582784,
+    "resultant_time_exponent": 4.530167675193255,
+    "direct_time_exponent": 2.132026973235409
+  }
+}

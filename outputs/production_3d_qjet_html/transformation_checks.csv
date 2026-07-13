@@ -1,0 +1,9 @@
+transformation,kernel_power,relative_residual,gate,passed
+translation,2,4.835459079152704e-16,2e-12,True
+rotation,2,2.5649805801673153e-16,2e-12,True
+scale,2,1.5915347664567946e-16,2e-12,True
+permutation,2,1.5479232455107708e-16,2e-12,True
+translation,3,1.784827932007623e-15,2e-12,True
+rotation,3,7.448366646644824e-16,2e-12,True
+scale,3,3.999896478588988e-16,2e-12,True
+permutation,3,3.325603884115315e-17,2e-12,True

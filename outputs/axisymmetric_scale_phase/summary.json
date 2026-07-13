@@ -1,0 +1,171 @@
+{
+  "method": "axisymmetric_hyperbolic_exact_alias_qjet",
+  "accuracy_rows": [
+    {
+      "shape": "cylinder",
+      "n_nodes": 304,
+      "compile_ms": 7.535959011875093,
+      "nested_ms": 19.07329200184904,
+      "direct_ms": 77.23158298176713,
+      "relative_error": 1.8298542034697258e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "cone",
+      "n_nodes": 304,
+      "compile_ms": 7.681584014790133,
+      "nested_ms": 18.974665988935158,
+      "direct_ms": 76.67358301114291,
+      "relative_error": 1.9359745504859475e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "sphere_cap",
+      "n_nodes": 304,
+      "compile_ms": 7.622292003361508,
+      "nested_ms": 18.955583014758304,
+      "direct_ms": 77.34329099184833,
+      "relative_error": 2.0034461528912933e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "corrugated",
+      "n_nodes": 304,
+      "compile_ms": 8.293457998661324,
+      "nested_ms": 19.189916987670586,
+      "direct_ms": 76.827749988297,
+      "relative_error": 1.9778512197326438e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "double_neck",
+      "n_nodes": 304,
+      "compile_ms": 7.862875005230308,
+      "nested_ms": 19.191166007658467,
+      "direct_ms": 77.45275000343099,
+      "relative_error": 1.7814242052559042e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "cusp_meridian",
+      "n_nodes": 304,
+      "compile_ms": 7.537915982538834,
+      "nested_ms": 19.204124982934445,
+      "direct_ms": 77.59754097787663,
+      "relative_error": 1.3341000094055238e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    },
+    {
+      "shape": "airfoil_body",
+      "n_nodes": 304,
+      "compile_ms": 7.598458003485575,
+      "nested_ms": 19.24449999933131,
+      "direct_ms": 76.92550000501797,
+      "relative_error": 1.3940678673071357e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.11695906432748537,
+      "stored_dense_matrix": false
+    }
+  ],
+  "scaling_rows": [
+    {
+      "n_scale": 16,
+      "n_theta": 8,
+      "n_nodes": 128,
+      "compile_ms": 1.2207500112708658,
+      "nested_ms": 3.5638750123325735,
+      "direct_ms": 14.791333000175655,
+      "relative_error": 1.0958481115771765e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.0,
+      "stored_mode_tile_entries": 0,
+      "stored_dense_matrix": false
+    },
+    {
+      "n_scale": 32,
+      "n_theta": 8,
+      "n_nodes": 256,
+      "compile_ms": 5.97716702031903,
+      "nested_ms": 11.571417009690776,
+      "direct_ms": 54.68683401704766,
+      "relative_error": 2.3230480249594014e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.12903225806451613,
+      "stored_mode_tile_entries": 5120,
+      "stored_dense_matrix": false
+    },
+    {
+      "n_scale": 64,
+      "n_theta": 8,
+      "n_nodes": 512,
+      "compile_ms": 36.179125017952174,
+      "nested_ms": 36.82354200282134,
+      "direct_ms": 221.95199999259785,
+      "relative_error": 5.803078247685881e-15,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.47619047619047616,
+      "stored_mode_tile_entries": 51200,
+      "stored_dense_matrix": false
+    },
+    {
+      "n_scale": 128,
+      "n_theta": 8,
+      "n_nodes": 1024,
+      "compile_ms": 120.79908300074749,
+      "nested_ms": 95.77233300660737,
+      "direct_ms": 895.7038749940693,
+      "relative_error": 1.1525527538530896e-14,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.7165354330708661,
+      "stored_mode_tile_entries": 179200,
+      "stored_dense_matrix": false
+    },
+    {
+      "n_scale": 256,
+      "n_theta": 8,
+      "n_nodes": 2048,
+      "compile_ms": 300.8977920108009,
+      "nested_ms": 225.69520899560302,
+      "direct_ms": null,
+      "relative_error": null,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.8529411764705882,
+      "stored_mode_tile_entries": 471040,
+      "stored_dense_matrix": false
+    },
+    {
+      "n_scale": 512,
+      "n_theta": 8,
+      "n_nodes": 4096,
+      "compile_ms": 694.597583002178,
+      "nested_ms": 493.9868329965975,
+      "direct_ms": null,
+      "relative_error": null,
+      "constant_residual": 0.0,
+      "compressed_pair_fraction": 0.925146771037182,
+      "stored_mode_tile_entries": 1090560,
+      "stored_dense_matrix": false
+    }
+  ],
+  "fits": {
+    "nested_time_exponent": 1.4231601644533265,
+    "nested_tail_exponent": 1.247401177851855,
+    "direct_time_exponent": 1.9781575864961922
+  },
+  "stored_dense_matrix": false,
+  "stored_pair_table": false,
+  "apply_complexity": "O(p^2 N + N log n_theta), fixed p",
+  "storage_complexity": "O(p^2 N), fixed p"
+}

@@ -1,0 +1,5 @@
+family,shape,kernel_power,nodes,triangles,compile_ms,apply_ms,reference_ms,apply_timing_repeats,relative_error,constant_residual,low_rank_blocks,maximum_rank,exact_pair_fraction,certification_kernel_samples,hard_no_quadratic_contract,quadratic_fallback,continuum_corner_certificate,stored_dense_matrix
+unstructured_curved_graph,folded_sheet,2.0,96,154,726.0976249817759,563.5607090080157,3.0499169952236116,1,7.438797248976374e-16,0.0,113,969,0.5381578947368421,0,True,False,False,False
+unstructured_curved_graph,folded_sheet,3.0,96,154,699.6531249897089,560.1633749902248,3.1003750045783818,1,1.9789939209620513e-15,0.0,102,969,0.625,0,True,False,False,False
+unstructured_curved_graph,mobius_strip,2.0,96,160,812.2429579962045,622.4017499771435,3.1321669812314212,1,1.3257530068332778e-15,0.0,180,969,0.20065789473684212,0,True,False,False,False
+unstructured_curved_graph,mobius_strip,3.0,96,160,793.5386250028387,610.7443750079256,3.171208983985707,1,3.4265386786713824e-15,0.0,211,969,0.24407894736842106,0,True,False,False,False

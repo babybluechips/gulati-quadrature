@@ -1,0 +1,5 @@
+n_meridian,n_theta,n_nodes,raw_apply_ms,repaid_apply_ms,estimated_work_units,dense_entries_avoided,dense_complex_bytes_avoided,theoretical_apply_cost,theoretical_storage
+8,16,128,1.0303329909220338,1.0522499942453578,2880,16384,262144,O(n_s^2 n_theta log n_theta),O(n_s n_theta)
+16,32,512,6.685375003144145,6.710000001476146,26112,262144,4194304,O(n_s^2 n_theta log n_theta),O(n_s n_theta)
+32,64,2048,47.923792008077726,47.997624991694465,236544,4194304,67108864,O(n_s^2 n_theta log n_theta),O(n_s n_theta)
+64,128,8192,360.38837500382215,360.06220799754374,2129920,67108864,1073741824,O(n_s^2 n_theta log n_theta),O(n_s n_theta)

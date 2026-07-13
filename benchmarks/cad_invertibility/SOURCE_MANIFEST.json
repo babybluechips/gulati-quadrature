@@ -1,0 +1,98 @@
+{
+  "buildingSMART_ifc_bridge": {
+    "attribution": "buildingSMART International; source model author Jan B.",
+    "files": [
+      {
+        "path": "sources/bridge/Infra-Bridge.ifc",
+        "sha256": "241e6576a3a554086d3d2ae87415c5ba98a0123d329245810e7d42ecc504c183"
+      }
+    ],
+    "license": "Creative Commons Attribution 4.0 International",
+    "license_file": "sources/bridge/LICENSE",
+    "source": "https://github.com/buildingSMART/Sample-Test-Files/blob/main/IFC%204.3.2.0%20%28IFC4X3_ADD2%29/PCERT-Sample-Scene/Infra-Bridge.ifc"
+  },
+  "nasa_curiosity_rover": {
+    "attribution": "NASA 3D Resources contributors",
+    "files": [
+      {
+        "path": "sources/curiosity_rover/1-body.stl",
+        "sha256": "37658779043aab83c74664c25347d6aaf4f17fe83ecf4382e24347f0f2156708"
+      },
+      {
+        "path": "sources/curiosity_rover/2-components.stl",
+        "sha256": "572bb13c4a2db8c7f9921ab0ad8353620c6c23566203373a5e74107daa4c1a8f"
+      },
+      {
+        "path": "sources/curiosity_rover/3-pins-and-hubs.stl",
+        "sha256": "3a0f5a043270c2bb0b85650143b0580f13d1cda4b19a68824affd537f5791174"
+      },
+      {
+        "path": "sources/curiosity_rover/4-wheels.stl",
+        "sha256": "b4fcb1cbf5e00d6498080cf92e50086829eab69d8af923c683a94fbcf9a5c560"
+      }
+    ],
+    "license": "NASA repository states assets are free and without copyright; NASA media usage guidelines apply",
+    "license_file": "sources/curiosity_rover/SOURCE_README.md",
+    "source": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/Curiosity%20Rover%20%28Detailed%29"
+  },
+  "nasa_curiosity_rover_single_file": {
+    "attribution": "NASA 3D Resources contributors",
+    "files": [
+      {
+        "path": "sources/curiosity_assembled/Curiosity_200uM.stl",
+        "sha256": "baf0e822a46bea22b23a7c0bee968f82d4f309b49c53f7e33fa642a0e176fe8a"
+      }
+    ],
+    "license": "NASA repository states assets are free and without copyright; NASA media usage guidelines apply",
+    "license_file": "sources/curiosity_assembled/SOURCE_README.md",
+    "source": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/Curiosity%20Rover%20%28Simplified%29"
+  },
+  "freecad_cement_mixer": {
+    "attribution": "Martijn Cramer; KU Leuven ACRO",
+    "files": [
+      {
+        "path": "sources/cement_mixer/asm_cement_mixer_truck.stl",
+        "sha256": "97b29d06fed2db99859dfd28c65d32b369db50a385d73d366bdc5525c05ea136"
+      }
+    ],
+    "license": "Creative Commons Attribution 3.0",
+    "license_file": "sources/cement_mixer/PART_README.md",
+    "source": "https://github.com/FreeCAD/FreeCAD-library/tree/master/Generic%20objects/Scale%20Models/Cement%20mixer%20truck"
+  },
+  "nasa_sofia": {
+    "attribution": "NASA 3D Resources contributors",
+    "files": [
+      {
+        "path": "sources/sofia/Fuselage_top.stl",
+        "sha256": "b9c764db333eef645f8500c0bdea432a7990ebf34c38d505635d6f562c7cec70"
+      },
+      {
+        "path": "sources/sofia/Instrument.stl",
+        "sha256": "f9ed13e917895e2b4cf63d291685211d691a462bedcf26945741506e0e15f9b5"
+      },
+      {
+        "path": "sources/sofia/Left_wing.stl",
+        "sha256": "6858f81cf35ba44e95ca1edd030b84686ce4e9732339598fa342ef6b1ae2fad9"
+      },
+      {
+        "path": "sources/sofia/Nose_section.stl",
+        "sha256": "6acea9041dd3065ebfd4542f2beb11359e256a885ca6ac74e72fe91f65ba3bfa"
+      },
+      {
+        "path": "sources/sofia/Right_wing.stl",
+        "sha256": "d5b881bf3c64ea99801c7afe1e2d87ccaa63a13f3a18b1af0a7aba2912a73523"
+      },
+      {
+        "path": "sources/sofia/Tail_section.stl",
+        "sha256": "034c11c16f9c94d3a3edfc51f8e90d80d1ab0961e542e80373fb5d939d8ce50b"
+      },
+      {
+        "path": "sources/sofia/Telescope_cavity_closed.stl",
+        "sha256": "568ac2b3e00a5965667908b5bd1b7daf2286234a7b78333e69d76fffa8827dfd"
+      }
+    ],
+    "license": "NASA repository states assets are free and without copyright; NASA media usage guidelines apply",
+    "license_file": "sources/sofia/SOURCE_README.md",
+    "source": "https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Printing/SOFIA"
+  }
+}

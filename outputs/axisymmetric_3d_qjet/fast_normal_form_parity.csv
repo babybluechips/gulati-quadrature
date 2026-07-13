@@ -1,0 +1,6 @@
+normal_form,chart,n_nodes,relative_fast_vs_direct,constant_residual,fast_apply_ms,direct_pair_stream_ms,generated_symbol_entries,stored_three_jet_scalars,dense_entries_avoided,apply_complexity,storage_complexity,dense_matrix_stored
+cylinder,"cylinder(z,theta)",32,5.569407999111905e-16,0.0,0.34749999758787453,0.8142499864334241,64,52,1024,O(N log N),O(N),False
+log_cone,"cone(rho=log r,theta)",32,1.0681220847209092e-15,0.0,0.3428750060265884,0.811542005976662,64,52,1024,O(N log N),O(N),False
+stereographic_sphere,"sphere(stereographic eta,theta)",32,4.531581184534698e-16,0.0,0.34374999813735485,0.8099999977275729,64,52,1024,O(N log N),O(N),False
+koenigs_tetration_cone_real_multiplier,"Koenigs-tetration cone(h,theta)",32,2.3318400485428848e-15,0.0,0.3445409965934232,0.8057499944698066,64,52,1024,O(N log N),O(N),False
+koenigs_tetration_cone_complex_multiplier,"Koenigs-tetration cone(h,theta)",32,3.1693734974273193e-15,0.0,0.34012499963864684,0.8070839976426214,64,52,1024,O(N log N),O(N),False

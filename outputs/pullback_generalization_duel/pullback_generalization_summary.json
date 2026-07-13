@@ -1,0 +1,37 @@
+{
+  "axisymmetric_cases": 9,
+  "axisymmetric_finest": {
+    "moderate_torus": {
+      "first_solve_speedup": 10.381689223107145,
+      "raw": 0.4472951942605223,
+      "repaid": 0.0020171224782130474,
+      "repeated_apply_speedup": 4439.871276668329
+    },
+    "near_horn_torus": {
+      "first_solve_speedup": 10.650953340197349,
+      "raw": 0.20162969089243216,
+      "repaid": 0.007151751178735489,
+      "repeated_apply_speedup": 4162.49722341845
+    },
+    "slender_torus": {
+      "first_solve_speedup": 10.815436917365956,
+      "raw": 0.8238865679535845,
+      "repaid": 0.006241146680034126,
+      "repeated_apply_speedup": 4987.5135787492345
+    }
+  },
+  "circle_max_cosecant_action_error": 5.943933401275219e-14,
+  "circle_max_lag_average_action_error": 1.3873243792936295e-13,
+  "generic_max_prime_form_far_defect": 0.3748646164662598,
+  "generic_min_lag_average_far_kernel_error": 0.004322942260286031,
+  "log_channel_finest_abs_error": 3.314717923638688e-05,
+  "log_channel_finest_coefficient": 0.2499668528207636,
+  "log_channel_predicted_coefficient": 0.25,
+  "planar_cases": 54,
+  "remaining_requirement": "repay the logarithmic reduced channel and compress the nonlocal remainder with a certified FMM/H-matrix; local three-jets alone do not determine it",
+  "riemann_route_status": "not a 3D DtN generalization; generic arclength kernels are not circulant, and the prime-form mixed Hessian is not the inverse-square chord weight off a circle",
+  "smooth_high_median_cosecant_error": 0.015957394197341053,
+  "smooth_high_median_cosecant_repaid_error": 0.013266464905031194,
+  "stored_dense_matrix": false,
+  "winner": "cosecant principal channel plus sparse local repayment"
+}

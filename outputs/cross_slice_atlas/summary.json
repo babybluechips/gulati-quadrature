@@ -1,0 +1,17 @@
+{
+  "shape_count": 6,
+  "kernel_powers": [
+    2,
+    3
+  ],
+  "maximum_atlas_relative_error": 7.778741479845777e-14,
+  "maximum_tree_relative_error": 0.002332719640604139,
+  "maximum_constant_residual": 0.0,
+  "maximum_scaling_relative_error": 2.0710965775219917e-14,
+  "atlas_apply_exponent": 1.5243827432675563,
+  "direct_apply_exponent": 1.9099251065606135,
+  "largest_low_rank_pair_fraction": 0.19047619047619047,
+  "stored_dense_matrix": false,
+  "numerical_substrate": "project QJet FFT and scalar kernels; no NumPy",
+  "complexity": "O(r N log N + L_local N log n_theta + P_near + N n_theta) under bounded atlas ranks/neighbors; geometry-dependent worst case"
+}

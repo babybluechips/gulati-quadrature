@@ -1,0 +1,43 @@
+shape,family,probe,azimuthal_mode,ritz_value,relative_ritz_residual,claim
+sphere,closed smooth genus 0,axial_m0,0,0.9896033052709098,0.009199617053099114,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+sphere,closed smooth genus 0,transverse_m1,1,1.0016994723262647,0.13290099379100842,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+sphere,closed smooth genus 0,quadrupole_m2,2,1.9889516028538503,0.030846318632748452,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+prolate_spheroid,closed smooth genus 0,axial_m0,0,0.6432891029732337,0.17272985789674183,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+prolate_spheroid,closed smooth genus 0,transverse_m1,1,1.6052723019512163,0.17742766485847844,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+prolate_spheroid,closed smooth genus 0,quadrupole_m2,2,3.282338271660202,0.10703377287951801,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+oblate_spheroid,closed smooth genus 0,axial_m0,0,1.4829208346760225,0.26010135098198517,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+oblate_spheroid,closed smooth genus 0,transverse_m1,1,0.739240598417861,0.24905752675155138,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+oblate_spheroid,closed smooth genus 0,quadrupole_m2,2,1.432397657691267,0.19477626703027895,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+golden_spheroid,closed smooth genus 0,axial_m0,0,0.4269170135906038,0.09122757226219089,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+golden_spheroid,closed smooth genus 0,transverse_m1,1,0.3431400091416739,0.15085835022943603,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+golden_spheroid,closed smooth genus 0,quadrupole_m2,2,0.6750652856054263,0.05679625177007623,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+peanut,closed smooth necked,axial_m0,0,0.7557709674057848,0.12417860453590647,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+peanut,closed smooth necked,transverse_m1,1,1.2982027186623126,0.19533869769477188,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+peanut,closed smooth necked,quadrupole_m2,2,2.6273098259988634,0.08961581415844833,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+multiscale_ripple,closed smooth oscillatory,axial_m0,0,0.9279433924840562,0.12521167576527975,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+multiscale_ripple,closed smooth oscillatory,transverse_m1,1,0.8519106896625884,0.11833085702768492,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+multiscale_ripple,closed smooth oscillatory,quadrupole_m2,2,1.6889331731334865,0.03294855565228261,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cusped_spindle,closed cusp tips,axial_m0,0,1.3952939204186519,0.19999636119258413,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cusped_spindle,closed cusp tips,transverse_m1,1,1.1134304121205436,0.3265843504916517,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cusped_spindle,closed cusp tips,quadrupole_m2,2,2.1564825376461587,0.10256913424910448,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+superquadric_capsule,closed high-curvature transitions,axial_m0,0,0.43190669541032134,0.4919430776799652,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+superquadric_capsule,closed high-curvature transitions,transverse_m1,1,0.8866667402834655,0.10430460431036835,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+superquadric_capsule,closed high-curvature transitions,quadrupole_m2,2,1.8393844096042504,0.07407529801331421,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+torus,closed genus 1,axial_m0,0,2.017931766131382,0.020876959233079202,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+torus,closed genus 1,transverse_m1,1,0.33681595989758156,0.6989693855787372,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+torus,closed genus 1,quadrupole_m2,2,0.8061754109518899,0.40689439806518996,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+thin_torus,closed genus 1 high aspect,axial_m0,0,4.765546554100844,0.04444790970173836,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+thin_torus,closed genus 1 high aspect,transverse_m1,1,0.11983202206186058,2.472619152055893,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+thin_torus,closed genus 1 high aspect,quadrupole_m2,2,0.3506557007644921,1.5917354693843015,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cylinder,open lateral surface,axial_m0,0,0.9923542414062213,0.2603854158290205,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cylinder,open lateral surface,transverse_m1,1,0.5738251107116608,0.10271750451633492,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+cylinder,open lateral surface,quadrupole_m2,2,1.3530300045446828,0.11409001117720985,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+frustum,open conic surface,axial_m0,0,0.9583826734145232,0.2595511815756501,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+frustum,open conic surface,transverse_m1,1,0.6802931083868475,0.2115911439213874,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+frustum,open conic surface,quadrupole_m2,2,1.3467594070137836,0.2028793701489907,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+near_tip_cone,open conic near-tip,axial_m0,0,1.0580777549207974,0.23900026909778394,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+near_tip_cone,open conic near-tip,transverse_m1,1,0.9221034202419345,0.47661384104383686,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+near_tip_cone,open conic near-tip,quadrupole_m2,2,1.7143032961224296,0.23398819495746492,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+double_concave_hourglass,open piecewise conic,axial_m0,0,0.7075608791704769,0.3075715734402414,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+double_concave_hourglass,open piecewise conic,transverse_m1,1,1.0054509495633608,0.1873062290566279,discrete probe Ritz diagnostic; not an exact continuum eigenpair
+double_concave_hourglass,open piecewise conic,quadrupole_m2,2,1.8421419662995313,0.17244789530655694,discrete probe Ritz diagnostic; not an exact continuum eigenpair

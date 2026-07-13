@@ -1,0 +1,26 @@
+{
+  "complexity": "O(L N log N + L^2 N) compiled charts; O(N) storage at fixed tolerance",
+  "conic_integration": {
+    "cross_slice_interactions_included": false,
+    "cycle_fft_channels": 632,
+    "direct_pairs_replaced": 3968,
+    "direct_same_slice_ms": 1.8985839997185394,
+    "maximum_tail_bound": 5.889232519457893e-16,
+    "n_theta": 32,
+    "nodes": 256,
+    "relative_error": 3.229098214262815e-15,
+    "slices": 8,
+    "static_apply_ms": 106.14804200304206,
+    "stored_dense_matrix": false
+  },
+  "direct_exponent": 2.022891028202518,
+  "golden_channels": 39,
+  "golden_tail_bound": 6.666575426061752e-18,
+  "maximum_annulus_q2_error": 5.0217477224270564e-15,
+  "maximum_annulus_q3_error": 1.423350265914418e-14,
+  "maximum_cartesian_reference_error": 4.003178109352934e-14,
+  "maximum_constant_residual": 0.0,
+  "maximum_golden_error": 6.823784231814434e-14,
+  "static_exponent": 1.1000897887892338,
+  "stored_dense_matrix": false
+}

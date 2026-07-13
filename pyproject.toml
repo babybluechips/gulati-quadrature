@@ -3,26 +3,26 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inverse-shape"
-version = "0.1.0"
-description = "Numerical primitives for inverse spectral and Hadamard shape reconstruction."
+name = "gulati-quadrature"
+version = "0.2.0"
+description = "Matrix-free planar and three-dimensional QJet quadrature operators."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "MIT"
 authors = [
   { name = "Rick Gulati" }
 ]
 keywords = [
-  "inverse spectral geometry",
-  "shape reconstruction",
-  "Hadamard variation",
-  "Steklov",
+  "boundary integral quadrature",
+  "Dirichlet-to-Neumann",
+  "near singular quadrature",
+  "surface quadrature",
+  "QJet",
   "Gulati Laplacian"
 ]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -37,13 +37,24 @@ dependencies = [
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.8"]
+reports = [
+  "beautifulsoup4>=4.12",
+  "nbconvert>=7.16",
+  "nbformat>=5.10",
+  "pillow>=10.0",
+]
 dev = [
+  "beautifulsoup4>=4.12",
+  "nbconvert>=7.16",
+  "nbformat>=5.10",
+  "pillow>=10.0",
   "pytest>=8",
   "ruff>=0.6",
   "mypy>=1.10",
 ]
 
 [project.scripts]
+gulati-q = "gulati_quadrature.cli:main"
 inverse-shape = "inverse_shape.cli:main"
 
 [tool.setuptools.packages.find]

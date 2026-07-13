@@ -1,0 +1,4 @@
+geometry,best_scalar_real,best_scalar_imag,relative_pair_kernel_residual,single_univariate_metric_closure
+common_circle,0.9999999999999999,-1.4594417291042403e-17,1.0023431450312545e-15,True
+ellipse,0.21554384913255595,4.535018908629621e-16,0.7987593369837573,False
+scale_phase_spiral,0.7718091123747695,-1.6337423189428272e-15,0.719335931421541,False

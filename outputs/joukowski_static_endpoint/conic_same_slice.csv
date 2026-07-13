@@ -1,0 +1,2 @@
+nodes,slices,n_theta,static_apply_ms,direct_same_slice_ms,direct_pairs_replaced,relative_error,cycle_fft_channels,maximum_tail_bound,cross_slice_interactions_included,stored_dense_matrix
+256,8,32,106.14804200304206,1.8985839997185394,3968,3.229098214262815e-15,632,5.889232519457893e-16,False,False

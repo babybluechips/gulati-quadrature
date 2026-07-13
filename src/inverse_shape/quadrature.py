@@ -107,9 +107,7 @@ def _exp(value):
     for idx in range(1, 42):
         term *= r / idx
         total += term
-    if k >= 0:
-        return total * (2.0**k)
-    return total / (2.0 ** (-k))
+    return total * (2.0**k)
 
 
 def _log(value):
@@ -443,6 +441,100 @@ def _ifft(values):
         return []
     transformed = _fft([value.conjugate() for value in values])
     return [value.conjugate() / n for value in transformed]
+
+
+class QJetFFTPlan:
+    """Reusable radix-two plan with independently generated twiddles."""
+
+    def __init__(self, n):
+        self.n = int(n)
+        if self.n < 1 or not _is_power_of_two(self.n):
+            raise ValueError("a QJetFFTPlan requires a positive radix-two size")
+        permutation = []
+        width = self.n.bit_length() - 1
+        for index in range(self.n):
+            value = index
+            reversed_value = 0
+            for _bit in range(width):
+                reversed_value = (reversed_value << 1) | (value & 1)
+                value >>= 1
+            permutation.append(reversed_value)
+        self.permutation = tuple(permutation)
+        stages = []
+        size = 2
+        while size <= self.n:
+            half = size // 2
+            stages.append(
+                tuple(
+                    complex(
+                        _cos(-TAU * offset / size),
+                        _sin(-TAU * offset / size),
+                    )
+                    for offset in range(half)
+                )
+            )
+            size <<= 1
+        self.stages = tuple(stages)
+
+    @property
+    def stored_twiddles(self):
+        return sum(len(stage) for stage in self.stages)
+
+    def fft(self, values):
+        if len(values) != self.n:
+            raise ValueError("FFT input length does not match the plan")
+        out = [complex(values[index]) for index in self.permutation]
+        size = 2
+        for twiddles in self.stages:
+            half = size // 2
+            for start in range(0, self.n, size):
+                for offset, factor in enumerate(twiddles):
+                    even = out[start + offset]
+                    odd = factor * out[start + offset + half]
+                    out[start + offset] = even + odd
+                    out[start + offset + half] = even - odd
+            size <<= 1
+        return out
+
+    def ifft(self, values):
+        if len(values) != self.n:
+            raise ValueError("FFT input length does not match the plan")
+        transformed = self.fft(
+            [complex(value).conjugate() for value in values]
+        )
+        return [value.conjugate() / self.n for value in transformed]
+
+
+_PRECISE_FFT_PLANS = {}
+
+
+def _precise_fft_plan(n):
+    size = int(n)
+    plan = _PRECISE_FFT_PLANS.get(size)
+    if plan is None:
+        plan = QJetFFTPlan(size)
+        _PRECISE_FFT_PLANS[size] = plan
+    return plan
+
+
+def _fft_precise(values):
+    """FFT using an O(n) cached plan with non-drifting stage twiddles."""
+
+    n = len(values)
+    if n == 0:
+        return []
+    if not _is_power_of_two(n):
+        return _dft(values, inverse=False)
+    return _precise_fft_plan(n).fft(values)
+
+
+def _ifft_precise(values):
+    n = len(values)
+    if n == 0:
+        return []
+    if not _is_power_of_two(n):
+        return _dft(values, inverse=True)
+    return _precise_fft_plan(n).ifft(values)
 
 
 def _clean_vector(output):
@@ -2071,6 +2163,7 @@ __all__ = [
     "NumericVector",
     "PointTable",
     "PullbackMetricQJet",
+    "QJetFFTPlan",
     "QModeJet",
     "QSpectralErrorSignature",
     "QuadratureEvaluation",
