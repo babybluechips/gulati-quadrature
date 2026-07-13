@@ -1,0 +1,31 @@
+shape,nodes,problem,reference,relative_solution_error,relative_equation_residual,compression_inf_bound,iterations,qjet_applications,solve_ms,error_gate,converged,dense_operator_stored,quadratic_fallback,passed
+sphere,40,laplace_dtn,independent streamed pairwise Q3,1.303089793916125e-16,0.0,6.581281137708214e-16,0,1,196.66374998632818,2e-10,True,False,False,True
+sphere,40,poisson,manufactured with independent streamed pairwise Q3,1.7986291056068918e-13,1.843196120729572e-12,7.386573643662655e-16,8,8,1549.7084590024315,2e-07,True,False,False,True
+sphere,40,screened_poisson,manufactured with independent streamed pairwise Q3,2.6023664685500125e-13,2.170070323867053e-12,1.037904230478599e-15,9,9,1744.3099170050118,2e-08,True,False,False,True
+sphere,40,helmholtz,manufactured with independent streamed pairwise Q3,5.5461458008484055e-12,2.354241833123594e-10,4.4265729951536023e-14,11,46,8957.265333010582,2e-06,True,False,False,True
+sphere,40,heat,same Pade integrator over independent streamed pairwise Q3,4.2131186604745956e-17,5.886432872018108e-10,2.111003799465157e-15,5,18,3526.100832998054,2e-07,True,False,False,True
+sphere,40,wave,same Newmark integrator over independent streamed pairwise Q3,1.3001812296484134e-18,1.7457437738904592e-09,1.4743321351577533e-15,6,20,3891.2800410180353,2e-07,True,False,False,True
+torus,40,laplace_dtn,independent streamed pairwise Q3,7.478009610462448e-16,0.0,1.5964085721725676e-14,0,1,231.68329100008123,2e-10,True,False,False,True
+torus,40,poisson,manufactured with independent streamed pairwise Q3,9.191785739168442e-16,3.009715230942774e-17,1.7205317887286882e-14,8,8,1873.4661250200588,2e-07,True,False,False,True
+torus,40,screened_poisson,manufactured with independent streamed pairwise Q3,3.428359760157418e-16,5.0126445877398e-18,2.231907823269001e-14,9,9,2102.3197500035167,2e-08,True,False,False,True
+torus,40,helmholtz,manufactured with independent streamed pairwise Q3,1.4859075045705678e-15,1.841020292400537e-14,9.187653172988194e-14,8,32,7491.1956249852665,2e-06,True,False,False,True
+torus,40,heat,same Pade integrator over independent streamed pairwise Q3,3.8656073439029485e-17,5.046138746317831e-10,2.8667203889903534e-14,5,18,4201.674499985529,2e-07,True,False,False,True
+torus,40,wave,same Newmark integrator over independent streamed pairwise Q3,9.322923967181058e-19,2.962798319415457e-10,3.192293937263469e-14,6,20,4668.720374989789,2e-07,True,False,False,True
+open folded sheet,40,laplace_dtn,independent streamed pairwise Q3,1.375885269811311e-16,0.0,5.648926763864734e-15,0,1,201.27041699015535,2e-10,True,False,False,True
+open folded sheet,40,poisson,manufactured with independent streamed pairwise Q3,2.197237982019519e-10,1.4589952158157795e-09,3.988783048119962e-15,19,19,3815.678917017067,2e-07,True,False,False,True
+open folded sheet,40,screened_poisson,manufactured with independent streamed pairwise Q3,1.6662141715384406e-10,7.323782131456828e-10,7.141251874836481e-15,19,19,3828.146709012799,2e-08,True,False,False,True
+open folded sheet,40,helmholtz,manufactured with independent streamed pairwise Q3,2.2719007343962305e-10,1.0603554738962582e-09,3.1888825590227446e-14,26,104,20964.550208009314,2e-06,True,False,False,True
+open folded sheet,40,heat,same Pade integrator over independent streamed pairwise Q3,1.2230560546273692e-17,6.72097093767165e-11,5.648926763864734e-15,6,21,4231.645958003355,2e-07,True,False,False,True
+open folded sheet,40,wave,same Newmark integrator over independent streamed pairwise Q3,0.0,7.300298721432239e-10,1.1295270279640094e-14,6,20,4036.633832991356,2e-07,True,False,False,True
+faceted octahedron,18,laplace_dtn,independent streamed pairwise Q3,1.0745595107316566e-16,0.0,0.0,0,1,59.63366699870676,2e-10,True,False,False,True
+faceted octahedron,18,poisson,manufactured with independent streamed pairwise Q3,1.2322915528642032e-16,6.505282478769795e-18,0.0,3,3,178.83200000505894,2e-07,True,False,False,True
+faceted octahedron,18,screened_poisson,manufactured with independent streamed pairwise Q3,1.0229366521248861e-16,1.7945491380629704e-17,0.0,4,4,239.26537498482503,2e-08,True,False,False,True
+faceted octahedron,18,helmholtz,manufactured with independent streamed pairwise Q3,2.1131551773612285e-16,3.4987951147404697e-16,0.0,3,12,731.343041989021,2e-06,True,False,False,True
+faceted octahedron,18,heat,same Pade integrator over independent streamed pairwise Q3,0.0,4.482312916495215e-20,0.0,3,12,723.1344169995282,2e-07,True,False,False,True
+faceted octahedron,18,wave,same Newmark integrator over independent streamed pairwise Q3,0.0,1.8072337227352545e-09,0.0,4,16,965.7669169828296,2e-07,True,False,False,True
+car assembly,40,laplace_dtn,independent streamed pairwise Q3,1.4570355890928239e-16,0.0,2.0397497990640796e-14,0,1,218.61545799765736,2e-10,True,False,False,True
+car assembly,40,poisson,manufactured with independent streamed pairwise Q3,6.861754980095241e-11,7.032430129723226e-10,7.18992546939804e-14,37,37,8137.4213339877315,2e-07,True,False,False,True
+car assembly,40,screened_poisson,manufactured with independent streamed pairwise Q3,1.4152356376784647e-10,5.178500984465633e-10,9.482363341718385e-14,36,36,7939.558624988422,2e-08,True,False,False,True
+car assembly,40,helmholtz,manufactured with independent streamed pairwise Q3,1.7790460489520944e-08,1.300851949835554e-09,1.2505190622362918e-11,126,504,111287.26275000372,2e-06,True,False,False,True
+car assembly,40,heat,same Pade integrator over independent streamed pairwise Q3,9.047427092868656e-19,2.514440736350974e-10,5.028025786456784e-13,10,33,7280.263583001215,2e-07,True,False,False,True
+car assembly,40,wave,same Newmark integrator over independent streamed pairwise Q3,3.2115610122958316e-19,1.4642605423592655e-09,4.62545101726324e-14,12,32,7064.861291000852,2e-07,True,False,False,True

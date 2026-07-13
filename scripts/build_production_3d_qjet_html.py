@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import csv
 import html
 import json
 from pathlib import Path
@@ -24,6 +25,10 @@ OUTPUT = (
 CAD_OUTPUT = ROOT / "outputs" / "cad_qjet_invertibility"
 CAD_SUMMARY = CAD_OUTPUT / "cad_roundtrip_summary.json"
 CAD_GALLERY = CAD_OUTPUT / "cad_roundtrip_gallery.svg"
+PDE_OUTPUT = ROOT / "outputs" / "production_3d_pde_validation"
+PDE_SUMMARY = PDE_OUTPUT / "summary.json"
+PDE_DISCRETE = PDE_OUTPUT / "discrete_pde_rows.csv"
+PDE_CONTINUUM = PDE_OUTPUT / "sphere_continuum_rows.csv"
 
 TITLE = "Production 3D QJet: proofs, algorithm, and validation"
 
@@ -191,6 +196,63 @@ def cad_invertibility_section() -> str:
 """
 
 
+def pde_validation_section() -> str:
+    """Embed independent discrete and exact-sphere PDE validation."""
+
+    required = (PDE_SUMMARY, PDE_DISCRETE, PDE_CONTINUUM)
+    if any(not path.exists() for path in required):
+        raise RuntimeError(
+            "3D PDE audit is missing; run scripts/production_3d_pde_validation.py"
+        )
+    summary = json.loads(PDE_SUMMARY.read_text(encoding="utf-8"))
+    with PDE_DISCRETE.open(newline="", encoding="utf-8") as handle:
+        discrete = list(csv.DictReader(handle))
+    with PDE_CONTINUUM.open(newline="", encoding="utf-8") as handle:
+        continuum = list(csv.DictReader(handle))
+    if not summary["all_discrete_gates_passed"]:
+        raise RuntimeError("refusing to publish a failed 3D PDE discrete audit")
+
+    problem_rows = []
+    for problem in summary["problems"]:
+        selected = [row for row in discrete if row["problem"] == problem]
+        problem_rows.append(
+            "<tr>"
+            f"<td>{html.escape(problem)}</td>"
+            f"<td>{max(float(row['relative_solution_error']) for row in selected):.3e}</td>"
+            f"<td>{max(float(row['relative_equation_residual']) for row in selected):.3e}</td>"
+            f"<td>{max(int(row['qjet_applications']) for row in selected):,}</td>"
+            f"<td>{max(float(row['solve_ms']) for row in selected):.1f}</td>"
+            "<td><strong>PASS</strong></td>"
+            "</tr>"
+        )
+    continuum_rows = []
+    for row in continuum:
+        continuum_rows.append(
+            "<tr>"
+            f"<td>{html.escape(row['problem'])}</td>"
+            f"<td>{int(row['degree'])}</td>"
+            f"<td>{int(row['nodes']):,}</td>"
+            f"<td>{float(row['relative_continuum_error']):.3e}</td>"
+            f"<td>{float(row['relative_equation_residual']):.3e}</td>"
+            "</tr>"
+        )
+    return f"""
+<section id="boundary-pde-validation" class="jp-Cell jp-MarkdownCell">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h2>Boundary PDE validation</h2>
+<p>The production PDE layer uses <code>A = Q_3/(2*pi)</code> without assembling a dense operator. It tests Laplace DtN application, mean-zero Poisson, screened Poisson/Yukawa, the damped boundary Helmholtz resolvent, the heat/Poisson semigroup, and boundary wave propagation. For <em>k</em> QJet applications the measured algorithmic contract is <strong>O(k N log N)</strong> time and <strong>O(N)</strong> auxiliary storage.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Boundary problem</th><th>Max discrete error</th><th>Max residual</th><th>Max Q applies</th><th>Max solve ms</th><th>Audit</th></tr></thead><tbody>{''.join(problem_rows)}</tbody></table></div>
+<p>All {summary['discrete_case_count']} cases across {summary['discrete_shape_count']} geometries pass against an independently streamed pairwise <code>Q_3</code> oracle. The largest discrete solution error is <strong>{summary['maximum_discrete_error']:.3e}</strong>; no dense operator and no quadratic production fallback are used.</p>
+<h3>Independent continuum check</h3>
+<p>The algebraic audit is not a continuum-accuracy certificate. On the unit sphere the exact identity is <code>Lambda Y_lm = l Y_lm</code>. The table below compares directly against that analytic reference.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Problem</th><th>l</th><th>N</th><th>Continuum error</th><th>Algebraic residual</th></tr></thead><tbody>{''.join(continuum_rows)}</tbody></table></div>
+<p>The best tested degree-one Laplace DtN error is <strong>{summary['best_sphere_degree_one_error']:.3e}</strong>, with observed order about <strong>{summary['median_degree_one_order']:.3f}</strong>. Thus the current lumped-node singular quadrature does not provide machine-precision continuum 3D PDE solves. A high-order tangent-cell/curvature repayment is still required; true bulk Poisson/heat additionally needs a volume-source channel, and the full Helmholtz DtN map needs its frequency-dependent lower-order operator.</p>
+<p><a href="../production_3d_pde_validation/report.md">Open the complete PDE equations, per-shape table, and scope statement.</a></p>
+</div></div></div></section>
+"""
+
+
 def validate_executed(notebook: nbformat.NotebookNode) -> None:
     code_cells = [cell for cell in notebook.cells if cell.cell_type == "code"]
     if not code_cells:
@@ -229,7 +291,7 @@ def main() -> None:
             1,
         )
     body = body.replace("<title>Notebook</title>", f"<title>{TITLE}</title>", 1)
-    section = cad_invertibility_section()
+    section = pde_validation_section() + cad_invertibility_section()
     if "</main>" in body:
         body = body.replace("</main>", section + "\n</main>", 1)
     else:

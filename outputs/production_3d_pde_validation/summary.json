@@ -1,0 +1,31 @@
+{
+  "all_discrete_gates_passed": true,
+  "best_sphere_degree_one_error": 0.08447346443562863,
+  "best_sphere_degree_two_error": 0.12762581322762112,
+  "continuum_machine_precision_claim": false,
+  "degree_one_observed_orders": [
+    1.0247237489008267,
+    1.027498596067687,
+    1.0246721601128483
+  ],
+  "dense_operator_stored": false,
+  "discrete_case_count": 30,
+  "discrete_shape_count": 5,
+  "iterative_solve_complexity": "O(k N log N), O(N) auxiliary storage",
+  "maximum_discrete_error": 1.7790460489520944e-08,
+  "maximum_discrete_residual": 1.8072337227352545e-09,
+  "median_degree_one_order": 1.0247237489008267,
+  "operator": "A = Q_3 / (2*pi)",
+  "pde_scope": "boundary functional calculus",
+  "problems": [
+    "laplace_dtn",
+    "poisson",
+    "screened_poisson",
+    "helmholtz",
+    "heat",
+    "wave"
+  ],
+  "production_operator_complexity": "O(N log N) per apply, O(N) storage",
+  "quadratic_fallback": false,
+  "volume_source_solver_claim": false
+}

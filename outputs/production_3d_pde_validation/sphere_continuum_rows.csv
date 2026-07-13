@@ -1,0 +1,14 @@
+nodes,degree,exact_dtn_eigenvalue,problem,reference,relative_continuum_error,relative_equation_residual,iterations,qjet_applications,solve_ms,converged
+32,1,1.0,laplace_dtn,exact unit-sphere spherical harmonic,0.26060058618638887,0.0,0,1,85.7826669816859,True
+32,2,2.0,laplace_dtn,exact unit-sphere spherical harmonic,0.39308275183226415,0.0,0,1,85.4334169998765,True
+72,1,1.0,laplace_dtn,exact unit-sphere spherical harmonic,0.17200081040018106,0.0,0,1,311.1167080060113,True
+72,2,2.0,laplace_dtn,exact unit-sphere spherical harmonic,0.2591759914212315,0.0,0,1,311.49529200047255,True
+128,1,1.0,laplace_dtn,exact unit-sphere spherical harmonic,0.12798412885010693,0.0,0,1,549.9396660015918,True
+128,2,2.0,laplace_dtn,exact unit-sphere spherical harmonic,0.19310005129922225,0.0,0,1,540.5724160082173,True
+288,1,1.0,laplace_dtn,exact unit-sphere spherical harmonic,0.08447346443562863,0.0,0,1,3595.8287910034414,True
+288,2,2.0,laplace_dtn,exact unit-sphere spherical harmonic,0.12762581322762112,0.0,0,1,3588.5762500111014,True
+72,1,1.0,poisson,exact unit-sphere spherical harmonic,0.2076629281160967,7.957572739048067e-16,3,3,946.5192499919794,True
+72,1,1.0,screened_poisson,exact unit-sphere spherical harmonic,0.13454949424368728,5.91456850524951e-17,3,3,943.1901249918155,True
+72,1,1.0,helmholtz,exact unit-sphere spherical harmonic,0.373249278804393,7.013989672385615e-10,4,18,5644.146750011714,True
+72,1,1.0,heat,exact unit-sphere spherical harmonic,0.010373247321648854,2.466520027796999e-19,3,12,3783.2305829797406,True
+72,1,1.0,wave,exact unit-sphere spherical harmonic,0.0010094166105698214,7.843503079349436e-10,4,16,5033.967958006542,True

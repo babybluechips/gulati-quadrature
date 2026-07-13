@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "outputs" / "production_3d_qjet_html"
 HTML_REPORT = OUTPUT / "production_3d_qjet_method.html"
 SUMMARY = OUTPUT / "validation_summary.json"
+PDE_OUTPUT = ROOT / "outputs" / "production_3d_pde_validation"
+PDE_SUMMARY = PDE_OUTPUT / "summary.json"
 
 
 def load_summary() -> dict[str, object]:
@@ -134,3 +136,28 @@ def test_html_is_a_complete_executed_single_file_report() -> None:
     assert "output_type&quot;: &quot;error&quot;" not in source
     assert "Traceback (most recent call last)" not in source
     assert not soup.find_all("img", src=lambda value: value and not value.startswith("data:"))
+
+
+def test_html_embeds_independent_discrete_and_continuum_pde_audits() -> None:
+    summary = json.loads(PDE_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["all_discrete_gates_passed"] is True
+    assert summary["discrete_case_count"] == 30
+    assert summary["dense_operator_stored"] is False
+    assert summary["quadratic_fallback"] is False
+    assert summary["continuum_machine_precision_claim"] is False
+
+    soup = BeautifulSoup(HTML_REPORT.read_text(encoding="utf-8"), "html.parser")
+    section = soup.find("section", id="boundary-pde-validation")
+    assert section is not None
+    text = section.get_text(" ", strip=True)
+    for required in (
+        "Boundary PDE validation",
+        "Laplace DtN application",
+        "screened Poisson/Yukawa",
+        "damped boundary Helmholtz resolvent",
+        "independently streamed pairwise",
+        "does not provide machine-precision continuum 3D PDE solves",
+        "true bulk Poisson/heat",
+    ):
+        assert required in text
+    assert len(section.find_all("table")) == 2

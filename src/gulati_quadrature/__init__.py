@@ -26,6 +26,14 @@ from gulati_quadrature.api import (
     solve_pde,
     star_boundary,
 )
+from gulati_quadrature.surface_pde import (
+    SurfacePDEConfig,
+    SurfacePDENonconvergenceError,
+    SurfacePDEResult,
+    SurfacePDESolver,
+    build_surface_pde_solver,
+    solve_surface_pde,
+)
 from gulati_quadrature.three_d import (
     CadArchiveError,
     CertifiedPolyhedralSurfaceQJet,
@@ -68,6 +76,10 @@ __all__ = [
     "ProductionSurfaceQEngine",
     "SurfaceQConfig",
     "SurfaceQEvaluation",
+    "SurfacePDEConfig",
+    "SurfacePDENonconvergenceError",
+    "SurfacePDEResult",
+    "SurfacePDESolver",
     "archive_header",
     "audit_round_trip",
     "build_axisymmetric_conic_engine",
@@ -79,6 +91,7 @@ __all__ = [
     "build_radial_profile_engine",
     "build_spheroid_engine",
     "build_surface_engine",
+    "build_surface_pde_solver",
     "build_torus_engine",
     "cosine_trace",
     "cycle_certificate",
@@ -92,6 +105,7 @@ __all__ = [
     "scale_phase_chord_squared",
     "scale_phase_point",
     "solve_pde",
+    "solve_surface_pde",
     "star_boundary",
     "triangle_lumped_vertex_weights",
     "write_archive",
