@@ -38,7 +38,11 @@ def test_public_mesh_engine_has_normalized_dtn_and_no_dense_fallback() -> None:
     engine = build_mesh_engine(
         VERTICES,
         FACES,
-        config=SurfaceQConfig(kernel_power=3.0, leaf_size=2),
+        config=SurfaceQConfig(
+            kernel_power=3.0,
+            leaf_size=2,
+            continuum_repayment=False,
+        ),
     )
     values = tuple(x + 0.2 * y - 0.1 * z for x, y, z in VERTICES)
     raw = engine.apply(values)

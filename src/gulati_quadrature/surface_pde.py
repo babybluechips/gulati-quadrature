@@ -268,6 +268,40 @@ def _bicgstab(
     return _CGResult(values, maximum_iterations, relative, False)
 
 
+def _solve_small_complex(
+    matrix: list[list[complex]],
+    right_hand_side: list[complex],
+) -> tuple[complex, ...] | None:
+    count = len(right_hand_side)
+    rows = [
+        [complex(value) for value in matrix[index]]
+        + [complex(right_hand_side[index])]
+        for index in range(count)
+    ]
+    scale = max(
+        (max((_abs(value) for value in row[:-1]), default=0.0) for row in rows),
+        default=1.0,
+    )
+    tolerance = 1.0e-13 * max(scale, 1.0)
+    for column in range(count):
+        pivot = max(range(column, count), key=lambda row: _abs(rows[row][column]))
+        if _abs(rows[pivot][column]) <= tolerance:
+            return None
+        rows[column], rows[pivot] = rows[pivot], rows[column]
+        divisor = rows[column][column]
+        for offset in range(column, count + 1):
+            rows[column][offset] /= divisor
+        for row in range(count):
+            if row == column:
+                continue
+            factor = rows[row][column]
+            if factor == 0.0:
+                continue
+            for offset in range(column, count + 1):
+                rows[row][offset] -= factor * rows[column][offset]
+    return tuple(rows[index][-1] for index in range(count))
+
+
 class SurfacePDESolver:
     """Boundary PDE functional calculus over a production surface QJet."""
 
@@ -286,12 +320,15 @@ class SurfacePDESolver:
         engine_config = getattr(engine, "config", None)
         if engine_config is not None and float(engine_config.kernel_power) != 3.0:
             raise ValueError("surface PDE solves require the Q_3 kernel")
+        self._dtn_self_adjoint = bool(getattr(engine, "dtn_self_adjoint", True))
         self._operator_applications = 0
         self._maximum_compression_bound = 0.0
+        self._last_solver_method = "none"
 
     def _begin(self) -> None:
         self._operator_applications = 0
         self._maximum_compression_bound = 0.0
+        self._last_solver_method = "none"
 
     def _apply_dtn(self, values: ComplexVector) -> ComplexVector:
         evaluation = self.engine.apply_dtn_principal(values)
@@ -301,6 +338,114 @@ class SurfacePDESolver:
             float(getattr(evaluation, "compression_inf_bound", 0.0)),
         )
         return tuple(complex(value) for value in evaluation.values)
+
+    def _solve_linear_system(
+        self,
+        apply: Callable[[ComplexVector], ComplexVector],
+        right_hand_side: ComplexVector,
+        *,
+        tolerance: float,
+        maximum_iterations: int,
+        projector: Callable[[ComplexVector], ComplexVector] | None = None,
+    ) -> _CGResult:
+        if self._dtn_self_adjoint:
+            self._last_solver_method = "CG"
+            return _conjugate_gradient(
+                apply,
+                right_hand_side,
+                self.weights,
+                tolerance=tolerance,
+                maximum_iterations=maximum_iterations,
+                projector=projector,
+            )
+        rhs = projector(right_hand_side) if projector is not None else right_hand_side
+
+        def projected_apply(candidate: ComplexVector) -> ComplexVector:
+            vector = projector(candidate) if projector is not None else candidate
+            output = apply(vector)
+            return projector(output) if projector is not None else output
+
+        self._last_solver_method = "BiCGSTAB"
+        solved = _bicgstab(
+            projected_apply,
+            rhs,
+            self.weights,
+            tolerance=tolerance,
+            maximum_iterations=maximum_iterations,
+        )
+        if projector is None:
+            return solved
+        return _CGResult(
+            projector(solved.values),
+            solved.iterations,
+            solved.relative_residual,
+            solved.converged,
+        )
+
+    def _try_harmonic_modal_solve(
+        self,
+        right_hand_side: ComplexVector,
+        *,
+        mass: float,
+        tolerance: float,
+        projector: Callable[[ComplexVector], ComplexVector] | None,
+    ) -> _CGResult | None:
+        basis_builder = getattr(self.engine, "harmonic_modal_basis", None)
+        if basis_builder is None:
+            return None
+        pairs = tuple(basis_builder())
+        if not pairs:
+            return None
+        rhs = projector(right_hand_side) if projector is not None else right_hand_side
+        traces = []
+        images = []
+        for trace_values, flux_values in pairs:
+            trace = tuple(complex(value) for value in trace_values)
+            image = tuple(
+                complex(flux) + mass * value
+                for flux, value in zip(flux_values, trace, strict=True)
+            )
+            if projector is not None:
+                trace = projector(trace)
+                image = projector(image)
+            traces.append(trace)
+            images.append(image)
+        gram = [
+            [
+                _weighted_inner(self.weights, left, right)
+                for right in images
+            ]
+            for left in images
+        ]
+        moments = [
+            _weighted_inner(self.weights, image, rhs) for image in images
+        ]
+        coefficients = _solve_small_complex(gram, moments)
+        if coefficients is None:
+            return None
+        candidate = tuple(
+            sum(
+                coefficients[mode] * traces[mode][index]
+                for mode in range(len(traces))
+            )
+            for index in range(self.n)
+        )
+        represented = tuple(
+            sum(
+                coefficients[mode] * images[mode][index]
+                for mode in range(len(images))
+            )
+            for index in range(self.n)
+        )
+        residual = tuple(
+            target - value
+            for target, value in zip(rhs, represented, strict=True)
+        )
+        relative = _relative_residual(self.weights, residual, rhs)
+        if relative > max(5.0 * tolerance, 5.0e-12):
+            return None
+        self._last_solver_method = "fixed-rank harmonic modal solve"
+        return _CGResult(candidate, 0, relative, True)
 
     def _result(
         self,
@@ -336,6 +481,8 @@ class SurfacePDESolver:
             "quadratic_fallback": False,
             "auxiliary_storage_big_o": "O(N)",
             "solve_time_big_o": "O(k N log N) for k QJet applications",
+            "dtn_self_adjoint": self._dtn_self_adjoint,
+            "krylov_method": self._last_solver_method,
         }
         if time_method is not None:
             stats["time_method"] = time_method
@@ -394,6 +541,35 @@ class SurfacePDESolver:
             equation="g = A f",
         )
 
+    def apply_helmholtz_dtn(
+        self,
+        values: Iterable[complex],
+        *,
+        wavenumber: float,
+        directions: Iterable[Iterable[float]] | None = None,
+    ) -> SurfacePDEResult:
+        """Apply the plane-wave-repaid interior Helmholtz DtN operator."""
+
+        self._begin()
+        vector = _vector(values, self.n, "values")
+        evaluation = self.engine.apply_helmholtz_dtn(
+            vector,
+            wavenumber=wavenumber,
+            directions=directions,
+        )
+        self._operator_applications = 1
+        self._maximum_compression_bound = float(
+            evaluation.compression_inf_bound
+        )
+        return self._result(
+            "helmholtz_dtn",
+            tuple(complex(value) for value in evaluation.values),
+            converged=True,
+            iterations=0,
+            relative_residual=0.0,
+            equation=f"g = Lambda_{float(wavenumber):.17g} f",
+        )
+
     def solve_poisson(
         self,
         right_hand_side: Iterable[complex],
@@ -421,14 +597,23 @@ class SurfacePDESolver:
                 for value, original in zip(applied, candidate, strict=True)
             )
 
-        solved = _conjugate_gradient(
-            apply_system,
+        requested = float(tolerance or self.config.tolerance)
+        solved = self._try_harmonic_modal_solve(
             rhs,
-            self.weights,
-            tolerance=float(tolerance or self.config.tolerance),
-            maximum_iterations=int(maximum_iterations or self.config.maximum_iterations),
+            mass=mass_value,
+            tolerance=requested,
             projector=projector,
         )
+        if solved is None:
+            solved = self._solve_linear_system(
+                apply_system,
+                rhs,
+                tolerance=requested,
+                maximum_iterations=int(
+                    maximum_iterations or self.config.maximum_iterations
+                ),
+                projector=projector,
+            )
         problem = "poisson" if mass_value == 0.0 else "screened_poisson"
         return self._result(
             problem,
@@ -566,10 +751,9 @@ class SurfacePDESolver:
                     )
                 )
 
-            solved = _conjugate_gradient(
+            solved = self._solve_linear_system(
                 denominator,
                 rhs,
-                self.weights,
                 tolerance=requested,
                 maximum_iterations=limit,
             )
@@ -657,10 +841,9 @@ class SurfacePDESolver:
                     )
                 )
 
-            solved = _conjugate_gradient(
+            solved = self._solve_linear_system(
                 denominator,
                 rhs,
-                self.weights,
                 tolerance=requested,
                 maximum_iterations=limit,
             )
@@ -713,6 +896,8 @@ class SurfacePDESolver:
             return self.solve_poisson(values, **parameters)
         if name in {"helmholtz", "helmholtz_resolvent"}:
             return self.solve_helmholtz(values, **parameters)
+        if name in {"helmholtz_dtn", "helmholtz_flux"}:
+            return self.apply_helmholtz_dtn(values, **parameters)
         if name in {"heat", "poisson_semigroup"}:
             return self.solve_heat(values, **parameters)
         if name == "wave":

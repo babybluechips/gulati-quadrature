@@ -1,0 +1,31 @@
+shape,problem,reference_class,relative_error,relative_algebraic_residual,iterations,qjet_applications,solve_ms,gate,converged,passed
+NASA SOFIA aircraft,laplace_dtn,compiled exact solid-harmonic degree one,9.904223990810362e-13,0.0,0,1,477.3737079813145,2e-10,True,True
+NASA SOFIA aircraft,poisson_boundary_inverse,manufactured exact harmonic flux with mean-zero gauge,3.3262285263873065e-16,2.9082510332913204e-16,0,0,2.976458054035902,2e-05,True,True
+NASA SOFIA aircraft,screened_poisson_boundary_inverse,manufactured exact harmonic flux,3.9575876794834315e-16,4.162814569951805e-16,0,0,2.600124978926033,2e-05,True,True
+NASA SOFIA aircraft,helmholtz_dtn,compiled exact whole-space plane wave,5.414153336943005e-13,0.0,0,1,327.0894580055028,2e-10,True,True
+NASA SOFIA aircraft,heat_boundary_semigroup,Pade denominator residual at t=1.202e-04; no bulk heat claim,,2.9171734091762807e-08,4,24,707.9380000359379,2e-07,True,True
+NASA SOFIA aircraft,wave_boundary_functional_calculus,Newmark denominator residual at t=1.202e-04; no bulk wave claim,,3.295476183307174e-09,2,12,355.36275000777096,2e-07,True,True
+FreeCAD cement mixer,laplace_dtn,compiled exact solid-harmonic degree one,2.6214092126351736e-14,0.0,0,1,167.0622920501046,2e-10,True,True
+FreeCAD cement mixer,poisson_boundary_inverse,manufactured exact harmonic flux with mean-zero gauge,1.7444232349751526e-16,2.5799981496041992e-16,0,0,1.5012919902801514,2e-05,True,True
+FreeCAD cement mixer,screened_poisson_boundary_inverse,manufactured exact harmonic flux,1.5810791596749708e-16,1.885215425329726e-16,0,0,1.383082999382168,2e-05,True,True
+FreeCAD cement mixer,helmholtz_dtn,compiled exact whole-space plane wave,2.0813327903284361e-13,0.0,0,1,116.25600000843406,2e-10,True,True
+FreeCAD cement mixer,heat_boundary_semigroup,Pade denominator residual at t=1.938e-03; no bulk heat claim,,9.400308206102804e-08,5,30,311.6038749576546,2e-07,True,True
+FreeCAD cement mixer,wave_boundary_functional_calculus,Newmark denominator residual at t=1.938e-03; no bulk wave claim,,1.1030824420399994e-08,4,20,390.25304198730737,2e-07,True,True
+NASA Curiosity manufacturing plates,laplace_dtn,compiled exact solid-harmonic degree one,9.326020671108286e-12,0.0,0,1,3287.5204159645364,2e-10,True,True
+NASA Curiosity manufacturing plates,poisson_boundary_inverse,manufactured exact harmonic flux with mean-zero gauge,2.225823303270232e-16,2.317922878201769e-16,0,0,8.596583036705852,2e-05,True,True
+NASA Curiosity manufacturing plates,screened_poisson_boundary_inverse,manufactured exact harmonic flux,3.625738465654703e-16,3.1186179377257284e-16,0,0,7.913291978184134,2e-05,True,True
+NASA Curiosity manufacturing plates,helmholtz_dtn,compiled exact whole-space plane wave,8.273951111033884e-12,0.0,0,1,1823.491582996212,2e-10,True,True
+NASA Curiosity manufacturing plates,heat_boundary_semigroup,Pade denominator residual at t=2.026e-04; no bulk heat claim,,8.63376391805967e-08,25,150,28459.95520800352,2e-07,True,True
+NASA Curiosity manufacturing plates,wave_boundary_functional_calculus,Newmark denominator residual at t=2.026e-04; no bulk wave claim,,9.240027826896197e-08,20,82,9381.16104103392,2e-07,True,True
+NASA Curiosity assembled,laplace_dtn,compiled exact solid-harmonic degree one,5.304040477332763e-13,0.0,0,1,1090.2718749712221,2e-10,True,True
+NASA Curiosity assembled,poisson_boundary_inverse,manufactured exact harmonic flux with mean-zero gauge,2.1005932539985003e-16,2.5941627101351495e-16,0,0,8.249083010014147,2e-05,True,True
+NASA Curiosity assembled,screened_poisson_boundary_inverse,manufactured exact harmonic flux,1.7133660166757397e-16,1.9676248155292028e-16,0,0,7.880875025875866,2e-05,True,True
+NASA Curiosity assembled,helmholtz_dtn,compiled exact whole-space plane wave,1.6007299384356148e-13,0.0,0,1,883.8077089749277,2e-10,True,True
+NASA Curiosity assembled,heat_boundary_semigroup,Pade denominator residual at t=1.652e-04; no bulk heat claim,,1.7038246957160124e-08,5,33,3198.5829999903217,2e-07,True,True
+NASA Curiosity assembled,wave_boundary_functional_calculus,Newmark denominator residual at t=1.652e-04; no bulk wave claim,,4.7733052122384665e-08,4,20,1581.5761659760028,2e-07,True,True
+buildingSMART IFC bridge,laplace_dtn,compiled exact solid-harmonic degree one,1.790132454363808e-12,0.0,0,1,1400.9677920257673,2e-10,True,True
+buildingSMART IFC bridge,poisson_boundary_inverse,manufactured exact harmonic flux with mean-zero gauge,2.8157509164988624e-16,2.4152725473417725e-16,0,0,8.841542003210634,2e-05,True,True
+buildingSMART IFC bridge,screened_poisson_boundary_inverse,manufactured exact harmonic flux,2.384360130078676e-16,3.0637597821408606e-16,0,0,7.7462089830078185,2e-05,True,True
+buildingSMART IFC bridge,helmholtz_dtn,compiled exact whole-space plane wave,3.206353213672663e-13,0.0,0,1,837.4353750259615,2e-10,True,True
+buildingSMART IFC bridge,heat_boundary_semigroup,Pade denominator residual at t=7.920e-05; no bulk heat claim,,5.310308920322062e-08,9,57,3987.622459011618,2e-07,True,True
+buildingSMART IFC bridge,wave_boundary_functional_calculus,Newmark denominator residual at t=7.920e-05; no bulk wave claim,,8.352870437659054e-08,9,38,3291.4988750126213,2e-07,True,True

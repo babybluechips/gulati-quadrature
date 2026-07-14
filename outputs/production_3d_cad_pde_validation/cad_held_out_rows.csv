@@ -1,0 +1,6 @@
+shape,mode,compiled_harmonic_degree,held_out_degree,relative_continuum_error,solve_ms,used_for_repayment_compilation
+NASA SOFIA aircraft,H4_8,3,4,11.05199539645618,29.794041998684406,False
+FreeCAD cement mixer,H4_8,3,4,19.91255538946349,11.365375015884638,False
+NASA Curiosity manufacturing plates,H4_8,3,4,203.7245868238071,278.64099998259917,False
+NASA Curiosity assembled,H4_8,3,4,55.93740489059258,79.50362499104813,False
+buildingSMART IFC bridge,H4_8,3,4,26.165748165533692,86.67412505019456,False

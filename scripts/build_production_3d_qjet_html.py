@@ -29,6 +29,12 @@ PDE_OUTPUT = ROOT / "outputs" / "production_3d_pde_validation"
 PDE_SUMMARY = PDE_OUTPUT / "summary.json"
 PDE_DISCRETE = PDE_OUTPUT / "discrete_pde_rows.csv"
 PDE_CONTINUUM = PDE_OUTPUT / "sphere_continuum_rows.csv"
+CAD_PDE_OUTPUT = ROOT / "outputs" / "production_3d_cad_pde_validation"
+CAD_PDE_SUMMARY = CAD_PDE_OUTPUT / "summary.json"
+CAD_PDE_ROWS = CAD_PDE_OUTPUT / "cad_pde_rows.csv"
+CAD_PDE_HELD_OUT = CAD_PDE_OUTPUT / "cad_held_out_rows.csv"
+CAD_PDE_GEOMETRY = CAD_PDE_OUTPUT / "cad_geometry_rows.csv"
+CAD_PDE_SPHERE = CAD_PDE_OUTPUT / "sphere_repayment_rows.csv"
 
 TITLE = "Production 3D QJet: proofs, algorithm, and validation"
 
@@ -247,8 +253,109 @@ def pde_validation_section() -> str:
 <h3>Independent continuum check</h3>
 <p>The algebraic audit is not a continuum-accuracy certificate. On the unit sphere the exact identity is <code>Lambda Y_lm = l Y_lm</code>. The table below compares directly against that analytic reference.</p>
 <div style="overflow-x:auto"><table><thead><tr><th>Problem</th><th>l</th><th>N</th><th>Continuum error</th><th>Algebraic residual</th></tr></thead><tbody>{''.join(continuum_rows)}</tbody></table></div>
-<p>The best tested degree-one Laplace DtN error is <strong>{summary['best_sphere_degree_one_error']:.3e}</strong>, with observed order about <strong>{summary['median_degree_one_order']:.3f}</strong>. Thus the current lumped-node singular quadrature does not provide machine-precision continuum 3D PDE solves. A high-order tangent-cell/curvature repayment is still required; true bulk Poisson/heat additionally needs a volume-source channel, and the full Helmholtz DtN map needs its frequency-dependent lower-order operator.</p>
+<p>The best raw degree-one Laplace DtN error is <strong>{summary['best_sphere_degree_one_error']:.3e}</strong>, with observed order about <strong>{summary['median_degree_one_order']:.3f}</strong>. This is the unrepaid baseline. The next audit adds the topology-aware singular-cell series and fixed-rank harmonic/Helmholtz channels, while retaining a separate held-out continuum column.</p>
 <p><a href="../production_3d_pde_validation/report.md">Open the complete PDE equations, per-shape table, and scope statement.</a></p>
+</div></div></div></section>
+"""
+
+
+def cad_pde_validation_section() -> str:
+    """Embed the continuum-repaid PDE campaign over every public CAD archive."""
+
+    required = (
+        CAD_PDE_SUMMARY,
+        CAD_PDE_ROWS,
+        CAD_PDE_HELD_OUT,
+        CAD_PDE_GEOMETRY,
+        CAD_PDE_SPHERE,
+    )
+    if any(not path.exists() for path in required):
+        raise RuntimeError(
+            "CAD PDE audit is missing; run scripts/production_3d_cad_pde_validation.py"
+        )
+    summary = json.loads(CAD_PDE_SUMMARY.read_text(encoding="utf-8"))
+    with CAD_PDE_ROWS.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    with CAD_PDE_HELD_OUT.open(newline="", encoding="utf-8") as handle:
+        held_out = list(csv.DictReader(handle))
+    with CAD_PDE_GEOMETRY.open(newline="", encoding="utf-8") as handle:
+        geometry = list(csv.DictReader(handle))
+    with CAD_PDE_SPHERE.open(newline="", encoding="utf-8") as handle:
+        sphere = list(csv.DictReader(handle))
+    if not summary["all_pde_gates_passed"]:
+        raise RuntimeError("refusing to publish failed CAD PDE algebraic gates")
+
+    geometry_rows = []
+    for row in geometry:
+        geometry_rows.append(
+            "<tr>"
+            f"<td>{html.escape(row['shape'])}</td>"
+            f"<td>{int(row['source_vertices']):,}</td>"
+            f"<td>{int(row['source_faces']):,}</td>"
+            f"<td>{int(row['compiled_vertices']):,}</td>"
+            f"<td>{int(row['compiled_faces']):,}</td>"
+            f"<td>{float(row['compiled_measure_to_source_area_ratio']):.6f}</td>"
+            f"<td>{int(row['singular_cells_repaid']):,}</td>"
+            "</tr>"
+        )
+    problem_rows = []
+    problem_names = tuple(dict.fromkeys(row["problem"] for row in rows))
+    for problem in problem_names:
+        selected = [row for row in rows if row["problem"] == problem]
+        errors = [
+            float(row["relative_error"])
+            for row in selected
+            if row["relative_error"]
+        ]
+        problem_rows.append(
+            "<tr>"
+            f"<td>{html.escape(problem)}</td>"
+            f"<td>{max(errors):.3e}</td>" if errors else
+            "<tr>"
+            f"<td>{html.escape(problem)}</td>"
+            "<td>n/a</td>"
+        )
+        problem_rows[-1] += (
+            f"<td>{max(float(row['relative_algebraic_residual']) for row in selected):.3e}</td>"
+            f"<td>{max(int(row['qjet_applications']) for row in selected):,}</td>"
+            f"<td>{max(float(row['solve_ms']) for row in selected):.1f}</td>"
+            "<td><strong>PASS</strong></td></tr>"
+        )
+    held_rows = []
+    for row in held_out:
+        held_rows.append(
+            "<tr>"
+            f"<td>{html.escape(row['shape'])}</td>"
+            f"<td>{int(row['held_out_degree'])}</td>"
+            f"<td>{float(row['relative_continuum_error']):.3e}</td>"
+            "</tr>"
+        )
+    finest = [row for row in sphere if int(row["nodes"]) == 258]
+    sphere_rows = []
+    for row in finest:
+        sphere_rows.append(
+            "<tr>"
+            f"<td>{html.escape(row['method'])}</td>"
+            f"<td>{float(row['relative_continuum_error']):.3e}</td>"
+            "</tr>"
+        )
+    return f"""
+<section id="cad-boundary-pde-validation" class="jp-Cell jp-MarkdownCell">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h2>Continuum-repaid CAD PDE campaign</h2>
+<p>The production path now retains topology, applies the curvature-adjusted omitted-cell series <code>-a Delta/4 - a^3 Delta^2/192 - a^5 Delta^3/11520</code>, and compiles fixed-rank solid-harmonic and plane-wave QJets. Every one of the {summary['source_face_count']:,} source triangles from all {summary['model_count']} CAD archives is scanned. The solver stores no dense boundary matrix or pair table.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>CAD object</th><th>Source V</th><th>Source F</th><th>PDE nodes</th><th>PDE faces</th><th>Measure ratio</th><th>Local cells repaid</th></tr></thead><tbody>{''.join(geometry_rows)}</tbody></table></div>
+<h3>Compiled channels and algebraic solves</h3>
+<div style="overflow-x:auto"><table><thead><tr><th>Problem</th><th>Max compiled-reference error</th><th>Max algebraic residual</th><th>Max Q applies</th><th>Max solve ms</th><th>Audit</th></tr></thead><tbody>{''.join(problem_rows)}</tbody></table></div>
+<p>The maximum exact compiled harmonic/plane-wave error is <strong>{summary['maximum_compiled_reference_error']:.3e}</strong>. The maximum algebraic residual is <strong>{summary['maximum_algebraic_residual']:.3e}</strong>. Poisson and screened-Poisson data in the retained harmonic subspace use a fixed-rank direct modal solve; heat and wave use the matrix-free boundary functional calculus at a cell-scale timestep.</p>
+<h3>Held-out continuum result</h3>
+<p>The degree-four mode below was not used to compile the degree-three repayment. It is the relevant generalization test. Its size prevents the machine-level compiled rows from being misread as universal continuum accuracy.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>CAD object</th><th>Held-out degree</th><th>Continuum error</th></tr></thead><tbody>{''.join(held_rows)}</tbody></table></div>
+<p>On the controlled sphere mesh at <code>N=258</code>, the local singular-cell/curvature series reduces the same held-out error before any fitted moment claim:</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Sphere method</th><th>Held-out error</th></tr></thead><tbody>{''.join(sphere_rows)}</tbody></table></div>
+<p><strong>Interpretation.</strong> The earlier <code>1.779e-8</code> number measured discrete implementation and PDE algebra. It did not bound continuum discretization. The CAD held-out range is <strong>{summary['minimum_held_out_continuum_error']:.3e}</strong> to <strong>{summary['maximum_held_out_continuum_error']:.3e}</strong>; therefore this campaign makes no universal 3D machine-precision claim.</p>
+<p><a href="../production_3d_cad_pde_validation/report.md">Open the complete CAD PDE report and CSV tables.</a></p>
 </div></div></div></section>
 """
 
@@ -291,7 +398,11 @@ def main() -> None:
             1,
         )
     body = body.replace("<title>Notebook</title>", f"<title>{TITLE}</title>", 1)
-    section = pde_validation_section() + cad_invertibility_section()
+    section = (
+        pde_validation_section()
+        + cad_pde_validation_section()
+        + cad_invertibility_section()
+    )
     if "</main>" in body:
         body = body.replace("</main>", section + "\n</main>", 1)
     else:

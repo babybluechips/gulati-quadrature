@@ -16,6 +16,8 @@ HTML_REPORT = OUTPUT / "production_3d_qjet_method.html"
 SUMMARY = OUTPUT / "validation_summary.json"
 PDE_OUTPUT = ROOT / "outputs" / "production_3d_pde_validation"
 PDE_SUMMARY = PDE_OUTPUT / "summary.json"
+CAD_PDE_OUTPUT = ROOT / "outputs" / "production_3d_cad_pde_validation"
+CAD_PDE_SUMMARY = CAD_PDE_OUTPUT / "summary.json"
 
 
 def load_summary() -> dict[str, object]:
@@ -156,8 +158,38 @@ def test_html_embeds_independent_discrete_and_continuum_pde_audits() -> None:
         "screened Poisson/Yukawa",
         "damped boundary Helmholtz resolvent",
         "independently streamed pairwise",
-        "does not provide machine-precision continuum 3D PDE solves",
-        "true bulk Poisson/heat",
+        "unrepaid baseline",
+        "separate held-out continuum column",
     ):
         assert required in text
     assert len(section.find_all("table")) == 2
+
+
+def test_html_embeds_repaid_cad_pde_and_held_out_audits() -> None:
+    summary = json.loads(CAD_PDE_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["model_count"] == 5
+    assert summary["pde_case_count"] == 30
+    assert summary["source_face_count"] == 1_261_986
+    assert summary["all_source_faces_scanned"] is True
+    assert summary["all_pde_gates_passed"] is True
+    assert summary["maximum_compiled_reference_error"] < 1.0e-11
+    assert summary["maximum_algebraic_residual"] < 1.0e-7
+    assert summary["maximum_held_out_continuum_error"] > 1.0
+    assert summary["universal_machine_precision_claim"] is False
+    assert summary["dense_q_matrix_stored"] is False
+    assert summary["pair_table_stored"] is False
+
+    soup = BeautifulSoup(HTML_REPORT.read_text(encoding="utf-8"), "html.parser")
+    section = soup.find("section", id="cad-boundary-pde-validation")
+    assert section is not None
+    text = section.get_text(" ", strip=True)
+    for required in (
+        "Continuum-repaid CAD PDE campaign",
+        "curvature-adjusted omitted-cell series",
+        "1,261,986 source triangles",
+        "Held-out continuum result",
+        "no universal 3D machine-precision claim",
+        "The earlier 1.779e-8 number measured discrete implementation and PDE algebra",
+    ):
+        assert required in text
+    assert len(section.find_all("table")) == 4
