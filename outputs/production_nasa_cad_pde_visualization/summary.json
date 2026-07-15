@@ -1,0 +1,33 @@
+{
+  "all_archive_checksums_verified": true,
+  "all_declared_gates_passed": true,
+  "all_source_faces_scanned": true,
+  "all_source_vertices_lifted": true,
+  "campaign": "NASA QCAD3J compressed boundary-PDE field visualization",
+  "dense_q_matrix_stored": false,
+  "held_out_continuum_machine_precision_claim": false,
+  "machine_reference_gate": 2e-11,
+  "machine_residual_gate": 2e-14,
+  "maximum_algebraic_residual": 7.638188632548001e-15,
+  "maximum_retained_reference_error": 3.4311016537525165e-16,
+  "maximum_warm_solve_ms": 3681.8655409733765,
+  "median_warm_solve_ms": 44.197916984558105,
+  "overview_path": "nasa_cad_pde_overview.png",
+  "pair_table_stored": false,
+  "pde_case_count": 18,
+  "problems": [
+    "laplace_dtn",
+    "poisson_boundary_inverse",
+    "screened_poisson_boundary_inverse",
+    "helmholtz_dtn",
+    "heat_boundary_semigroup",
+    "wave_boundary_calculus"
+  ],
+  "production_apply_complexity": "O(N log N)+O(Nr) at fixed jet rank",
+  "production_storage_complexity": "O(N) operator plus O(V_source) display lift",
+  "rendered_nondegenerate_face_count": 1227262,
+  "shape_count": 3,
+  "source_face_count": 1227262,
+  "source_vertex_count": 612609,
+  "visualization_uses_numerical_fields": true
+}

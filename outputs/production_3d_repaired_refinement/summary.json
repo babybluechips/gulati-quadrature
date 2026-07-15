@@ -1,0 +1,40 @@
+{
+  "all_curved_panel_atlases_watertight": true,
+  "all_final_modes_independent": true,
+  "all_repaired_surfaces_edge_manifold": true,
+  "all_repaired_surfaces_production_ready": true,
+  "all_repaired_surfaces_vertex_manifold": true,
+  "all_repaired_surfaces_watertight": true,
+  "cube_vertex_kondratiev_spread": 8.881784197001252e-16,
+  "dense_q_matrix_stored": false,
+  "exact_sphere_repaid_endpoint_rate": 0.8181730787548603,
+  "feature_stats": {
+    "edge_mellin_channels": 12,
+    "feature_apply_big_o": "O(total retained feature support)",
+    "feature_channel_rank": 4,
+    "feature_reference_quadrature_order": 12,
+    "feature_storage_big_o": "O(total retained feature support)",
+    "mellin_kondratiev_channels": 20,
+    "stored_dense_feature_matrix": false,
+    "stored_feature_support_entries": 540,
+    "stored_pair_table": false,
+    "vertex_link_pencil_failures": 0,
+    "vertex_mellin_channels": 8
+  },
+  "feature_topology_production_ready": true,
+  "held_out_degrees": [
+    4,
+    5
+  ],
+  "maximum_adaptively_inspected_degree": 3,
+  "maximum_compiled_degree": 2,
+  "maximum_cube_vertex_kondratiev_error": 0.036736807078534994,
+  "maximum_curved_panel_seam_gap": 2.482534153247273e-16,
+  "maximum_feature_repaid_absolute_error": 6.555585747067272e-06,
+  "pair_table_stored": false,
+  "production_apply_complexity": "O(N log N)+O(N q)+O(N d^2)",
+  "production_storage_complexity": "O(N) at fixed q,d and feature rank",
+  "refinement_levels": 3,
+  "shape_count": 3,
+  "universal_machine_precision_claim": false
+}

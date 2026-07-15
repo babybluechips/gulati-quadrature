@@ -28,14 +28,72 @@ and an analytic Gegenbauer tail bound. Its fixed-parameter contract is:
 |---|---:|---:|
 | Compile | `O(N log^2 N)` | `O(N)` |
 | Apply | `O(N log N)` | `O(N)` |
+| Triangle-soup manifold repair | `O(V+F)` expected | `O(V+F)` |
+| Cubic panel quadrature (`q` fixed) | `O(F q^2)` | `O(F q^2)` |
+| Smooth-panel singular repayment | `O(N q)` | `O(N+q^2)` |
 | Tangent-cell/curvature repayment | `O(N+E)` | `O(N+E)` |
 | Fixed-degree harmonic repayment | `O(N d^2)` | `O(N d^2)` |
-| Polyhedral corner repayment | `O(c)` | `O(c)` |
+| Mellin/Kondratiev feature repayment | `O(s_c)` | `O(s_c)` |
 | QCAD3J encode/decode | `O(V+F)` | `O(V+F)` |
 
-Here `c` is the number of retained Mellin-Kondratiev edge and vertex channels.
+Here `s_c` is the total fixed local support of the retained edge and vertex
+channels. At fixed panel order `q`, harmonic degree `d`, and four-rung feature
+rank, every displayed storage cost is linear in the surface size.
 The operator fails closed with `NearLinearContractError` if a compiled work
 budget is exceeded. There is no dense or quadratic production fallback.
+
+### Exact transparent shell tails
+
+Autonomous cylindrical or conic ends do not need to be represented by a deep
+stack of shells. After the angular QJet FFT, each mode has the Riccati map
+
+```text
+Phi(sigma) = d - u^2/sigma,
+w + w^-1 = d/u,
+Sigma_star = u/w,  |w| < 1.
+```
+
+`Sigma_star` is the exact first-tail Schur pivot, `u*w` is the self-energy
+inserted into the retained system, `u*(1-w)` is the interface flux DtN symbol,
+and `-log(w)` is the discrete half-Laplacian generator. These normalizations
+are separate in the API.
+
+```python
+from gulati_quadrature import CylindricalTransparentDtN
+
+cap = CylindricalTransparentDtN.for_problem(
+    128,
+    "helmholtz",
+    parameter=0.7,
+    damping=0.2,  # limiting absorption selects the decaying branch
+)
+trace = tuple(complex(index == 0) for index in range(128))
+flux = cap.apply_boundary_dtn(trace)
+
+assert flux.ledger.status == "balanced"
+assert cap.stats()["dense_shell_matrix_stored"] is False
+assert cap.stats()["tail_depth_dependence"] == "none"
+```
+
+For `N_theta=128`, eight right-hand sides, and explicit depth `L=512`, the
+audited cap is 110–124 times faster than the streamed direct shell solve across
+Laplace, screened Poisson, heat-resolvent, damped Helmholtz, and causal-wave
+resolvent cases. The direct and finite-tail implementations agree within
+`1.827e-14`; the maximum fixed-point residual is `2.036e-15`. The cap has zero
+truncation error for the autonomous tail by the Schur fixed-point identity.
+
+| Tail method | Setup | Repeated apply | Storage |
+|---|---:|---:|---:|
+| Direct streamed shells | none | `O(K N_theta L + K N_theta log N_theta)` | `O(N_theta+L)` |
+| Compiled finite tail | `O(N_theta L)` | `O(K N_theta log N_theta)` | `O(N_theta)` |
+| Exact fixed-point cap | `O(N_theta)` | `O(K N_theta log N_theta)` | `O(N_theta)` |
+
+Run `PYTHONPATH=src python3 scripts/transparent_tail_benchmark.py`. The formal
+cross-ratio proof, cylinder symbol audit, golden Fibonacci checksum, and branch
+conventions are in
+[`docs/transparent_tail_dtn.md`](docs/transparent_tail_dtn.md). This closure
+removes a structured exterior tail; it does not repair continuum information
+discarded by an aggressively compressed arbitrary CAD atlas.
 
 ```python
 from gulati_quadrature import SurfaceQConfig, build_mesh_engine
@@ -62,6 +120,60 @@ assert result.ledger.status == "borrowed_repaid"
 assert engine.stats()["quadratic_fallback"] is False
 assert engine.stats()["dense_q_matrix_stored"] is False
 ```
+
+For imperfect triangle soups, use the repaired high-order path:
+
+```python
+from gulati_quadrature import (
+    CurvedPanelConfig,
+    ManifoldRepairConfig,
+    SurfaceQConfig,
+    build_repaired_mesh_engine,
+)
+
+engine = build_repaired_mesh_engine(
+    vertices,
+    faces,
+    repair_config=ManifoldRepairConfig(sharp_angle_degrees=32.0),
+    panel_config=CurvedPanelConfig(quadrature_order=4),
+    config=SurfaceQConfig(
+        harmonic_moment_degree=5,
+        adaptive_moment_degree=True,
+        moment_validation_tolerance=1e-4,
+    ),
+)
+
+certificate = engine.repair_certificate
+assert certificate.watertight
+assert certificate.manifold
+assert certificate.nonmanifold_vertices == 0
+assert certificate.consistently_oriented
+```
+
+This path welds duplicate vertices, removes degenerate and duplicate faces,
+splits disconnected face fans at nonmanifold vertices and edges, propagates a
+consistent orientation, fills closed boundary loops, and orients each
+nonzero-volume component outward. It certifies incidence topology; global
+self-intersection remains a separate, explicitly unaudited property.
+
+Each repaired face becomes a cubic PN triangle with analytic first and second
+jets. Sharp edges use one shared straight Bezier edge, and every shared curved
+edge is audited for physical seam closure. The production smooth-panel
+correction stores the discrete odd tangent
+moment that must vanish in the principal value and applies a
+measure-symmetric weak Duffy Laplace--Beltrami jet for the stable first even
+rung. It is applied at every smooth panel node. Sharp dihedral edges use
+`pi/omega` Mellin exponents; feature vertices use a sparse spherical-link
+Kondratiev pencil. Their four moment defects are precomputed with a higher
+order rule on the same curved geometry. The generated campaign compiles all
+80 cube feature rungs at order 12 and checks them against a separate order-16
+rule. `engine.repay_feature_integral(...)`
+applies these channels to a target-local scalar layer integral.
+
+Adaptive harmonic repayment never validates on its fitted space. A degree
+`d` candidate is tested on all degree `d+1` solid harmonics, and only the
+selected candidate is retained. Final scientific benchmarks must still hold
+out degrees beyond every degree inspected during selection.
 
 The same API accepts arbitrary weighted nodes with `build_surface_engine`.
 Triangle meshes retain their topology. By default the DtN path adds the
@@ -151,6 +263,34 @@ separate from the non-injective moment hierarchy used for operator application.
 
 ### Audited 3D Results
 
+The repaired curved-panel refinement campaign is generated by:
+
+```sh
+PYTHONPATH=src python3 scripts/production_3d_repaired_refinement.py
+```
+
+It reserves degree-four and degree-five solid harmonics while compilation uses
+at most degree two and adaptive selection sees at most degree three. Across
+exact-sphere, exact-ellipsoid, and funky PN surfaces, all nine meshes are
+watertight and both edge- and vertex-manifold. The largest curved-panel seam
+gap is `2.483e-16`. The maximum held-out repaid errors from 72 to 1,152 nodes
+are:
+
+| Surface | 72 nodes | 288 nodes | 1,152 nodes |
+|---|---:|---:|---:|
+| exact sphere | `1.087e0` | `4.946e-1` | `3.496e-1` |
+| exact ellipsoid | `2.526e0` | `6.042e-1` | `3.842e-1` |
+| funky cubic PN | `1.242e0` | `6.490e-1` | `3.699e-1` |
+
+The exact-sphere endpoint rate is `0.818` in node spacing. On a cube, all 80
+edge/vertex rungs improve when channels compiled with an order-12 panel rule
+are scored against a separate order-16 rule; the largest corrected discrepancy
+is `6.56e-6`. All eight vertex-link pencils return the same exponent to
+roundoff, within `3.68e-2` of the exact octant exponent three at three spherical
+refinements. These are feature-basis checks, not universal continuum accuracy.
+The complete protocol and per-mode rows are in
+[`outputs/production_3d_repaired_refinement/report.md`](outputs/production_3d_repaired_refinement/report.md).
+
 The checked extended campaign contains 16 geometry classes, 32 `p=2/p=3`
 operator cases, and 96 independent field comparisons. It includes smooth
 genus-zero and genus-one surfaces, polyhedra, an open nonorientable strip,
@@ -180,10 +320,21 @@ audit at `N=258` improves from `1.700e-1` for raw `Q_3` to `6.174e-2` after the
 singular-cell/curvature series. The repository therefore does not claim
 universal machine-precision 3D continuum accuracy.
 
+The separate NASA field gallery solves Laplace DtN, Poisson, screened Poisson,
+Helmholtz DtN, heat, and wave on 24 to 42 compressed nodes, then lifts the
+computed values onto all 1,227,262 triangles decoded from the SOFIA and two
+Curiosity QCAD3J archives. Across 18 displayed rows, the maximum retained
+manufactured-reference error is `3.431e-16`, the maximum self-adjoint heat/wave
+algebraic residual is `7.638e-15`, and the median warm solve is `44.2 ms`; the
+strictest implicit heat solve is `3.68 s`. Those numbers audit retained channels
+or finite-operator equations, not the independent held-out continuum modes.
+The generated color maps are numerical fields, not illustrative textures.
+
 ```sh
 PYTHONPATH=src python3 -m gulati_quadrature.cli surface-demo
 PYTHONPATH=src python3 scripts/production_3d_qjet_extended_validation.py
 PYTHONPATH=src python3 scripts/cad_qjet_invertibility_campaign.py
+PYTHONPATH=src python3 scripts/production_nasa_cad_pde_visualization.py
 ```
 
 The formal derivation and executable examples are in

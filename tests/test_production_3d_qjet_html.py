@@ -9,7 +9,6 @@ from scripts.production_3d_qjet_extended_validation import (
     car_assembly,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "outputs" / "production_3d_qjet_html"
 HTML_REPORT = OUTPUT / "production_3d_qjet_method.html"
@@ -18,6 +17,12 @@ PDE_OUTPUT = ROOT / "outputs" / "production_3d_pde_validation"
 PDE_SUMMARY = PDE_OUTPUT / "summary.json"
 CAD_PDE_OUTPUT = ROOT / "outputs" / "production_3d_cad_pde_validation"
 CAD_PDE_SUMMARY = CAD_PDE_OUTPUT / "summary.json"
+REPAIRED_OUTPUT = ROOT / "outputs" / "production_3d_repaired_refinement"
+REPAIRED_SUMMARY = REPAIRED_OUTPUT / "summary.json"
+NASA_VIS_OUTPUT = ROOT / "outputs" / "production_nasa_cad_pde_visualization"
+NASA_VIS_SUMMARY = NASA_VIS_OUTPUT / "summary.json"
+TAIL_OUTPUT = ROOT / "outputs" / "transparent_tail_benchmark"
+TAIL_SUMMARY = TAIL_OUTPUT / "summary.json"
 
 
 def load_summary() -> dict[str, object]:
@@ -165,6 +170,28 @@ def test_html_embeds_independent_discrete_and_continuum_pde_audits() -> None:
     assert len(section.find_all("table")) == 2
 
 
+def test_html_embeds_exact_transparent_tail_closure_without_cad_overclaim() -> None:
+    summary = json.loads(TAIL_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["all_gates_passed"] is True
+    assert summary["autonomous_tail_truncation_error_with_cap"] == 0.0
+    assert summary["held_out_cad_machine_precision_claim"] is False
+
+    soup = BeautifulSoup(HTML_REPORT.read_text(encoding="utf-8"), "html.parser")
+    section = soup.find("section", id="transparent-tail-closure")
+    assert section is not None
+    text = section.get_text(" ", strip=True)
+    for required in (
+        "Exact transparent closure of cylindrical and conic tails",
+        "chi(Phi(sigma)) = w^2 chi(sigma)",
+        "zero autonomous-tail truncation error",
+        "Undamped propagating Helmholtz modes are rejected",
+        "does not recover surface channels discarded",
+    ):
+        assert required in text
+    assert len(section.find_all("table")) == 1
+    assert section.find("svg") is not None
+
+
 def test_html_embeds_repaid_cad_pde_and_held_out_audits() -> None:
     summary = json.loads(CAD_PDE_SUMMARY.read_text(encoding="utf-8"))
     assert summary["model_count"] == 5
@@ -193,3 +220,65 @@ def test_html_embeds_repaid_cad_pde_and_held_out_audits() -> None:
     ):
         assert required in text
     assert len(section.find_all("table")) == 4
+
+
+def test_html_embeds_nasa_compressed_pde_fields_and_scope() -> None:
+    summary = json.loads(NASA_VIS_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["shape_count"] == 3
+    assert summary["pde_case_count"] == 18
+    assert summary["all_declared_gates_passed"] is True
+    assert summary["maximum_retained_reference_error"] < 1.0e-14
+    assert summary["maximum_algebraic_residual"] < 2.0e-14
+    assert summary["maximum_warm_solve_ms"] < 10_000.0
+    assert summary["dense_q_matrix_stored"] is False
+    assert summary["held_out_continuum_machine_precision_claim"] is False
+
+    soup = BeautifulSoup(HTML_REPORT.read_text(encoding="utf-8"), "html.parser")
+    section = soup.find("section", id="nasa-cad-pde-fields")
+    assert section is not None
+    text = section.get_text(" ", strip=True)
+    for required in (
+        "Numerical PDE fields on compressed NASA CAD",
+        "1,227,262 losslessly decoded source triangles",
+        "24 to 42 compressed boundary nodes",
+        "self-adjoint heat/wave denominator residual",
+        "Machine-scale values certify retained manufactured channels",
+        "not held-out continuum accuracy",
+    ):
+        assert required in text
+    assert len(section.find_all("table")) == 2
+    images = section.find_all("img")
+    assert len(images) == 4
+    assert all(image["src"].startswith("data:image/png;base64,") for image in images)
+
+
+def test_html_embeds_repaired_manifold_and_independent_refinement() -> None:
+    summary = json.loads(REPAIRED_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["all_final_modes_independent"] is True
+    assert summary["all_repaired_surfaces_production_ready"] is True
+    assert summary["all_repaired_surfaces_watertight"] is True
+    assert summary["all_repaired_surfaces_edge_manifold"] is True
+    assert summary["all_repaired_surfaces_vertex_manifold"] is True
+    assert summary["all_curved_panel_atlases_watertight"] is True
+    assert summary["maximum_curved_panel_seam_gap"] < 2.0e-12
+    assert summary["maximum_feature_repaid_absolute_error"] < 1.0e-5
+    assert summary["maximum_cube_vertex_kondratiev_error"] < 0.05
+    assert summary["cube_vertex_kondratiev_spread"] < 1.0e-11
+    assert summary["exact_sphere_repaid_endpoint_rate"] > 0.5
+
+    soup = BeautifulSoup(HTML_REPORT.read_text(encoding="utf-8"), "html.parser")
+    section = soup.find("section", id="repaired-curved-refinement")
+    assert section is not None
+    text = section.get_text(" ", strip=True)
+    for required in (
+        "Watertight repair and independent curved-panel refinement",
+        "cubic PN atlas",
+        "odd principal-value tangent-moment correction",
+        "sparse spherical-link pencil",
+        "order-sixteen rule",
+        "Modes excluded from fitting and model selection",
+        "degree four or five",
+        "not at machine precision",
+    ):
+        assert required in text
+    assert len(section.find_all("table")) == 3

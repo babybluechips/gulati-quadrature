@@ -11,7 +11,6 @@ from gulati_quadrature import (
 )
 from inverse_shape.quadrature import _cos, _sin
 
-
 VERTICES = (
     (1.0, 0.0, 0.0),
     (-1.0, 0.0, 0.0),
@@ -57,6 +56,13 @@ def test_compiled_cad_surface_scans_every_face_and_preserves_measure() -> None:
     assert abs(sum(surface.weights) / surface.source_area - 1.0) < 2.0e-15
     assert surface.stats["stored_dense_matrix"] is False
     assert surface.stats["stored_pair_table"] is False
+    assert len(surface.source_to_compiled_vertex) == len(mesh.vertices)
+    assert all(
+        0 <= index < len(surface.vertices)
+        for index in surface.source_to_compiled_vertex
+    )
+    lifted = surface.lift_vertex_values(range(len(surface.vertices)))
+    assert len(lifted) == len(mesh.vertices)
 
 
 def test_cad_harmonic_modal_inverse_and_helmholtz_flux() -> None:
@@ -122,6 +128,5 @@ def test_cad_harmonic_modal_inverse_and_helmholtz_flux() -> None:
         surface.weights,
         exact_plane_flux,
         helmholtz.values,
-    ) < 2.0e-12
+    ) < 5.0e-14
     assert engine.stats()["dense_q_matrix_stored"] is False
-

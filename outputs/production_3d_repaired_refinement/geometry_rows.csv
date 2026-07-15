@@ -1,0 +1,10 @@
+shape,refinement,mesh_vertices,mesh_faces,nodes,build_ms,area,maximum_panel_seam_gap,boundary_edges,nonmanifold_edges,nonmanifold_vertices,production_ready,panel_geometry_kind,adaptive_selected_degree,adaptive_validation_certified,dense_q_matrix_stored,pair_table_stored
+exact_sphere,0,6,8,72,8.898875035811216,12.575317588541607,0.0,0,0,0,True,RadialQuadricTriangle,0,True,False,False
+exact_sphere,1,18,32,288,59.31762501131743,12.568931306182463,0.0,0,0,0,True,RadialQuadricTriangle,0,True,False,False
+exact_sphere,2,66,128,1152,982.7894160407595,12.566419818206992,0.0,0,0,0,True,RadialQuadricTriangle,0,True,False,False
+exact_ellipsoid,0,6,8,72,9.920707962010056,12.135223249974572,0.0,0,0,0,True,RadialQuadricTriangle,2,False,False,False
+exact_ellipsoid,1,18,32,288,64.35141596011817,12.21483072716515,0.0,0,0,0,True,RadialQuadricTriangle,2,False,False,False
+exact_ellipsoid,2,66,128,1152,1071.0495830280706,12.212084687633746,0.0,0,0,0,True,RadialQuadricTriangle,2,False,False,False
+funky_pn,0,6,8,72,11.720666952896863,8.724713381983353,1.2412670766236366e-16,0,0,0,True,CubicPNTriangle,2,False,False,False
+funky_pn,1,18,32,288,68.47562501206994,11.162669015630588,2.237726045655905e-16,0,0,0,True,CubicPNTriangle,2,False,False,False
+funky_pn,2,66,128,1152,1051.1476250248961,11.673145743604872,2.482534153247273e-16,0,0,0,True,CubicPNTriangle,2,False,False,False

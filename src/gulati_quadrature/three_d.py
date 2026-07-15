@@ -34,6 +34,14 @@ from inverse_shape.cad_surface_compiler import (
     load_compiled_cad_surface,
 )
 from inverse_shape.conic_pencil_surface import ConicPencilSurfaceQJet
+from inverse_shape.curved_panels import (
+    CurvedPanelConfig,
+    CurvedPanelSurface,
+    PanelSingularRepayment3D,
+    PanelSingularRepaymentConfig,
+    build_curved_panel_surface,
+    build_radial_quadric_panel_surface,
+)
 from inverse_shape.polyhedral_kondratiev import (
     CertifiedPolyhedralSurfaceQJet,
     EdgeMellinPencil,
@@ -61,7 +69,19 @@ from inverse_shape.riesz_near_linear import (
     NearLinearRieszEvaluation,
     ProductionRieszQJet,
 )
+from inverse_shape.surface_feature_channels import (
+    FeatureChannelConfig,
+    FeatureRepaymentEvaluation,
+    MellinKondratievPanelRepayment3D,
+)
+from inverse_shape.surface_manifold import (
+    ManifoldRepairCertificate,
+    ManifoldRepairConfig,
+    RepairedTriangleMesh,
+    repair_triangle_mesh,
+)
 from inverse_shape.surface_repayment import (
+    AdaptiveHarmonicMomentRepayment3D,
     HarmonicMomentRepayment3D,
     HelmholtzMomentRepayment3D,
     MeshDifferentialGeometry,
@@ -98,6 +118,10 @@ class SurfaceQConfig:
     continuum_repayment: bool = True
     singular_cell_order: int = 3
     harmonic_moment_degree: int = 3
+    adaptive_moment_degree: bool = False
+    minimum_harmonic_moment_degree: int = 1
+    moment_validation_tolerance: float = 1.0e-4
+    moment_validation_gap: int = 1
     self_adjoint_moment_repayment: bool = False
     orthogonalization_tolerance: float = 1.0e-11
 
@@ -106,6 +130,19 @@ class SurfaceQConfig:
             raise ValueError("singular_cell_order must lie between zero and three")
         if self.harmonic_moment_degree < 0:
             raise ValueError("harmonic_moment_degree must be nonnegative")
+        if self.minimum_harmonic_moment_degree < 1:
+            raise ValueError("minimum_harmonic_moment_degree must be positive")
+        if (
+            self.harmonic_moment_degree > 0
+            and self.minimum_harmonic_moment_degree > self.harmonic_moment_degree
+        ):
+            raise ValueError(
+                "minimum_harmonic_moment_degree cannot exceed harmonic_moment_degree"
+            )
+        if self.moment_validation_tolerance <= 0.0:
+            raise ValueError("moment_validation_tolerance must be positive")
+        if self.moment_validation_gap < 1:
+            raise ValueError("moment_validation_gap must be positive")
         if self.orthogonalization_tolerance <= 0.0:
             raise ValueError("orthogonalization_tolerance must be positive")
 
@@ -130,6 +167,9 @@ class ProductionSurfaceQEngine:
         *,
         normals: Iterable[Iterable[float]] | None = None,
         faces: Iterable[Iterable[int]] | None = None,
+        panel_surface: CurvedPanelSurface | None = None,
+        panel_singular_repayment: PanelSingularRepayment3D | None = None,
+        feature_repayment: MellinKondratievPanelRepayment3D | None = None,
         config: SurfaceQConfig | None = None,
     ) -> None:
         self.config = config or SurfaceQConfig()
@@ -164,7 +204,23 @@ class ProductionSurfaceQEngine:
             self._normals = None
         if self._normals is not None and len(self._normals) != len(point_rows):
             raise ValueError("normals must contain one vector per surface node")
-        self._harmonic_repayment: HarmonicMomentRepayment3D | None = None
+        self._panel_surface = panel_surface
+        self._panel_singular_repayment = panel_singular_repayment
+        self._feature_repayment = feature_repayment
+        if panel_surface is not None:
+            if tuple(point_rows) != panel_surface.points:
+                raise ValueError("panel surface points do not match the QJet nodes")
+            if tuple(weight_rows) != panel_surface.weights:
+                raise ValueError("panel surface weights do not match the QJet nodes")
+        if panel_singular_repayment is not None and panel_surface is None:
+            raise ValueError("panel singular repayment requires its curved panel surface")
+        if feature_repayment is not None and panel_surface is None:
+            raise ValueError("feature repayment requires its curved panel surface")
+        self._harmonic_repayment: (
+            HarmonicMomentRepayment3D
+            | AdaptiveHarmonicMomentRepayment3D
+            | None
+        ) = None
         self._harmonic_repayment_compiled = False
         self._helmholtz_repayments: dict[
             tuple[float, tuple[Point3, ...]], HelmholtzMomentRepayment3D
@@ -202,6 +258,18 @@ class ProductionSurfaceQEngine:
     def weights(self) -> tuple[float, ...]:
         return self._qjet.weights
 
+    @property
+    def panel_surface(self) -> CurvedPanelSurface | None:
+        return self._panel_surface
+
+    @property
+    def repair_certificate(self) -> ManifoldRepairCertificate | None:
+        return (
+            self._panel_surface.topology.certificate
+            if self._panel_surface is not None
+            else None
+        )
+
     def apply(self, values: Iterable[complex]) -> NearLinearRieszEvaluation:
         """Apply the configured inverse-distance graph and return its ledger."""
 
@@ -218,17 +286,27 @@ class ProductionSurfaceQEngine:
         if (
             self.config.continuum_repayment
             and self.config.singular_cell_order > 0
-            and self._mesh_geometry is not None
             and not bool(evaluation.stats.get("constant_shortcut", False))
         ):
-            correction = self._mesh_geometry.singular_cell_correction(
-                values,
-                order=self.config.singular_cell_order,
-            )
-            output = tuple(
-                value + delta
-                for value, delta in zip(output, correction, strict=True)
-            )
+            correction = None
+            if self._panel_singular_repayment is not None:
+                correction = self._panel_singular_repayment.correction(
+                    values,
+                    order=min(
+                        self.config.singular_cell_order,
+                        self._panel_singular_repayment.config.series_order,
+                    ),
+                )
+            elif self._mesh_geometry is not None:
+                correction = self._mesh_geometry.singular_cell_correction(
+                    values,
+                    order=self.config.singular_cell_order,
+                )
+            if correction is not None:
+                output = tuple(
+                    value + delta
+                    for value, delta in zip(output, correction, strict=True)
+                )
         return output, evaluation
 
     def _effective_harmonic_degree(self) -> int:
@@ -259,6 +337,36 @@ class ProductionSurfaceQEngine:
             )
             return output
 
+        if self.config.adaptive_moment_degree:
+            while degree >= self.config.minimum_harmonic_moment_degree:
+                try:
+                    self._harmonic_repayment = AdaptiveHarmonicMomentRepayment3D(
+                        self.points,
+                        self.weights,
+                        self._normals,
+                        base_apply,
+                        minimum_degree=min(
+                            self.config.minimum_harmonic_moment_degree,
+                            degree,
+                        ),
+                        maximum_degree=degree,
+                        validation_tolerance=(
+                            self.config.moment_validation_tolerance
+                        ),
+                        validation_gap=self.config.moment_validation_gap,
+                        self_adjoint=(
+                            self.config.self_adjoint_moment_repayment
+                        ),
+                        orthogonalization_tolerance=(
+                            self.config.orthogonalization_tolerance
+                        ),
+                    )
+                    return self._harmonic_repayment
+                except RuntimeError as error:
+                    if "lost an expected trace mode" not in str(error):
+                        raise
+                    degree -= 1
+            return None
         while degree > 0:
             try:
                 self._harmonic_repayment = HarmonicMomentRepayment3D(
@@ -314,6 +422,8 @@ class ProductionSurfaceQEngine:
                 "continuum_repayment": bool(self.config.continuum_repayment),
                 "singular_cell_order": self.config.singular_cell_order
                 if self._mesh_geometry is not None
+                else self._panel_singular_repayment.config.series_order
+                if self._panel_singular_repayment is not None
                 else 0,
                 "harmonic_moment_degree": repayment.degree
                 if repayment is not None
@@ -326,6 +436,13 @@ class ProductionSurfaceQEngine:
         )
         if self._mesh_geometry is not None:
             stats.update(self._mesh_geometry.stats())
+        if self._panel_surface is not None:
+            stats.update(self._panel_surface.topology.stats)
+            stats.update(self._panel_surface.stats)
+        if self._panel_singular_repayment is not None:
+            stats.update(self._panel_singular_repayment.stats())
+        if self._feature_repayment is not None:
+            stats.update(self._feature_repayment.stats())
         if repayment is not None:
             stats.update(repayment.stats())
         ledger = BorrowComputeRepayLedger(
@@ -340,9 +457,17 @@ class ProductionSurfaceQEngine:
             repaid=(
                 "1/(2*pi) principal-symbol normalization",
                 "curvature-adjusted singular-cell Laplace--Beltrami series"
-                if self._mesh_geometry is not None
-                and self.config.singular_cell_order > 0
+                if (
+                    (
+                        self._mesh_geometry is not None
+                        or self._panel_singular_repayment is not None
+                    )
+                    and self.config.singular_cell_order > 0
+                )
                 else "no topology-aware singular-cell channel available",
+                "fixed-rank Mellin/Kondratiev feature moments available for layer integrals"
+                if self._feature_repayment is not None
+                else "no geometric edge/vertex channel required",
                 "fixed-rank solid-harmonic normal-flux moments"
                 if repayment is not None
                 else "no harmonic normal-flux channel available",
@@ -369,6 +494,23 @@ class ProductionSurfaceQEngine:
             compression_inf_bound=scale * raw.compression_inf_bound,
             ledger=ledger,
             stats=stats,
+        )
+
+    def repay_feature_integral(
+        self,
+        values: Iterable[complex],
+        *,
+        borrowed_value: complex | None = None,
+        channel_labels: Iterable[str] | None = None,
+    ) -> FeatureRepaymentEvaluation:
+        """Repay curved-panel Mellin channels in one scalar layer integral."""
+
+        if self._feature_repayment is None:
+            raise ValueError("this surface engine has no edge or vertex channels")
+        return self._feature_repayment.repay_integral(
+            values,
+            borrowed_value=borrowed_value,
+            channel_labels=channel_labels,
         )
 
     def apply_helmholtz_dtn(
@@ -486,6 +628,8 @@ class ProductionSurfaceQEngine:
                 "continuum_repayment": self.config.continuum_repayment,
                 "singular_cell_order": self.config.singular_cell_order
                 if self._mesh_geometry is not None
+                else self._panel_singular_repayment.config.series_order
+                if self._panel_singular_repayment is not None
                 else 0,
                 "harmonic_moment_degree": self._effective_harmonic_degree()
                 if self._normals is not None
@@ -498,10 +642,18 @@ class ProductionSurfaceQEngine:
                     self._helmholtz_repayments
                 ),
                 "dtn_self_adjoint": self.dtn_self_adjoint,
+                "adaptive_moment_degree": self.config.adaptive_moment_degree,
             }
         )
         if self._mesh_geometry is not None:
             result.update(self._mesh_geometry.stats())
+        if self._panel_surface is not None:
+            result.update(self._panel_surface.topology.stats)
+            result.update(self._panel_surface.stats)
+        if self._panel_singular_repayment is not None:
+            result.update(self._panel_singular_repayment.stats())
+        if self._feature_repayment is not None:
+            result.update(self._feature_repayment.stats())
         if self._harmonic_repayment is not None:
             result.update(self._harmonic_repayment.stats())
         return result
@@ -532,6 +684,96 @@ def build_mesh_engine(
         vertices,
         triangles,
         normals=normals,
+        config=config,
+    )
+
+
+def build_curved_panel_engine(
+    surface: CurvedPanelSurface,
+    *,
+    config: SurfaceQConfig | None = None,
+    singular_config: PanelSingularRepaymentConfig | None = None,
+    feature_config: FeatureChannelConfig | None = None,
+) -> ProductionSurfaceQEngine:
+    """Build the repaired high-order panel path without a dense matrix."""
+
+    settings = config or SurfaceQConfig()
+    singular = (
+        PanelSingularRepayment3D(
+            surface,
+            config=singular_config
+            or PanelSingularRepaymentConfig(
+                # The panel path exposes only the stable first even rung plus
+                # the explicitly compiled odd principal-value moment.
+                series_order=1,
+            ),
+        )
+        if settings.continuum_repayment and settings.singular_cell_order > 0
+        else None
+    )
+    features = (
+        MellinKondratievPanelRepayment3D(
+            surface,
+            config=feature_config,
+        )
+        if surface.topology.sharp_edges
+        else None
+    )
+    return ProductionSurfaceQEngine(
+        surface.points,
+        surface.weights,
+        normals=surface.normals,
+        panel_surface=surface,
+        panel_singular_repayment=singular,
+        feature_repayment=features,
+        config=settings,
+    )
+
+
+def build_repaired_mesh_engine(
+    vertices: Iterable[Iterable[float]],
+    triangles: Iterable[Iterable[int]],
+    *,
+    repair_config: ManifoldRepairConfig | None = None,
+    panel_config: CurvedPanelConfig | None = None,
+    singular_config: PanelSingularRepaymentConfig | None = None,
+    feature_config: FeatureChannelConfig | None = None,
+    config: SurfaceQConfig | None = None,
+) -> ProductionSurfaceQEngine:
+    """Repair, curve, quadrature-sample, and compile an arbitrary triangle soup."""
+
+    topology = repair_triangle_mesh(
+        vertices,
+        triangles,
+        config=repair_config,
+    )
+    surface = build_curved_panel_surface(topology, config=panel_config)
+    return build_curved_panel_engine(
+        surface,
+        config=config,
+        singular_config=singular_config,
+        feature_config=feature_config,
+    )
+
+
+def build_repaired_cad_engine(
+    mesh: ExactMesh,
+    *,
+    repair_config: ManifoldRepairConfig | None = None,
+    panel_config: CurvedPanelConfig | None = None,
+    singular_config: PanelSingularRepaymentConfig | None = None,
+    feature_config: FeatureChannelConfig | None = None,
+    config: SurfaceQConfig | None = None,
+) -> ProductionSurfaceQEngine:
+    """Compile every face of an exact CAD archive through the repaired panel path."""
+
+    return build_repaired_mesh_engine(
+        mesh.vertices,
+        mesh.faces,
+        repair_config=repair_config,
+        panel_config=panel_config,
+        singular_config=singular_config,
+        feature_config=feature_config,
         config=config,
     )
 
@@ -816,15 +1058,24 @@ __all__ = [
     "CertifiedPolyhedralSurfaceQJet",
     "CompiledCadPanelSurface",
     "CompiledCadSurface",
+    "CurvedPanelConfig",
+    "CurvedPanelSurface",
     "EdgeMellinPencil",
     "ExactMesh",
+    "FeatureChannelConfig",
+    "FeatureRepaymentEvaluation",
+    "ManifoldRepairCertificate",
+    "ManifoldRepairConfig",
+    "MellinKondratievPanelRepayment3D",
     "MellinKondratievRepayment",
     "MellinThreeJetChannel",
     "MeshPart",
     "NearLinearContractError",
+    "PanelSingularRepaymentConfig",
     "PolyhedralMeshTopology",
     "ProductionRieszQJet",
     "ProductionSurfaceQEngine",
+    "RepairedTriangleMesh",
     "RoundTripAudit",
     "SurfaceQConfig",
     "SurfaceQEvaluation",
@@ -835,9 +1086,14 @@ __all__ = [
     "build_axisymmetric_engine",
     "build_conic_pencil_engine",
     "build_compiled_cad_engine",
+    "build_curved_panel_engine",
+    "build_curved_panel_surface",
     "build_mesh_engine",
     "build_polyhedral_engine",
     "build_radial_profile_engine",
+    "build_radial_quadric_panel_surface",
+    "build_repaired_cad_engine",
+    "build_repaired_mesh_engine",
     "build_spheroid_engine",
     "build_surface_engine",
     "build_torus_engine",
@@ -849,6 +1105,7 @@ __all__ = [
     "load_ifc_tessellation",
     "load_compiled_cad_panels",
     "load_compiled_cad_surface",
+    "repair_triangle_mesh",
     "triangle_lumped_vertex_weights",
     "write_archive",
 ]

@@ -30,13 +30,11 @@ contract on every operator application.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Callable, Iterable
-
-from inverse_shape.quadrature import BorrowComputeRepayLedger, _abs, _finite, _sqrt
 
 from gulati_quadrature.three_d import ProductionSurfaceQEngine
-
+from inverse_shape.quadrature import BorrowComputeRepayLedger, _abs, _finite, _sqrt
 
 ComplexVector = tuple[complex, ...]
 
@@ -146,6 +144,7 @@ def _conjugate_gradient(
     tolerance: float,
     maximum_iterations: int,
     projector: Callable[[ComplexVector], ComplexVector] | None = None,
+    initial_values: ComplexVector | None = None,
 ) -> _CGResult:
     """Weighted Hermitian positive-definite CG with ``O(N)`` storage."""
 
@@ -153,8 +152,24 @@ def _conjugate_gradient(
     rhs_norm = _weighted_norm(weights, rhs)
     if rhs_norm <= 1.0e-300:
         return _CGResult((0.0j,) * len(rhs), 0, 0.0, True)
-    values = (0.0j,) * len(rhs)
-    residual = rhs
+    values = (
+        (0.0j,) * len(rhs)
+        if initial_values is None
+        else projector(initial_values)
+        if projector is not None
+        else initial_values
+    )
+    if initial_values is None:
+        residual = rhs
+    else:
+        image = apply(values)
+        if projector is not None:
+            image = projector(image)
+        residual = tuple(
+            target - value for target, value in zip(rhs, image, strict=True)
+        )
+        if projector is not None:
+            residual = projector(residual)
     direction = residual
     residual_energy = max(_weighted_inner(weights, residual, residual).real, 0.0)
     relative = _sqrt(residual_energy) / rhs_norm
@@ -202,14 +217,30 @@ def _bicgstab(
     *,
     tolerance: float,
     maximum_iterations: int,
+    initial_values: ComplexVector | None = None,
 ) -> _CGResult:
     """Weighted BiCGSTAB for the damped non-Hermitian Helmholtz system."""
 
     rhs_norm = _weighted_norm(weights, right_hand_side)
     if rhs_norm <= 1.0e-300:
         return _CGResult((0.0j,) * len(right_hand_side), 0, 0.0, True)
-    values = (0.0j,) * len(right_hand_side)
-    residual = right_hand_side
+    values = (
+        (0.0j,) * len(right_hand_side)
+        if initial_values is None
+        else initial_values
+    )
+    residual = (
+        right_hand_side
+        if initial_values is None
+        else tuple(
+            target - value
+            for target, value in zip(
+                right_hand_side,
+                apply(values),
+                strict=True,
+            )
+        )
+    )
     shadow = residual
     direction = (0.0j,) * len(residual)
     image = (0.0j,) * len(residual)
@@ -217,6 +248,8 @@ def _bicgstab(
     alpha = 1.0 + 0.0j
     omega = 1.0 + 0.0j
     relative = _weighted_norm(weights, residual) / rhs_norm
+    if relative <= tolerance:
+        return _CGResult(values, 0, relative, True)
     breakdown = 1.0e-30
 
     for iteration in range(1, maximum_iterations + 1):
@@ -347,6 +380,7 @@ class SurfacePDESolver:
         tolerance: float,
         maximum_iterations: int,
         projector: Callable[[ComplexVector], ComplexVector] | None = None,
+        initial_values: ComplexVector | None = None,
     ) -> _CGResult:
         if self._dtn_self_adjoint:
             self._last_solver_method = "CG"
@@ -357,6 +391,7 @@ class SurfacePDESolver:
                 tolerance=tolerance,
                 maximum_iterations=maximum_iterations,
                 projector=projector,
+                initial_values=initial_values,
             )
         rhs = projector(right_hand_side) if projector is not None else right_hand_side
 
@@ -372,6 +407,11 @@ class SurfacePDESolver:
             self.weights,
             tolerance=tolerance,
             maximum_iterations=maximum_iterations,
+            initial_values=(
+                projector(initial_values)
+                if projector is not None and initial_values is not None
+                else initial_values
+            ),
         )
         if projector is None:
             return solved
@@ -585,9 +625,12 @@ class SurfacePDESolver:
             raise ValueError("Poisson mass must be nonnegative and finite")
         self._begin()
         rhs = _vector(right_hand_side, self.n, "right_hand_side")
-        projector = None
+        projector: Callable[[ComplexVector], ComplexVector] | None = None
         if mass_value == 0.0:
-            projector = lambda row: _project_mean_zero(self.weights, row)
+            def mean_zero_projector(row: ComplexVector) -> ComplexVector:
+                return _project_mean_zero(self.weights, row)
+
+            projector = mean_zero_projector
             rhs = projector(rhs)
 
         def apply_system(candidate: ComplexVector) -> ComplexVector:
@@ -756,6 +799,7 @@ class SurfacePDESolver:
                 rhs,
                 tolerance=requested,
                 maximum_iterations=limit,
+                initial_values=values,
             )
             values = solved.values
             total_iterations += solved.iterations
@@ -846,6 +890,7 @@ class SurfacePDESolver:
                 rhs,
                 tolerance=requested,
                 maximum_iterations=limit,
+                initial_values=displacement,
             )
             next_displacement = solved.values
             square_sum = apply_square(

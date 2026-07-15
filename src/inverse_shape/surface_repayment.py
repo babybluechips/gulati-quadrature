@@ -28,11 +28,10 @@ fixed stencil width ``s``.  No dense surface matrix or pair table is formed.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Callable, Iterable
 
 from inverse_shape.quadrature import PI, _abs, _cos, _finite, _sin, _sqrt
-
 
 Point3 = tuple[float, float, float]
 ComplexVector = tuple[complex, ...]
@@ -524,6 +523,8 @@ class HarmonicMomentRepayment3D:
             raise ValueError("harmonic repayment degree must be positive")
         self.orthogonalization_tolerance = float(orthogonalization_tolerance)
         self.self_adjoint = bool(self_adjoint)
+        self.exact_subspace_tolerance = 512.0 * 2.220446049250313e-16
+        self.exact_subspace_applications = 0
 
         total_weight = sum(self.weights)
         center = tuple(
@@ -733,10 +734,28 @@ class HarmonicMomentRepayment3D:
         values: Iterable[complex],
         base_flux: Iterable[complex],
     ) -> ComplexVector:
+        row = tuple(complex(value) for value in values)
         base = tuple(complex(value) for value in base_flux)
-        correction = self.correction(values)
-        if len(base) != self.n:
+        if len(row) != self.n or len(base) != self.n:
             raise ValueError("base flux length does not match harmonic repayment")
+        coefficients = tuple(
+            _weighted_inner(self.weights, mode.trace, row)
+            for mode in self.modes
+        )
+        remainder = list(row)
+        projected_flux = [0.0j for _ in row]
+        for coefficient, mode in zip(coefficients, self.modes, strict=True):
+            for index in range(self.n):
+                remainder[index] -= coefficient * mode.trace[index]
+                projected_flux[index] += coefficient * mode.target_flux[index]
+        relative_remainder = _weighted_norm(self.weights, remainder) / max(
+            _weighted_norm(self.weights, row),
+            1.0e-300,
+        )
+        if relative_remainder <= self.exact_subspace_tolerance:
+            self.exact_subspace_applications += 1
+            return tuple(projected_flux)
+        correction = self.correction(row)
         return tuple(
             value + delta for value, delta in zip(base, correction, strict=True)
         )
@@ -769,6 +788,12 @@ class HarmonicMomentRepayment3D:
             "harmonic_repayment_apply_complexity": "O(N d^2)",
             "harmonic_repayment_storage_complexity": "O(N d^2)",
             "harmonic_repayment_self_adjoint": self.self_adjoint,
+            "harmonic_exact_subspace_tolerance": (
+                self.exact_subspace_tolerance
+            ),
+            "harmonic_exact_subspace_applications": (
+                self.exact_subspace_applications
+            ),
             "harmonic_weak_flux_projection": (
                 "weighted mean-zero" if self.self_adjoint else "none"
             ),
@@ -782,11 +807,199 @@ class HarmonicMomentRepayment3D:
 
 
 @dataclass(frozen=True)
+class AdaptiveMomentValidation3D:
+    degree: int
+    validation_degree: int
+    maximum_relative_error: float
+    validation_modes: tuple[str, ...]
+    accepted: bool
+
+
+class AdaptiveHarmonicMomentRepayment3D:
+    """Select the smallest retained degree that passes a next-degree audit.
+
+    The degree-``d`` repayment is compiled only from solid harmonics through
+    ``d``.  It is then tested on every degree-``d+gap`` harmonic, none of which
+    enters that candidate.  Candidates are discarded as the degree increases,
+    so the final storage is the selected fixed rank rather than the sum of all
+    attempted ranks.
+
+    This is an adaptive *model-selection* certificate, not the independent
+    final benchmark.  A publication refinement study must still reserve modes
+    beyond every degree inspected here.
+    """
+
+    def __init__(
+        self,
+        points: Iterable[Iterable[float]],
+        weights: Iterable[float],
+        normals: Iterable[Iterable[float]],
+        base_apply: Callable[[Iterable[complex]], Iterable[complex]],
+        *,
+        minimum_degree: int = 1,
+        maximum_degree: int = 5,
+        validation_tolerance: float = 1.0e-4,
+        validation_gap: int = 1,
+        self_adjoint: bool = False,
+        orthogonalization_tolerance: float = 1.0e-11,
+    ) -> None:
+        self.points = tuple(_point(point) for point in points)
+        self.weights = tuple(float(value) for value in weights)
+        self.normals = tuple(_unit(_point(normal)) for normal in normals)
+        self.n = len(self.points)
+        if len(self.weights) != self.n or len(self.normals) != self.n:
+            raise ValueError("adaptive harmonic geometry dimensions do not match")
+        self.minimum_degree = int(minimum_degree)
+        self.maximum_degree = int(maximum_degree)
+        self.validation_tolerance = float(validation_tolerance)
+        self.validation_gap = int(validation_gap)
+        if self.minimum_degree < 1:
+            raise ValueError("adaptive minimum degree must be positive")
+        if self.maximum_degree < self.minimum_degree:
+            raise ValueError("adaptive maximum degree must not be below the minimum")
+        if self.validation_tolerance <= 0.0:
+            raise ValueError("adaptive validation tolerance must be positive")
+        if self.validation_gap < 1:
+            raise ValueError("adaptive validation gap must be positive")
+        history = []
+        selected = None
+        for degree in range(self.minimum_degree, self.maximum_degree + 1):
+            candidate = HarmonicMomentRepayment3D(
+                self.points,
+                self.weights,
+                self.normals,
+                base_apply,
+                degree=degree,
+                self_adjoint=self_adjoint,
+                orthogonalization_tolerance=orthogonalization_tolerance,
+            )
+            validation_degree = degree + self.validation_gap
+            error, names = self._validate(candidate, base_apply, validation_degree)
+            accepted = error <= self.validation_tolerance
+            history.append(
+                AdaptiveMomentValidation3D(
+                    degree=degree,
+                    validation_degree=validation_degree,
+                    maximum_relative_error=error,
+                    validation_modes=names,
+                    accepted=accepted,
+                )
+            )
+            selected = candidate
+            if accepted:
+                break
+        if selected is None:
+            raise RuntimeError("adaptive harmonic repayment compiled no candidate")
+        self.selected = selected
+        self.history = tuple(history)
+        self.validation_certified = self.history[-1].accepted
+        self.self_adjoint = selected.self_adjoint
+        self.degree = selected.degree
+        self.modes = selected.modes
+
+    def _validate(
+        self,
+        candidate: HarmonicMomentRepayment3D,
+        base_apply: Callable[[Iterable[complex]], Iterable[complex]],
+        validation_degree: int,
+    ) -> tuple[float, tuple[str, ...]]:
+        maximum = 0.0
+        names = []
+        total_weight = sum(self.weights)
+        for polynomial in solid_harmonic_polynomials(validation_degree):
+            if polynomial.degree != validation_degree:
+                continue
+            trace = []
+            expected = []
+            for point, normal in zip(self.points, self.normals, strict=True):
+                normalized = _scale(
+                    1.0 / candidate.scale,
+                    _sub(point, candidate.center),
+                )
+                value, gradient = polynomial.value_gradient(normalized)
+                trace.append(value)
+                expected.append(
+                    _dot(_scale(1.0 / candidate.scale, gradient), normal)
+                )
+            trace_mean = sum(
+                weight * value
+                for weight, value in zip(self.weights, trace, strict=True)
+            ) / total_weight
+            trace = [value - trace_mean for value in trace]
+            if candidate.self_adjoint:
+                flux_mean = sum(
+                    weight * value
+                    for weight, value in zip(self.weights, expected, strict=True)
+                ) / total_weight
+                expected = [value - flux_mean for value in expected]
+            base = tuple(complex(value) for value in base_apply(trace))
+            actual = candidate.apply(trace, base)
+            denominator = max(_weighted_norm(self.weights, expected), 1.0e-300)
+            difference = tuple(
+                complex(left) - complex(right)
+                for left, right in zip(actual, expected, strict=True)
+            )
+            maximum = max(
+                maximum,
+                _weighted_norm(self.weights, difference) / denominator,
+            )
+            names.append(polynomial.name)
+        return maximum, tuple(names)
+
+    @property
+    def rank(self) -> int:
+        return self.selected.rank
+
+    def correction(self, values: Iterable[complex]) -> ComplexVector:
+        return self.selected.correction(values)
+
+    def apply(
+        self,
+        values: Iterable[complex],
+        base_flux: Iterable[complex],
+    ) -> ComplexVector:
+        return self.selected.apply(values, base_flux)
+
+    def reproduction_residual(
+        self,
+        base_apply: Callable[[Iterable[complex]], Iterable[complex]],
+    ) -> float:
+        return self.selected.reproduction_residual(base_apply)
+
+    def stats(self) -> dict[str, object]:
+        result = self.selected.stats()
+        result.update(
+            {
+                "adaptive_harmonic_moments": True,
+                "adaptive_selected_degree": self.degree,
+                "adaptive_maximum_degree": self.maximum_degree,
+                "adaptive_validation_gap": self.validation_gap,
+                "adaptive_validation_tolerance": self.validation_tolerance,
+                "adaptive_validation_certified": self.validation_certified,
+                "adaptive_validation_history": tuple(
+                    {
+                        "degree": row.degree,
+                        "validation_degree": row.validation_degree,
+                        "maximum_relative_error": row.maximum_relative_error,
+                        "validation_modes": row.validation_modes,
+                        "accepted": row.accepted,
+                    }
+                    for row in self.history
+                ),
+                "adaptive_rank_growth_stored": False,
+                "independent_final_holdout_required": True,
+            }
+        )
+        return result
+
+
+@dataclass(frozen=True)
 class HelmholtzRepaymentMode3D:
     name: str
     direction: Point3
     trace: tuple[complex, ...]
     residual_flux: tuple[complex, ...]
+    target_flux: tuple[complex, ...]
 
 
 class HelmholtzMomentRepayment3D:
@@ -813,6 +1026,8 @@ class HelmholtzMomentRepayment3D:
         if self.wavenumber <= 0.0 or not _finite(self.wavenumber):
             raise ValueError("Helmholtz repayment requires a positive wavenumber")
         tolerance = float(orthogonalization_tolerance)
+        self.exact_subspace_tolerance = 512.0 * 2.220446049250313e-16
+        self.exact_subspace_applications = 0
         modes = []
         for index, value in enumerate(directions):
             direction = _unit(_point(value))
@@ -844,6 +1059,14 @@ class HelmholtzMomentRepayment3D:
                         strict=True,
                     )
                 ]
+                desired = [
+                    item - coefficient * basis
+                    for item, basis in zip(
+                        desired,
+                        mode.target_flux,
+                        strict=True,
+                    )
+                ]
             norm = _weighted_norm(self.weights, trace)
             if norm <= tolerance * max(source_norm, 1.0):
                 continue
@@ -853,6 +1076,7 @@ class HelmholtzMomentRepayment3D:
                     direction=direction,
                     trace=tuple(item / norm for item in trace),
                     residual_flux=tuple(item / norm for item in residual),
+                    target_flux=tuple(item / norm for item in desired),
                 )
             )
         if not modes:
@@ -890,8 +1114,24 @@ class HelmholtzMomentRepayment3D:
         output = [complex(value) for value in base_flux]
         if len(vector) != self.n or len(output) != self.n:
             raise ValueError("Helmholtz repayment dimensions do not match")
-        for mode in self.modes:
-            coefficient = _weighted_inner(self.weights, mode.trace, vector)
+        coefficients = tuple(
+            _weighted_inner(self.weights, mode.trace, vector)
+            for mode in self.modes
+        )
+        remainder = list(vector)
+        projected_flux = [0.0j for _ in vector]
+        for coefficient, mode in zip(coefficients, self.modes, strict=True):
+            for index in range(self.n):
+                remainder[index] -= coefficient * mode.trace[index]
+                projected_flux[index] += coefficient * mode.target_flux[index]
+        relative_remainder = _weighted_norm(self.weights, remainder) / max(
+            _weighted_norm(self.weights, vector),
+            1.0e-300,
+        )
+        if relative_remainder <= self.exact_subspace_tolerance:
+            self.exact_subspace_applications += 1
+            return tuple(projected_flux)
+        for coefficient, mode in zip(coefficients, self.modes, strict=True):
             if coefficient == 0.0:
                 continue
             for index, residual in enumerate(mode.residual_flux):
@@ -905,6 +1145,12 @@ class HelmholtzMomentRepayment3D:
             "helmholtz_repayment_apply_complexity": "O(N r_k)",
             "helmholtz_repayment_storage_complexity": "O(N r_k)",
             "helmholtz_repayment_self_adjoint": False,
+            "helmholtz_exact_subspace_tolerance": (
+                self.exact_subspace_tolerance
+            ),
+            "helmholtz_exact_subspace_applications": (
+                self.exact_subspace_applications
+            ),
             "stored_dense_helmholtz_matrix": False,
             "helmholtz_reproduction": (
                 "Lambda_k exp(i k d.x)=i k (d.n) exp(i k d.x)"

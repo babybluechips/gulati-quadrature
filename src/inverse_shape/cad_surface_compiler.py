@@ -18,9 +18,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+
 from inverse_shape.quadrature import _abs, _sqrt
 from inverse_shape.reversible_cad_qjet import ExactMesh, decode_mesh
-
 
 Point3 = tuple[float, float, float]
 Face3 = tuple[int, int, int]
@@ -106,6 +106,16 @@ class CompiledCadSurface:
     compiled_area: float
     boundary_edges: int
     nonmanifold_edges: int
+    source_to_compiled_vertex: tuple[int, ...]
+    reassigned_source_clusters: int
+
+    def lift_vertex_values(self, values):
+        """Lift one compiled-node field onto every lossless source vertex."""
+
+        row = tuple(values)
+        if len(row) != len(self.vertices):
+            raise ValueError("compiled CAD field must contain one value per node")
+        return tuple(row[index] for index in self.source_to_compiled_vertex)
 
     @property
     def stats(self) -> dict[str, object]:
@@ -135,6 +145,10 @@ class CompiledCadSurface:
             ),
             "boundary_edges": self.boundary_edges,
             "nonmanifold_edges": self.nonmanifold_edges,
+            "source_vertex_lift_entries": len(self.source_to_compiled_vertex),
+            "reassigned_source_clusters": self.reassigned_source_clusters,
+            "source_vertex_lift_time_big_o": "O(source vertices)",
+            "source_vertex_lift_storage_big_o": "O(source vertices)",
             "all_source_faces_scanned": (
                 self.processed_source_faces == self.source_faces
             ),
@@ -392,6 +406,24 @@ def compile_cad_surface(
     faces = tuple(
         tuple(remap[index] for index in face) for face in coarse_faces
     )
+    cluster_to_compiled = []
+    reassigned_clusters = 0
+    for cluster, point in enumerate(coarse_points):
+        compiled = remap.get(cluster)
+        if compiled is None:
+            reassigned_clusters += 1
+            nearest = min(
+                used,
+                key=lambda candidate: _dot(
+                    _sub(point, coarse_points[candidate]),
+                    _sub(point, coarse_points[candidate]),
+                ),
+            )
+            compiled = remap[nearest]
+        cluster_to_compiled.append(compiled)
+    source_to_compiled = tuple(
+        cluster_to_compiled[cluster] for cluster in source_to_cluster
+    )
 
     compiled_area = 0.0
     edge_counts: dict[tuple[int, int], int] = {}
@@ -427,6 +459,8 @@ def compile_cad_surface(
         compiled_area=compiled_area,
         boundary_edges=sum(count == 1 for count in edge_counts.values()),
         nonmanifold_edges=sum(count > 2 for count in edge_counts.values()),
+        source_to_compiled_vertex=source_to_compiled,
+        reassigned_source_clusters=reassigned_clusters,
     )
 
 

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="520" viewBox="0 0 980 520">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#171717;letter-spacing:0}.axis{stroke:#222;stroke-width:1}.grid{stroke:#ddd;stroke-width:1}.series{fill:none;stroke-width:2.2}.point{stroke:white;stroke-width:1}</style>
+<text x="90" y="27" font-size="19" font-weight="600">Transparent tail closure: median total time across five PDE resolvents</text>
+<line class="grid" x1="90" y1="445.00" x2="950" y2="445.00"/>
+<text x="78" y="450.00" text-anchor="end" font-size="12">10^1 ms</text>
+<line class="grid" x1="90" y1="313.33" x2="950" y2="313.33"/>
+<text x="78" y="318.33" text-anchor="end" font-size="12">10^2 ms</text>
+<line class="grid" x1="90" y1="181.67" x2="950" y2="181.67"/>
+<text x="78" y="186.67" text-anchor="end" font-size="12">10^3 ms</text>
+<line class="grid" x1="90" y1="50.00" x2="950" y2="50.00"/>
+<text x="78" y="55.00" text-anchor="end" font-size="12">10^4 ms</text>
+<line class="grid" x1="90.00" y1="50" x2="90.00" y2="445"/>
+<text x="90.00" y="469" text-anchor="middle" font-size="12">4</text>
+<line class="grid" x1="212.86" y1="50" x2="212.86" y2="445"/>
+<text x="212.86" y="469" text-anchor="middle" font-size="12">8</text>
+<line class="grid" x1="335.71" y1="50" x2="335.71" y2="445"/>
+<text x="335.71" y="469" text-anchor="middle" font-size="12">16</text>
+<line class="grid" x1="458.57" y1="50" x2="458.57" y2="445"/>
+<text x="458.57" y="469" text-anchor="middle" font-size="12">32</text>
+<line class="grid" x1="581.43" y1="50" x2="581.43" y2="445"/>
+<text x="581.43" y="469" text-anchor="middle" font-size="12">64</text>
+<line class="grid" x1="704.29" y1="50" x2="704.29" y2="445"/>
+<text x="704.29" y="469" text-anchor="middle" font-size="12">128</text>
+<line class="grid" x1="827.14" y1="50" x2="827.14" y2="445"/>
+<text x="827.14" y="469" text-anchor="middle" font-size="12">256</text>
+<line class="grid" x1="950.00" y1="50" x2="950.00" y2="445"/>
+<text x="950.00" y="469" text-anchor="middle" font-size="12">512</text>
+<line class="axis" x1="90" y1="445" x2="950" y2="445"/>
+<line class="axis" x1="90" y1="50" x2="90" y2="445"/>
+<text x="520.00" y="502" text-anchor="middle" font-size="14">Explicit shell depth L</text>
+<text x="20" y="247.50" text-anchor="middle" font-size="14" transform="rotate(-90 20 247.50)">Total time for K=8 right-hand sides (ms)</text>
+<polyline class="series" points="90.00,383.13 212.86,357.58 335.71,326.26 458.57,291.65 581.43,255.08 704.29,216.01 827.14,176.80 950.00,128.64" stroke="#111111"/>
+<circle class="point" cx="90.00" cy="383.13" r="3.5" fill="#111111"/>
+<circle class="point" cx="212.86" cy="357.58" r="3.5" fill="#111111"/>
+<circle class="point" cx="335.71" cy="326.26" r="3.5" fill="#111111"/>
+<circle class="point" cx="458.57" cy="291.65" r="3.5" fill="#111111"/>
+<circle class="point" cx="581.43" cy="255.08" r="3.5" fill="#111111"/>
+<circle class="point" cx="704.29" cy="216.01" r="3.5" fill="#111111"/>
+<circle class="point" cx="827.14" cy="176.80" r="3.5" fill="#111111"/>
+<circle class="point" cx="950.00" cy="128.64" r="3.5" fill="#111111"/>
+<polyline class="series" points="90.00,434.80 212.86,432.66 335.71,430.19 458.57,422.60 581.43,410.75 704.29,395.25 827.14,370.99 950.00,340.67" stroke="#666666" stroke-dasharray="6,5"/>
+<circle class="point" cx="90.00" cy="434.80" r="3.5" fill="#666666"/>
+<circle class="point" cx="212.86" cy="432.66" r="3.5" fill="#666666"/>
+<circle class="point" cx="335.71" cy="430.19" r="3.5" fill="#666666"/>
+<circle class="point" cx="458.57" cy="422.60" r="3.5" fill="#666666"/>
+<circle class="point" cx="581.43" cy="410.75" r="3.5" fill="#666666"/>
+<circle class="point" cx="704.29" cy="395.25" r="3.5" fill="#666666"/>
+<circle class="point" cx="827.14" cy="370.99" r="3.5" fill="#666666"/>
+<circle class="point" cx="950.00" cy="340.67" r="3.5" fill="#666666"/>
+<polyline class="series" points="90.00,402.33 212.86,402.33 335.71,402.33 458.57,402.33 581.43,402.33 704.29,402.33 827.14,402.33 950.00,402.33" stroke="#999999" stroke-dasharray="2,4"/>
+<circle class="point" cx="90.00" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="212.86" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="335.71" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="458.57" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="581.43" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="704.29" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="827.14" cy="402.33" r="3.5" fill="#999999"/>
+<circle class="point" cx="950.00" cy="402.33" r="3.5" fill="#999999"/>
+<line x1="590" y1="72" x2="624" y2="72" stroke="#111111" stroke-width="2.2"/>
+<text x="634" y="77" font-size="13">Direct L-shell</text>
+<line x1="590" y1="96" x2="624" y2="96" stroke="#666666" stroke-width="2.2" stroke-dasharray="6,5"/>
+<text x="634" y="101" font-size="13">Finite symbol</text>
+<line x1="590" y1="120" x2="624" y2="120" stroke="#999999" stroke-width="2.2" stroke-dasharray="2,4"/>
+<text x="634" y="125" font-size="13">Fixed-point cap</text>
+</svg>
